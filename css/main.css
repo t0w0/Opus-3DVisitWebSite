@@ -1,0 +1,92 @@
+/**********************************     ***************************************/
+/*******************************  RESETS  ************************************/
+/**********************************     ***************************************/
+
+body, h1, h2, h3, h4, h5, blockquote, a {
+    margin: 0px;
+    padding: 0px;
+}
+
+/**********************************     ***************************************/
+/******************************  TYPOGRAPHY  **********************************/
+/**********************************     ***************************************/
+
+@font-face {
+    font-family: pfefferBold;
+    src: url('../data/fonts/pfeffer-simpelgotisch-bold.otf');
+}
+
+@font-face {
+    font-family: steelplateTextura;
+    src: url('../data/fonts/steelplate-textura.ttf');
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 100;
+    color: white; 
+}
+
+a {
+    text-decoration: none;
+    font-family:'Raleway', sans-serif;
+    font-style: normal;
+    font-size:  1.7em;
+    font-weight: 300;
+    color:white;
+}
+
+h1 {
+    font-family:'pfefferBold', serif;
+    font-style: normal;
+    font-size: 4.2em;
+    font-weight: normal;
+    color: #B9A64B;
+}
+
+mark {
+    background-color:transparent;
+    font-family:'steelplateTextura', 'pfefferBold', serif;
+    font-style: normal;
+    font-weight: normal;
+    color: #B9A64B;
+}
+
+h3 {
+    font-size: 1.7em;
+    font-weight: 300;
+}
+
+/**********************************     ***************************************/
+/******************************   GRAPHICS   **********************************/
+/**********************************     ***************************************/
+
+body {
+    background-color: #1E1E28;
+}
+
+/**********************************     ***************************************/
+/*****************************   CONTAINERS   *********************************/
+/**********************************     ***************************************/
+body {
+    width: 100vw;
+    height: 100vh;
+    padding: 5px;
+}
+
+.logoMenu {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.centralInfo {
+    text-align: center;
+    margin-top: 50vh;
+    transform: translateY(-50%);
+}
+
+.startButton {
+    margin-top: 5vh;
+}
