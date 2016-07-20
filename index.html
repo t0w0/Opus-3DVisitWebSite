@@ -5,28 +5,51 @@
         <link type="text/css" rel= stylesheet href="./css/main.css">
         <link href='https://fonts.googleapis.com/css?family=Raleway:300,300italic,100italic,100' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src= "js/three.min.js"></script>
+		<script type="text/javascript" src= "js/ColladaLoader.js"></script>
+		<script type="text/javascript" src= "js/OrbitControls.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     </head>
     <body>
-        <section>
-            <a class="logoMenu" href="index.html"><img src="data/img/logoMenu.png"></a>
-        </section>
-        <section class="centralInfo">
+        <div class="logoMenu">
+            <a href="index.html"><img src="data/img/logoMenu.png"></a>
+        </div>
+        <div class="centralInfo">
             <h3>Bienvenue à la</h3> <br/>
             <h1><mark>C</mark>athédrale <br/>
                 <mark>N</mark>otre <mark>D</mark>ame <br/>
                 d'<mark>A</mark>miens</h1>
-            <a class="startButton" href='#'>COMMENCEZ LA VISITE</a>
-        </section>
-        <section id="infos">
-            <a class="infos" href="#"><img src="data/img/infos.png"></a>
-            <a class="projet" href="#"><img src="data/img/projet.png"></a>
-            <a class="equipe" href="#"><img src="data/img/equipe.png"></a>
-            <a class="partenaires" href="#"><img src="data/img/partenaires.png"></a>
-        </section>
-        <section id="controls">
-            <a class="mute" href="#"><img src="data/img/mute.png"></a>
-            <a class="fullScreen" href="#"><img src="data/img/fullScreen.png"></a>
-        </section>
+        </div>
+		<div id ="menu">
+			<button id="infosDeploy">
+				<img src="data/img/picto/infos.png"><img>
+			</button>
+			<ul id = "infosMenu">
+				<li>
+					<button id="projet">
+						<img src="data/img/picto/projet.png"><img>
+					</button>
+				</li>
+				<li>
+					<button id="equipe">
+						<img src="data/img/picto/equipe.png"><img>
+					</button>
+				</li>
+				<li>
+					<button id="partenaires">
+						<img src="data/img/picto/partenaires.png"><img>
+					</button>
+				</li>
+			</ul>
+			<button id="startButton">COMMENCEZ LA VISITE</button>
+			<div id = "controls">
+				<button id="fullScreen">
+					<img src="data/img/picto/fullScreen.png"><img>
+				</button>
+				<button id="mute">
+					<img src="data/img/picto/mute.png"><img>
+				</button>
+			</div>
+		</div>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>

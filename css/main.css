@@ -2,6 +2,10 @@
 /*******************************  RESETS  ************************************/
 /**********************************     ***************************************/
 
+html, body {
+	height: 100%;
+}
+
 body, h1, h2, h3, h4, h5, blockquote, a {
     margin: 0px;
     padding: 0px;
@@ -71,22 +75,78 @@ body {
 /*****************************   CONTAINERS   *********************************/
 /**********************************     ***************************************/
 body {
-    width: 100vw;
-    height: 100vh;
-    padding: 5px;
+
 }
 
 .logoMenu {
-    margin-top: 30px;
-    margin-left: 30px;
+	position: absolute;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
 .centralInfo {
+	position : absolute;
     text-align: center;
+	margin-left: 50vw;
     margin-top: 50vh;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
 }
 
 .startButton {
-    margin-top: 5vh;
+	position : absolute;
+	text-align: center;
+	margin-top : 80vh;
+	margin-left : 50vw;
+	transform : translate(0,-50%);
+}
+
+#menu {
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+	text-align: center;
+}
+
+#startButton {
+	color: rgba(255,255,255,0.75);
+	background: transparent;
+	outline: 1px solid rgba(255,255,255,0.75);
+	border: 0px;
+	padding: 10px 20px;
+	cursor: pointer;
+}
+#startButton:hover {
+	background-color: rgba(255,255,255,0.5);
+}
+#startButton:active {
+	color: #000000;
+	background-color: rgba(255,255,255,0.75);
+}
+
+#infosDeploy {
+	position:absolute;
+	left:20px;
+	bottom:0px;
+	z-index: 1;
+}
+
+#infosMenu {
+	position:absolute;
+	list-style: none;
+	padding:0px;
+	margin:0;
+	left:20px;
+	bottom:30px;
+	/*opacity: 0;*/
+	z-index:0;
+}
+#infosMenu button {
+	padding-bottom: 30px;
+	padding-top: 30px;
+}
+
+#controls {
+	position: absolute;
+	bottom:0px;
+	right: 20px;
 }
