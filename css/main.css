@@ -11,6 +11,19 @@ body, h1, h2, h3, h4, h5, blockquote, a {
     padding: 0px;
 }
 
+ul, li {
+	margin:0;
+	padding:0;
+	list-style: none;
+}
+
+button {
+	margin:0;
+	padding:0;
+	background: transparent;
+	border: 0px;
+}
+
 /**********************************     ***************************************/
 /******************************  TYPOGRAPHY  **********************************/
 /**********************************     ***************************************/
@@ -80,39 +93,45 @@ body {
 
 .logoMenu {
 	position: absolute;
-    margin-top: 20px;
-    margin-left: 20px;
+    margin-top: 2vh;
+    margin-left: 2vw;
 }
 
-.centralInfo {
+#centralInfo {
 	position : absolute;
     text-align: center;
 	margin-left: 50vw;
     margin-top: 50vh;
+	opacity:1;
+	-webkit-transition: 0.2s linear 0.8s;
+    -o-transition: 0.2s linear 0.8s;
+    transition: 0.2s linear 0.8s;
     transform: translate(-50%, -50%);
 }
 
-.startButton {
+#projetPage{
 	position : absolute;
-	text-align: center;
-	margin-top : 80vh;
-	margin-left : 50vw;
-	transform : translate(0,-50%);
+	width:40%;
+	margin-left: 50vw;
+    margin-top: 50vh;
+    transform: translate(-50%, -50%);
+	opacity:0;
+	-webkit-transition: 0.2s linear 0.8s;
+    -o-transition: 0.2s linear 0.8s;
+    transition: 0.2s linear 0.8s;
 }
 
 #menu {
 	position: absolute;
-	bottom: 20px;
+	bottom: 2vh;
 	width: 100%;
 	text-align: center;
 }
 
 #startButton {
 	color: rgba(255,255,255,0.75);
-	background: transparent;
 	outline: 1px solid rgba(255,255,255,0.75);
-	border: 0px;
-	padding: 10px 20px;
+	padding: 25px 50px;
 	cursor: pointer;
 }
 #startButton:hover {
@@ -123,30 +142,80 @@ body {
 	background-color: rgba(255,255,255,0.75);
 }
 
-#infosDeploy {
-	position:absolute;
-	left:20px;
-	bottom:0px;
-	z-index: 1;
-}
-
 #infosMenu {
 	position:absolute;
-	list-style: none;
 	padding:0px;
 	margin:0;
-	left:20px;
-	bottom:30px;
-	/*opacity: 0;*/
-	z-index:0;
-}
-#infosMenu button {
-	padding-bottom: 30px;
-	padding-top: 30px;
+	width:auto;
+	left:2vw;
+	bottom:0px;
 }
 
-#controls {
+#infosDeploy {
+	cursor: pointer;
+}
+#infosDeploy img {
+	height: 5vh;
+}
+
+#infosList {
+	overflow: hidden;
+	position:absolute;
+	left:0;
+	bottom:0px;
+	margin:0px;
+	padding:0px;
+	cursor: pointer;
+}
+
+#infosList li {
+	padding-bottom: 30px;
+	padding-top: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	opacity:0;
+    -webkit-transform-origin: 50% 0%;
+    -o-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+}
+
+#infosList #projet {
+	transform: translateY(50px);
+    -webkit-transition: 0.2s linear 0.8s;
+    -o-transition: 0.2s linear 0.8s;
+    transition: 0.2s linear 0.8s;
+}
+
+#infosList #equipe {
+	transform: translateY(50px);
+    -webkit-transition: 0.2s linear 0.6s;
+    -o-transition: 0.2s linear 0.6s;
+    transition: 0.2s linear 0.6s;
+}
+
+#infosList #partenaires {
+	transform: translateY(50px);
+    -webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#infosMenu:hover #infosList li {
+    transform:translateY(-25px);
+	opacity:1;
+    -webkit-transition: 0.2s linear 0s;
+    -o-transition: 0.2s linear 0s;
+    transition: 0.2s linear 0s;
+}
+
+#controls li {
+	margin: 5px;
+	display:block;
 	position: absolute;
 	bottom:0px;
-	right: 20px;
+	right: 0px;
+}
+
+#controls img {
+	height: 5vh;
 }
