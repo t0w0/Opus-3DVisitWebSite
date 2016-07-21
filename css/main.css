@@ -97,15 +97,24 @@ body {
     margin-left: 2vw;
 }
 
+#background {
+	pointer-events: :none;
+	position: absolute;
+	width:100%;
+	height:100%;
+	background-color: darkblue;
+	opacity:0.3;
+}
+
 #centralInfo {
 	position : absolute;
     text-align: center;
 	margin-left: 50vw;
     margin-top: 50vh;
 	opacity:1;
-	-webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
+	-webkit-transition: 0.2s linear 0.2s;
+    -o-transition: 0.2s linear 0.2s;
+    transition: 0.2s linear 0.2s;
     transform: translate(-50%, -50%);
 }
 
@@ -116,9 +125,33 @@ body {
     margin-top: 50vh;
     transform: translate(-50%, -50%);
 	opacity:0;
-	-webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
+	-webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#equipePage{
+	position : absolute;
+	width:40%;
+	margin-left: 50vw;
+    margin-top: 50vh;
+    transform: translate(-50%, -50%);
+	opacity:0;
+	-webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#partenairePage{
+	position : absolute;
+	width:40%;
+	margin-left: 50vw;
+    margin-top: 50vh;
+    transform: translate(-50%, -50%);
+	opacity:0;
+	-webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
 }
 
 #menu {

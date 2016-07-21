@@ -14,15 +14,26 @@ $(function(){
 		//var infosMenu = document.getElementById('infosMenu');
 		//infosMenu.style.opacity = 0;
 		
-		var button = document.getElementById( 'projet' );
-		button.addEventListener( 'click', function ( event ) {
+		
+		var projetButton = document.getElementById( 'infosDeploy' );
+		projetButton.addEventListener( 'click', function ( event ) {
+			navigateBetweenPage(0);
+		}, false );
+		
+		var projetButton = document.getElementById( 'projet' );
+		projetButton.addEventListener( 'click', function ( event ) {
 			navigateBetweenPage(1);
 		}, false );
-	}
-	
-	function openInfosMenu() {
-		infosMenuOpen = true;
-		infosMenu.style.opacity =+ 0.1;
+		
+		var equipeButton = document.getElementById('equipe');
+		projetButton.addEventListener('click', function(event){
+			navigateBetweenPage(2);
+		}, false)
+		
+		var equipeButton = document.getElementById('partenaire');
+		projetButton.addEventListener('click', function(event){
+			navigateBetweenPage(3);
+		}, false)
 	}
 	
 	function animate(){
@@ -31,14 +42,33 @@ $(function(){
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		var projetPage = document.getElementById('projetPage');
-		var equipePage = document.getElementById('projetPage');
-		var partenairePage = document.getElementById('projetPage');
+		var equipePage = document.getElementById('equipePage');
+		var partenairePage = document.getElementById('partenairePage');
 		var centralInfo = document.getElementById('centralInfo');
+		if (pageToMoveTo == 0) {
+			projetPage.style.opacity = 0;
+			equipePage.style.opacity = 0;
+			partenairePage.style.opacity = 0;
+			centralInfo.style.opacity = 1;
+		}
 		if (pageToMoveTo == 1) {
 			projetPage.style.opacity = 1;
-			//equipePage.style.opacity = 1;
-			//partenairePage.style.opacity = 1;
+			equipePage.style.opacity = 0;
+			partenairePage.style.opacity = 0;
 			centralInfo.style.opacity = 0;
 		}
+		if (pageToMoveTo == 2) {
+			projetPage.style.opacity = 0;
+			equipePage.style.opacity = 1;
+			partenairePage.style.opacity = 0;
+			centralInfo.style.opacity = 0;
+		}
+		if (pageToMoveTo == 3) {
+			projetPage.style.opacity = 0;
+			equipePage.style.opacity = 0;
+			partenairePage.style.opacity = 1;
+			centralInfo.style.opacity = 0;
+		}
+		
 	}
 });
