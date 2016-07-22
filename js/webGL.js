@@ -6,7 +6,7 @@ var scene, camera, renderer;
     
     var loader = new  THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
-    loader.load('http://localhost/webgl/models/cath.dae', function (collada){
+    loader.load('http://localhost/opus0a/models/cath.dae', function (collada){
         dae = collada.scene;
         dae.scale.x = dae.scale.y = dae.scale.z = 3;
         dae.traverse(function (child){

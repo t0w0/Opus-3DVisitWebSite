@@ -1,22 +1,13 @@
 $(function(){
 	
-	var infosMenuOpen = false;
+	var elem = document.body; // Make the body go full screen.
 	
 	init();
-	//animate();
 	
 	function init() {
-		/*var button = document.getElementById( 'infosDeploy' );
-		button.addEventListener( 'mouseover', function ( event ) {
-			openInfosMenu();
-		}, false );*/
 		
-		//var infosMenu = document.getElementById('infosMenu');
-		//infosMenu.style.opacity = 0;
-		
-		
-		var projetButton = document.getElementById( 'infosDeploy' );
-		projetButton.addEventListener( 'click', function ( event ) {
+		var infosDeployButton = document.getElementById( 'infosDeploy' );
+		infosDeployButton.addEventListener( 'click', function ( event ) {
 			navigateBetweenPage(0);
 		}, false );
 		
@@ -26,24 +17,26 @@ $(function(){
 		}, false );
 		
 		var equipeButton = document.getElementById('equipe');
-		projetButton.addEventListener('click', function(event){
+		equipeButton.addEventListener('click', function(event){
 			navigateBetweenPage(2);
 		}, false)
 		
-		var equipeButton = document.getElementById('partenaire');
-		projetButton.addEventListener('click', function(event){
+		var partenaireButton = document.getElementById('partenaires');
+			partenaireButton.addEventListener('click', function(event){
 			navigateBetweenPage(3);
 		}, false)
-	}
-	
-	function animate(){
-        requestAnimationFrame(animate);
+		
+		var fullScreenButton = document.getElementById('fullScreenPict');
+			fullScreenButton.addEventListener('click', function(event){
+			requestFullScreen(elem);
+		}, false)
+			
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		var projetPage = document.getElementById('projetPage');
 		var equipePage = document.getElementById('equipePage');
-		var partenairePage = document.getElementById('partenairePage');
+		var partenairePage = document.getElementById('partenairesPage');
 		var centralInfo = document.getElementById('centralInfo');
 		if (pageToMoveTo == 0) {
 			projetPage.style.opacity = 0;
@@ -71,4 +64,19 @@ $(function(){
 		}
 		
 	}
+	function requestFullScreen(element) {
+		// Supports most browsers and their versions.
+		var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+		if (requestMethod) { // Native full screen.
+			requestMethod.call(element);
+		} 
+		else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+			var wscript = new ActiveXObject("WScript.Shell");
+			if (wscript !== null) {
+				wscript.SendKeys("{F11}");
+			}
+		}
+	}
+	
 });

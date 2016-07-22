@@ -6,7 +6,7 @@ html, body {
 	height: 100%;
 }
 
-body, h1, h2, h3, h4, h5, blockquote, a {
+body, h1, h2, h3, h4, h5, blockquote, a, p {
     margin: 0px;
     padding: 0px;
 }
@@ -22,6 +22,11 @@ button {
 	padding:0;
 	background: transparent;
 	border: 0px;
+}
+
+img {
+	margin:0;
+	padding:0;
 }
 
 /**********************************     ***************************************/
@@ -60,6 +65,8 @@ h1 {
     font-style: normal;
     font-size: 4.2em;
     font-weight: normal;
+	text-align:center;
+	padding-bottom: 30px;
     color: #B9A64B;
 }
 
@@ -102,8 +109,8 @@ body {
 	position: absolute;
 	width:100%;
 	height:100%;
-	background-color: darkblue;
-	opacity:0.3;
+	background-color: #1e1e28;
+	opacity:0.5;
 }
 
 #centralInfo {
@@ -120,7 +127,7 @@ body {
 
 #projetPage{
 	position : absolute;
-	width:40%;
+	width:50vw;
 	margin-left: 50vw;
     margin-top: 50vh;
     transform: translate(-50%, -50%);
@@ -132,7 +139,9 @@ body {
 
 #equipePage{
 	position : absolute;
-	width:40%;
+	overflow:hidden;
+	text-align:center;
+	width:50vw;
 	margin-left: 50vw;
     margin-top: 50vh;
     transform: translate(-50%, -50%);
@@ -142,9 +151,23 @@ body {
     transition: 0.2s linear 0.4s;
 }
 
-#partenairePage{
+.equipeListElement {
+	width: 15vw;
+	text-align: center;
+	display:inline-block;
+	vertical-align:top;
+	padding: 7px;
+}
+
+.equipeListElement img {
+	width: 10vw;
+}
+
+
+#partenairesPage{
 	position : absolute;
-	width:40%;
+	overflow: hidden;
+	width:50vw;
 	margin-left: 50vw;
     margin-top: 50vh;
     transform: translate(-50%, -50%);
@@ -152,6 +175,25 @@ body {
 	-webkit-transition: 0.2s linear 0.4s;
     -o-transition: 0.2s linear 0.4s;
     transition: 0.2s linear 0.4s;
+}
+
+#partenairesList {
+	height: 20vh;
+	width:700%;
+	transform:translate(0%,0);
+}
+
+.partenairesListElement {
+	width:15vw;
+	display:inline-block;
+	text-align: center;
+	overflow: hidden;
+	vertical-align:top;
+	padding: 7px;
+}
+
+.partenairesListElement img {
+	width:10vw;
 }
 
 #menu {
@@ -159,6 +201,83 @@ body {
 	bottom: 2vh;
 	width: 100%;
 	text-align: center;
+}
+
+#infosMenu {
+	position:absolute;
+	padding:0px;
+	margin:0;
+	left:2vw;
+	bottom:0px;
+}
+
+#infosDeploy {
+	cursor: pointer;
+}
+
+#infosDeploy img {
+	height: 5vh;
+	width:auto;
+}
+
+#infosList {
+	cursor: pointer;
+}
+
+#infosList li {
+	padding-bottom: 2vh;
+	padding-top: 2vh;
+	margin-top: 1vh;
+	margin-bottom: 1vh;
+    -webkit-transform-origin: 50% 0%;
+    -o-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+}
+
+#infosList #projet {
+	opacity:0;
+	transform:translateY(25px);
+    -webkit-transition: 0.2s linear 0.2s;
+    -o-transition: 0.2s linear 0.2s;
+    transition: 0.2s linear 0.2s;
+}
+
+#infosList #equipe {
+	opacity:0;
+	transform:translateY(35px);
+    -webkit-transition: 0.2s linear 0.3s;
+    -o-transition: 0.2s linear 0.3s;
+    transition: 0.2s linear 0.3s;
+}
+
+#infosList #partenaires {
+	opacity:0;
+	transform:translateY(45px);
+    -webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#infosMenu:hover #projet {
+	opacity:1;
+    transform:translateY(-25px);
+	 -webkit-transition: 0.2s linear 0.2s;
+    -o-transition: 0.2s linear 0.2s;
+    transition: 0.2s linear 0.2s;
+}
+#infosMenu:hover #equipe {
+	opacity:1;
+    transform:translateY(-35px);
+	 -webkit-transition: 0.2s linear 0.3s;
+    -o-transition: 0.2s linear 0.3s;
+    transition: 0.2s linear 0.3s;
+}
+#infosMenu:hover #partenaires {
+	opacity:1;
+    transform:translateY(-45px);
+	 -webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
 }
 
 #startButton {
@@ -175,80 +294,18 @@ body {
 	background-color: rgba(255,255,255,0.75);
 }
 
-#infosMenu {
+#controls {
 	position:absolute;
-	padding:0px;
-	margin:0;
-	width:auto;
-	left:2vw;
 	bottom:0px;
-}
-
-#infosDeploy {
-	cursor: pointer;
-}
-#infosDeploy img {
-	height: 5vh;
-}
-
-#infosList {
-	overflow: hidden;
-	position:absolute;
-	left:0;
-	bottom:0px;
-	margin:0px;
-	padding:0px;
-	cursor: pointer;
-}
-
-#infosList li {
-	padding-bottom: 30px;
-	padding-top: 30px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	opacity:0;
-    -webkit-transform-origin: 50% 0%;
-    -o-transform-origin: 50% 0%;
-    transform-origin: 50% 0%;
-}
-
-#infosList #projet {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
-}
-
-#infosList #equipe {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.6s;
-    -o-transition: 0.2s linear 0.6s;
-    transition: 0.2s linear 0.6s;
-}
-
-#infosList #partenaires {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
-}
-
-#infosMenu:hover #infosList li {
-    transform:translateY(-25px);
-	opacity:1;
-    -webkit-transition: 0.2s linear 0s;
-    -o-transition: 0.2s linear 0s;
-    transition: 0.2s linear 0s;
+	right: 20px;
 }
 
 #controls li {
-	margin: 5px;
-	display:block;
-	position: absolute;
-	bottom:0px;
-	right: 0px;
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 1vw;
 }
 
-#controls img {
+#controls li img {
 	height: 5vh;
 }

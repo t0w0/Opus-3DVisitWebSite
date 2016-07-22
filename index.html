@@ -12,7 +12,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     </head>
     <body>
-		 <div id="webGL-container"></div>
+		<div id="webGL-container"></div>
 		<div id="background"></div>
         <div class="logoMenu">
             <a href="index.html"><img src="data/img/logoMenu.png"></a>
@@ -33,58 +33,101 @@
 		</div>
 		<div id="equipePage">
 			<h1><mark>N</mark>otre <mark>É</mark>quipe </h1>
-			<ul>
-				<li>
-					<img id="mouaddib" src="data/img/portrait/mouaddib.jpg">
-					<p>Aenean et lacinia erat. Donec non eros elementum lacus accumsan condimentum. Maecenas condimentum, nibh ac scelerisque vulputate, nibh massa feugiat erat, in luctus nibh diam in leo. Sed non tempus purus, sed dignissim arcu. Sed sollicitudin, velit vitae lobortis ornare, lectus nunc imperdiet tellus, congue condimentum est felis vehicula dolor. Ut maximus blandit nulla, vel euismod est tincidunt sed. Nulla at lacinia arcu. Fusce a viverra ligula, eget malesuada libero. Nulla quis tempor magna. Nam eget ex in purus venenatis dignissim.</p>
+			<ul id="equipeList">
+				<li class="equipeListElement">
+					<img src="data/img/portrait/mouaddib.png">
+					<h3>El Mustafa Mouaddib</h3>
+					<p>Aenean et lacinia erat. Donec non eros elementum lacus accumsan condimentum. Maecenas condimentum, nibh ac scelerisque vulputate, nibh massa feugiat erat, in luctus nibh diam in leo. Sed non tempus purus, sed dignissim arcu.</p>
 				</li>
-				<li>
-					<img id="dennys" src="data/img/portrait/dennys.jpg">
-					<p>Aenean et lacinia erat. Donec non eros elementum lacus accumsan condimentum. Maecenas condimentum, nibh ac scelerisque vulputate, nibh massa feugiat erat, in luctus nibh diam in leo. Sed non tempus purus, sed dignissim arcu. Sed sollicitudin, velit vitae lobortis ornare, lectus nunc imperdiet tellus, congue condimentum est felis vehicula dolor. Ut maximus blandit nulla, vel euismod est tincidunt sed. Nulla at lacinia arcu. Fusce a viverra ligula, eget malesuada libero. Nulla quis tempor magna. Nam eget ex in purus venenatis dignissim.</p>
+				<li class="equipeListElement">
+					<img src="data/img/portrait/mouaddib.png">
+					<h3>El Mustafa Mouaddib</h3>
+					<p>Ut maximus blandit nulla, vel euismod est tincidunt sed. Nulla at lacinia arcu. Fusce a viverra ligula, eget malesuada libero. Nulla quis tempor magna. Nam eget ex in purus venenatis dignissim.</p>
+				</li>
+				<li class="equipeListElement">
+					<img src="data/img/portrait/mouaddib.png">
+					<h3>El Mustafa Mouaddib</h3>
+					<p>Ut maximus blandit nulla, vel euismod est tincidunt sed. Nulla at lacinia arcu. Fusce a viverra ligula, eget malesuada libero. Nulla quis tempor magna. Nam eget ex in purus venenatis dignissim.</p>
 				</li>
 			</ul>
 		</div>
-		<div id="partenairePage">
+		<div id="partenairesPage">
 			<h1><mark>N</mark>os <mark>P</mark>artenaires </h1>
+			<ul id='partenairesList'>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+				<li class="partenairesListElement">
+					<img src="data/img/logo/mis.png">
+					<h3>MIS</h3>
+					<p>Modélisation, Informartion etSsystèmes</p>
+				</li>
+			</ul>
 		</div>
 		<div id ="menu">
 			<div id="infosMenu">
+				<ul id = "infosList">
+					<li id="partenaires">
+						<button>
+							<img src="data/img/picto/partenaires.png">
+						</button>
+						<hr width="10px">
+					</li>
+					<li id="equipe">
+						<button>
+							<img src="data/img/picto/equipe.png">
+						</button>
+						<hr width="10px">
+					</li>
+					<li id='projet'>
+						<button>
+							<img src="data/img/picto/projet.png">
+						</button>
+						<hr width="10px">
+					</li>
+				</ul>
 				<button id="infosDeploy">
 					<img src="data/img/picto/infos.png"><img>
 				</button>
-				<ul id = "infosList">
-					<li>
-						<button id="partenaires">
-							<img src="data/img/picto/partenaires.png">
-						</button>
-						
-					</li>
-					<li>
-						<hr width="10px">
-						<button id="equipe">
-							<img src="data/img/picto/equipe.png">
-						</button>
-						
-					</li>
-					<li>
-						<hr width="10px">
-						<button id="projet">
-							<img src="data/img/picto/projet.png">
-						</button>
-					</li>
-				</ul>
 			</div>
 			<button id="startButton">COMMENCEZ LA VISITE</button>
 			<ul id = "controls">
-				<li>
+				<li id="mute">
 					<p>Mute</p>
-					<button id="mute">
+				</li>
+				<li id="mutePict">
+					<button>
 						<img src="data/img/picto/mute.png">
 					</button>
 				</li>
-				<li>
-					<p>Full Screen</p>
-					<button id="fullScreen">
+				<li><hr height="30px"></li>
+				<li id="fullscreen">
+					<p>Fullscreen</p>
+				</li>
+				<li id="fullScreenPict">
+					<button>
 						<img src="data/img/picto/fullScreen.png">
 					</button>
 				</li>
