@@ -205,6 +205,20 @@ body {
 	width:10vw;
 }
 
+#lateralInfosR {
+	position : absolute;
+	width:20vw;
+	right:2vw;
+	float: right;
+	margin: 2vw;
+	opacity:0;
+	display:none;
+	z-index:1;
+	-webkit-transition: 0.1s linear 0.2s;
+    -o-transition: 0.1s linear 0.2s;
+    transition: 0.1s linear 0.2s;
+}
+
 #menu {
 	position: absolute;
 	bottom: 4vh;
@@ -318,16 +332,16 @@ body {
 #controls ul {
 	opacity:0.5;
 	float: right;
-	-webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
 }
 
 #controls ul:hover {
 	opacity:1;
-	-webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
 }
 
 #controls li {
@@ -350,4 +364,46 @@ body {
 
 #mute:hover p {
 	display: inline;
+}
+
+.element {
+	width: 120px;
+	height: 160px;
+	box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+	border: 1px solid rgba(127,255,255,0.25);
+	text-align: center;
+	cursor: default;
+}
+
+.element:hover {
+	box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+	border: 1px solid rgba(127,255,255,0.75);
+}
+
+.element .number {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 12px;
+	color: rgba(127,255,255,0.75);
+}
+
+.element .symbol {
+	position: absolute;
+	top: 40px;
+	left: 0px;
+	right: 0px;
+	font-size: 60px;
+	font-weight: bold;
+	color: rgba(255,255,255,0.75);
+	text-shadow: 0 0 10px rgba(0,255,255,0.95);
+}
+
+.element .details {
+	position: absolute;
+	bottom: 15px;
+	left: 0px;
+	right: 0px;
+	font-size: 12px;
+	color: rgba(127,255,255,0.75);
 }

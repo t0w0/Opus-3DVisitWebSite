@@ -3,29 +3,21 @@ var scene, camera, renderer;
     var stats;
     var dae, spotLight, lightHelper;
     var SCREEN_WIDTH, SCREEN_HEIGHT;
-    
+	var hoverCubeGeo, hoverCubeMat, hoverCube;
+	var domEvents;
     var loader = new  THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
+
     loader.load('http://localhost/opus0a/models/cath.dae', function (collada){
         dae = collada.scene;
         dae.scale.x = dae.scale.y = dae.scale.z = 3;
-        dae.traverse(function (child){
-            if (child.colladaId == "Full"){
-                child.traverse(function(e){
-                    e.castShadow = true;
-                    e.receiveShadow = true;
-                    if (e.material instanceof THREE.MeshPhongMaterial){
-                        e.material.needsUpdate = true;
-                    }   
-                
-                });
-            }   
-        });
         dae.updateMatrix();
+		
         init();
         animate();
-        console.log(scene);
-    }); 
+        //console.log(scene);
+    });
+
     function init(){
         /*creates empty scene object and renderer*/
         scene = new THREE.Scene();
@@ -44,113 +36,52 @@ var scene, camera, renderer;
                     
         camera.position.x = 45;
         camera.position.y = 0;
-        camera.position.z = 0; 
+        camera.position.z = 0;
         camera.lookAt(scene.position);
 		
+		dae.position.y = 30;
         scene.add(dae);
-        /*datGUI controls object*/
-        guiControls = new function(){
-            this.rotationX  = 0.0;
-            this.rotationY  = 0.0;
-            this.rotationZ  = 0.0;
-            
-            this.intensity = 10;       
-            this.distance = 373;
-            this.angle = 1.6;
-            this.exponent = 38;
-            this.shadowCameraNear = 34;
-            this.shadowCameraFar = 2635;
-            this.shadowCameraFov = 68;
-            this.shadowCameraVisible=false;
-            this.shadowMapWidth=512;
-            this.shadowMapHeight=512;
-            this.shadowBias=0.00;   
-
-        }
 		
         /*adds spot light with starting parameters*/
         spotLight = new THREE.SpotLight(0x1E1E28);
         spotLight.castShadow = true;
-		spotLight.position.x = -100; 
-        spotLight.intensity = guiControls.intensity;        
-        spotLight.distance = guiControls.distance;
-        spotLight.angle = guiControls.angle;
-        spotLight.exponent = guiControls.exponent;
-        spotLight.shadow.camera.near = guiControls.shadowCameraNear;
-        spotLight.shadow.camera.far = guiControls.shadowCameraFar;
-        spotLight.shadow.camera.fov = guiControls.shadowCameraFov;
-        spotLight.shadow.bias = guiControls.shadowBias;
-        spotLight.shadowDarkness = guiControls.shadowDarkness;
+		spotLight.position.x = -50; 
+        spotLight.intensity = 10;        
+        spotLight.distance = 373;
+        spotLight.angle = 1.6;
+        spotLight.exponent = 38;
+        spotLight.shadow.camera.near = 34;
+        spotLight.shadow.camera.far = 2635;
+        spotLight.shadow.camera.fov = 68;
+        spotLight.shadow.bias = 0;
         scene.add(spotLight);
 		
-		/*adds light helper*/
-		lightHelper = new THREE.CameraHelper(spotLight.shadow.camera)
-		lightHelper.visible = guiControls.shadowCameraVisible;;
-		scene.add(lightHelper);
+		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 		
-		//var axisHelper = new THREE.AxisHelper( 5 );
-		//scene.add( axisHelper );
+		/*adds a cube that can be hovered*/
+		var geometry = new THREE.BoxGeometry( .5, .5, .5 );
+		var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+		var cube = new THREE.Mesh( geometry, material );
+		cube.position.x = 10;
+		cube.position.y = -10;
+		cube.position.z = 5;
+		scene.add( cube );
 		
-        /*adds controls to scene*/
+		domEvents.addEventListener(cube, 'mouseover', function(event) {
+			new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
+			cube.material = new_material;
+			lateralInfosR.style.display = 'inline';
+			lateralInfosR.style.opacity = 1;
+			return renderer.render(scene, camera);
+		 });
 		
-		/*var button = document.getElementById( '0' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 0 );
-
-				}, false );
+      	domEvents.addEventListener(cube, 'mouseout', function(event) {
+			cube.material = material;
+			lateralInfosR.style.opacity = 0;
+			return renderer.render(scene, camera);
+		});
 		
-		var button = document.getElementById( '1' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 1 );
-
-				}, false );
-		var button = document.getElementById( '2' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 2 );
-
-				}, false );
-		var button = document.getElementById( '3' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 3 );
-
-				}, false );
-		var button = document.getElementById( '4' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 4 );
-
-				}, false );
-		var button = document.getElementById( '5' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 5 );
-
-				}, false );
-		var button = document.getElementById( '6' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 6 );
-
-				}, false );
-		var button = document.getElementById( '7' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 7 );
-
-				}, false );
-		
-		var button = document.getElementById( '8' );
-				button.addEventListener( 'click', function ( event ) {
-
-					navigateThroughTime( 8 );
-
-				}, false );*/
-		
-        datGUI = new dat.GUI();
+        /*datGUI = new dat.GUI();
         
         datGUI.add(guiControls, 'intensity',0.01, 5).onChange(function(value){
             spotLight.intensity = value;
@@ -188,73 +119,32 @@ var scene, camera, renderer;
            lightHelper.update();
         });
 		
-        datGUI.close();
+        datGUI.close();*/
         $("#webGL-container").append(renderer.domElement);
 		
         /*stats*/
-        stats = new Stats();        
+        /*stats = new Stats();        
         stats.domElement.style.position = 'absolute';
         stats.domElement.style.left = '0px';
         stats.domElement.style.top = '0px';     
-        $("#webGL-container").append( stats.domElement );       
+        $("#webGL-container").append( stats.domElement );*/       
     }
-	
-	function navigateThroughTime( date ) {
-		if (date == 0) {
-			dae.visible = false;
-		}
-		else {
-			dae.visible = true;
-		}
-		
-				/*TWEEN.removeAll();
-
-				for ( var i = 0; i < objects.length; i ++ ) {
-
-					var object = objects[ i ];
-					var target = targets[ i ];
-
-					new TWEEN.Tween( object.position )
-						.to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-						.easing( TWEEN.Easing.Exponential.InOut )
-						.start();
-
-					new TWEEN.Tween( object.rotation )
-						.to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-						.easing( TWEEN.Easing.Exponential.InOut )
-						.start();
-
-				}
-
-				new TWEEN.Tween( this )
-					.to( {}, duration * 2 )
-					.onUpdate( render )
-					.start();*/
-				
-
-			}
-
 
     function render() {   
-
-        //spotLight.position.x = guiControls.lightX;
-        //spotLight.position.y = guiControls.lightY;
-        //spotLight.position.z = guiControls.lightZ;
     
     }
     
     function animate(){
         requestAnimationFrame(animate);
-        stats.update();     
+        //stats.update();     
         renderer.render(scene, camera);
     }
+
 	$(window).resize(function(){
+		SCREEN_WIDTH = window.innerWidth;
+		SCREEN_HEIGHT = window.innerHeight;
 
+		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 
-    SCREEN_WIDTH = window.innerWidth;
-    SCREEN_HEIGHT = window.innerHeight;
-
-    camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-
-    renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
 	});

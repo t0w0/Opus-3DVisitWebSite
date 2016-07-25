@@ -10,6 +10,7 @@ $(function(){
 	var projetButton = document.getElementById( 'projet' );
 	var equipeButton = document.getElementById('equipe');
 	var partenaireButton = document.getElementById('partenaires');
+	var lateralInfosR = document.getElementById('lateralInfosR');
 	var startButton = document.getElementById('startButton');
 	var fullScreenButton = document.getElementById('fullScreen');
 	var muteButton = document.getElementById('mute');
