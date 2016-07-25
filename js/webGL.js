@@ -42,11 +42,11 @@ var scene, camera, renderer;
         controls = new THREE.OrbitControls( camera, renderer.domElement );
         controls.addEventListener( 'change', render );
                     
-        camera.position.x = 5;
-        camera.position.y = 9;
-        camera.position.z = 42; 
+        camera.position.x = 45;
+        camera.position.y = 0;
+        camera.position.z = 0; 
         camera.lookAt(scene.position);
-
+		
         scene.add(dae);
         /*datGUI controls object*/
         guiControls = new function(){
@@ -54,10 +54,7 @@ var scene, camera, renderer;
             this.rotationY  = 0.0;
             this.rotationZ  = 0.0;
             
-            this.lightX = 19;
-            this.lightY = 47;
-            this.lightZ = 19;
-            this.intensity = 2.5;       
+            this.intensity = 10;       
             this.distance = 373;
             this.angle = 1.6;
             this.exponent = 38;
@@ -67,15 +64,14 @@ var scene, camera, renderer;
             this.shadowCameraVisible=false;
             this.shadowMapWidth=512;
             this.shadowMapHeight=512;
-            this.shadowBias=0.00;
-            this.shadowDarkness=0.11;       
+            this.shadowBias=0.00;   
 
         }
 		
         /*adds spot light with starting parameters*/
-        spotLight = new THREE.SpotLight(0xffffff);
+        spotLight = new THREE.SpotLight(0x1E1E28);
         spotLight.castShadow = true;
-        spotLight.position.set (20, 35, 40);
+		spotLight.position.x = -100; 
         spotLight.intensity = guiControls.intensity;        
         spotLight.distance = guiControls.distance;
         spotLight.angle = guiControls.angle;
@@ -91,6 +87,9 @@ var scene, camera, renderer;
 		lightHelper = new THREE.CameraHelper(spotLight.shadow.camera)
 		lightHelper.visible = guiControls.shadowCameraVisible;;
 		scene.add(lightHelper);
+		
+		//var axisHelper = new THREE.AxisHelper( 5 );
+		//scene.add( axisHelper );
 		
         /*adds controls to scene*/
 		
@@ -153,10 +152,6 @@ var scene, camera, renderer;
 		
         datGUI = new dat.GUI();
         
-        datGUI.add(guiControls, 'lightX',-60,180);  
-        datGUI.add(guiControls, 'lightY',0,180);    
-        datGUI.add(guiControls, 'lightZ',-60,180);
-        
         datGUI.add(guiControls, 'intensity',0.01, 5).onChange(function(value){
             spotLight.intensity = value;
 			lightHelper.update();
@@ -192,9 +187,7 @@ var scene, camera, renderer;
             spotLight.shadow.bias = value;
            lightHelper.update();
         });
-        datGUI.add(guiControls, 'shadowDarkness',0,1).onChange(function(value){
-            spotLight.shadowDarkness = value;
-        });
+		
         datGUI.close();
         $("#webGL-container").append(renderer.domElement);
 		
@@ -244,15 +237,14 @@ var scene, camera, renderer;
 
     function render() {   
 
-        spotLight.position.x = guiControls.lightX;
-        spotLight.position.y = guiControls.lightY;
-        spotLight.position.z = guiControls.lightZ;
+        //spotLight.position.x = guiControls.lightX;
+        //spotLight.position.y = guiControls.lightY;
+        //spotLight.position.z = guiControls.lightZ;
     
     }
     
     function animate(){
         requestAnimationFrame(animate);
-        render();
         stats.update();     
         renderer.render(scene, camera);
     }
