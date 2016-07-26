@@ -2,28 +2,36 @@ $(function(){
 	
 	var body = document.body; // Make the body go full screen.
 	
+	var interface = document.getElementById('interface');
 	
-	var centralInfo = document.getElementById('centralInfo');
-	var projetPage = document.getElementById('projetPage');
-	var equipePage = document.getElementById('equipePage');
-	var menu = document.getElementById('menu');
-	var partenairePage = document.getElementById('partenairesPage');
+	var basicInterface = document.getElementById('basicInterface');
+	var logo = document.getElementById('logo');	
+	
 	var infosDeployButton = document.getElementById( 'infosDeploy' );
 	var projetButton = document.getElementById( 'projet' );
 	var equipeButton = document.getElementById('equipe');
 	var partenaireButton = document.getElementById('partenaires');
-	var startButton = document.getElementById('startButton');
+	
 	var fullScreenButton = document.getElementById('fullScreen');
 	var muteButton = document.getElementById('mute');
-	var background = document.getElementById('background');
-	var logo = document.getElementById('logoMenu');
-	var skipTrailer = document.getElementById ('skipTrailer');
-	var vid = document.getElementById("trailerVid");
-	var trailerDiv = document.getElementById("trailer");
-	var webGL = document.getElementById("webGL-container");
-	
 	var audio = new Audio('./data/sound/cathSound.mp3');
 	var mute = false;
+	
+	var accueil = document.getElementById('accueil');
+	var startButton = document.getElementById('startButton');
+	var watchTheTrailer = document.getElementById('watchTheTrailer');
+	var title = document.getElementById('title');
+	var projetInfos = document.getElementById('projetInfos');
+	var equipeInfos = document.getElementById('equipeInfos');
+	var partenaireInfos = document.getElementById('partenairesInfos');
+	var background = document.getElementById('background');
+	
+	var trailer = document.getElementById("trailer");
+	var vid = document.getElementById("trailerVid");
+	var skipTrailer = document.getElementById ('skipTrailer');
+	
+	var webGL = document.getElementById("webGL-container");
+	
 	
 	init();
 	
@@ -75,20 +83,15 @@ $(function(){
 			manageTrailer(0);
 		});
 		
-		centralInfo.style.display = 'none';
-		projetPage.style.display ='none';
-		equipePage.style.display = 'none';
-		partenairePage.style.display = 'none';
-		startButton.style.display='none';
-		menu.style.display='none';
-		logo.style.display='none';
-		webGL.style.display='none';
-			
+		watchTheTrailer.addEventListener("click", function(event) {
+			manageTrailer(1);
+		});
+		
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		if (pageToMoveTo == 0) {
-			projetPage.style.opacity = 0;
+			projetInfos.style.opacity = 0;
 			equipePage.style.opacity = 0;
 			partenairePage.style.opacity = 0;
 			centralInfo.style.opacity = 1;
@@ -115,49 +118,38 @@ $(function(){
 	}
 	
 	function startVisit() {
-		centralInfo.style.display = 'none';
-		projetPage.style.display ='none';
-		equipePage.style.display = 'none';
-		partenairePage.style.display = 'none';
-		startButton.style.display='none';
-		background.style.display = 'none';
+		
 	}
 	
 	function showPlan () {
-		plan.style.display = 'inline';
 		plan.style.opacity = 1;
 	}
 	
 	function unShowPlan () {
-		plan.style.display = 'none';
+
 	}
 	
 	function manageTrailer(toDo) {
 		if (toDo == 0) {
 			vid.pause();
-			trailerDiv.style.display = 'none';
 			audio.play();
-			centralInfo.style.display = 'inline';
-			projetPage.style.display ='inline';
-			equipePage.style.display = 'inline';
-			partenairePage.style.display = 'inline';
-			startButton.style.display='inline';
-			webGL.style.display='inline';
-			menu.style.display='inline';
-			logo.style.display='inline';
+			background.style.opacity = 0.3;
+			trailer.style.opacity = 0;
+			interface.style.display = 'inline';
+			interface.style.opacity = 1;
+			webGL.style.display = 'inline';
+			basicInterface.style.display = 'inline';
+			accueil.style.display = 'inline';
+			equipeInfos.style.disaply = 'none';
+			projetInfos.style.disaply = 'none';
+			partenaireInfosInfos.style.disaply = 'none';
 		}
 		if (toDo == 1) {
-			vid.start();
-			trailerDiv.style.display = 'inline';
 			audio.pause();
-			centralInfo.style.display = 'none';
-			projetPage.style.display ='none';
-			equipePage.style.display = 'none';
-			partenairePage.style.display = 'none';
-			startButton.style.display='none';
-			webGL.style.display='none';
-			menu.style.display='none';
-			logo.style.display='none';
+			background.style.opacity = 1;
+			trailer.style.opacity = 1;
+			interface.style.display = 'none';
+			interface.style.opacity = 0;
 		}
 		
 	}
