@@ -1,10 +1,10 @@
 var scene, camera, renderer;
     var controls, guiControls, datGUI;
     var stats;
+	var leftPanel;
     var dae, spotLight, lightHelper;
     var SCREEN_WIDTH, SCREEN_HEIGHT;
 	var hoverCubeGeo, hoverCubeMat, hoverCube;
-	var domEvents;
     var loader = new  THREE.ColladaLoader();
     loader.options.convertUpAxis = true;
 
@@ -56,6 +56,7 @@ var scene, camera, renderer;
         spotLight.shadow.bias = 0;
         scene.add(spotLight);
 		
+		leftPanel = document.getElementById('leftPanel');
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 		
 		/*adds a cube that can be hovered*/
@@ -70,56 +71,17 @@ var scene, camera, renderer;
 		domEvents.addEventListener(cube, 'mouseover', function(event) {
 			new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
 			cube.material = new_material;
-			lateralInfosR.style.display = 'inline';
-			lateralInfosR.style.opacity = 1;
+			leftPanel.style.display = 'inline';
+			leftPanel.style.opacity = 1;
 			return renderer.render(scene, camera);
 		 });
 		
       	domEvents.addEventListener(cube, 'mouseout', function(event) {
 			cube.material = material;
-			lateralInfosR.style.opacity = 0;
+			leftPanel.style.opacity = 0;
 			return renderer.render(scene, camera);
 		});
 		
-        /*datGUI = new dat.GUI();
-        
-        datGUI.add(guiControls, 'intensity',0.01, 5).onChange(function(value){
-            spotLight.intensity = value;
-			lightHelper.update();
-        });     
-        datGUI.add(guiControls, 'distance',0, 1000).onChange(function(value){
-            spotLight.distance = value;
-			lightHelper.update();
-        }); 
-        datGUI.add(guiControls, 'angle',0.001, 1.570).onChange(function(value){
-            spotLight.angle = value;
-			lightHelper.update();
-        });     
-        datGUI.add(guiControls, 'exponent',0 ,50 ).onChange(function(value){
-            spotLight.exponent = value;
-			lightHelper.update();
-        });
-        datGUI.add(guiControls, 'shadowCameraNear',0,100).name("Near").onChange(function(value){        
-            spotLight.shadow.camera.near = value;
-			lightHelper.update();      
-        });
-        datGUI.add(guiControls, 'shadowCameraFar',0,5000).name("Far").onChange(function(value){
-            spotLight.shadow.camera.far = value;
-           lightHelper.update();
-        });
-        datGUI.add(guiControls, 'shadowCameraFov',1,180).name("Fov").onChange(function(value){
-            spotLight.shadow.camera.fov = value;
-           lightHelper.update();
-        });
-        datGUI.add(guiControls, 'shadowCameraVisible').onChange(function(value){
-            lightHelper.visible = value;
-        });
-        datGUI.add(guiControls, 'shadowBias',0,1).onChange(function(value){
-            spotLight.shadow.bias = value;
-           lightHelper.update();
-        });
-		
-        datGUI.close();*/
         $("#webGL-container").append(renderer.domElement);
 		
         /*stats*/

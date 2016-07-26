@@ -4,11 +4,13 @@
 
 html, body {
 	height: 100%;
+	cursor: crosshair;
 }
 
 body, h1, h2, h3, h4, h5, blockquote, a, p {
     margin: 0px;
     padding: 0px;
+	cursor: crosshair;
 }
 
 ul, li {
@@ -22,6 +24,7 @@ button {
 	padding:0;
 	background: transparent;
 	border: 0px;
+	cursor:crosshair;
 }
 
 img {
@@ -107,10 +110,43 @@ body {
 
 }
 
-.logoMenu {
+#webGL-container {
+	z-index:0;
+}
+
+#trailer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	overflow:hidden;
+	z-index: 4;
+}
+#trailer video {
+    position: absolute;
+    z-index: 0;    
+	background: url(data/vid/trailer.mp4) no-repeat;
+    /*background-size: 100% 100%;*/
+    top: 50vh;
+	transform: translate(0, -50%);
+    left: 0px; /* fixed to left. Replace it by right if you want.*/
+    width: 100vw;
+    height: auto;
+}
+#trailer #skipTrailer {
+	color: white;
+	opacity: 0.5;
+	margin-top:90vh;
+}
+#trailer #skipTrailer:hover {
+	opacity: 1;
+}
+
+#logoMenu {
 	position: absolute;
     margin-top: 2vh;
     margin-left: 2vw;
+	z-index:3;
 }
 
 #background {
@@ -120,6 +156,7 @@ body {
 	height:100%;
 	background-color: #1e1e28;
 	opacity:0.5;
+	z-index: 1;
 }
 
 #centralInfo {
@@ -132,6 +169,7 @@ body {
     -o-transition: 0.2s linear 0.2s;
     transition: 0.2s linear 0.2s;
     transform: translate(-50%, -50%);
+	z-index: 3;
 }
 
 #projetPage{
@@ -144,6 +182,7 @@ body {
 	-webkit-transition: 0.2s linear 0.4s;
     -o-transition: 0.2s linear 0.4s;
     transition: 0.2s linear 0.4s;
+	z-index:3;
 }
 
 #equipePage{
@@ -158,6 +197,7 @@ body {
 	-webkit-transition: 0.2s linear 0.4s;
     -o-transition: 0.2s linear 0.4s;
     transition: 0.2s linear 0.4s;
+	z-index: 3;
 }
 
 .equipeListElement {
@@ -184,6 +224,7 @@ body {
 	-webkit-transition: 0.2s linear 0.4s;
     -o-transition: 0.2s linear 0.4s;
     transition: 0.2s linear 0.4s;
+	z-index:3;
 }
 
 #partenairesList {
@@ -205,18 +246,22 @@ body {
 	width:10vw;
 }
 
-#lateralInfosR {
+#leftPanel {
 	position : absolute;
+	top: 5vh;
 	width:20vw;
-	right:2vw;
-	float: right;
-	margin: 2vw;
+	float: left;
+	padding: 2vw;
 	opacity:0;
 	display:none;
-	z-index:1;
+	z-index:3;
+	background-color: #1E1E28;
 	-webkit-transition: 0.1s linear 0.2s;
     -o-transition: 0.1s linear 0.2s;
     transition: 0.1s linear 0.2s;
+}
+#leftPanel p {
+	display: none;
 }
 
 #menu {
@@ -224,6 +269,7 @@ body {
 	bottom: 4vh;
 	width: 100%;
 	text-align: center;
+	z-index: 3;
 }
 
 #infosMenu {
@@ -242,17 +288,9 @@ body {
 	opacity : 1;
 }
 
-#infosDeploy {
-	cursor: pointer;
-}
-
 #infosDeploy img {
 	height: 1vw;
 	width:auto;
-}
-
-#infosList {
-	cursor: pointer;
 }
 
 #infosList li {
@@ -313,11 +351,12 @@ body {
 	color: rgba(255,255,255,0.75);
 	outline: 1px solid rgba(255,255,255,0.75);
 	padding: 25px 50px;
-	cursor: pointer;
 }
+
 #startButton:hover {
 	background-color: rgba(255,255,255,0.5);
 }
+
 #startButton:active {
 	color: #000000;
 	background-color: rgba(255,255,255,0.75);
@@ -366,44 +405,29 @@ body {
 	display: inline;
 }
 
-.element {
-	width: 120px;
-	height: 160px;
-	box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
-	border: 1px solid rgba(127,255,255,0.25);
-	text-align: center;
-	cursor: default;
+#plan {
+	position:absolute;
+	display : none;
+	width:100%;
+	margin-top: 50vh;
+    transform: translate(0, -50%);
+	text-align:  center;
+	z-index: 1;
 }
 
-.element:hover {
-	box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
-	border: 1px solid rgba(127,255,255,0.75);
-}
-
-.element .number {
+#plan svg {
 	position: absolute;
-	top: 20px;
-	right: 20px;
-	font-size: 12px;
-	color: rgba(127,255,255,0.75);
+	width:100%;
+	height:100%;
+	top:0;
+	left: 50%;
+	transform: translate(-50%, 0);
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
 }
-
-.element .symbol {
-	position: absolute;
-	top: 40px;
-	left: 0px;
-	right: 0px;
-	font-size: 60px;
-	font-weight: bold;
-	color: rgba(255,255,255,0.75);
-	text-shadow: 0 0 10px rgba(0,255,255,0.95);
-}
-
-.element .details {
-	position: absolute;
-	bottom: 15px;
-	left: 0px;
-	right: 0px;
-	font-size: 12px;
-	color: rgba(127,255,255,0.75);
+#plan img {
+	width:100%;
+	height:100%;
+	opacity: 0.3;
 }
