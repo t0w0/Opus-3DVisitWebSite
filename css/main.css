@@ -83,6 +83,8 @@ h1 {
     color: #B9A64B;
 }
 
+
+
 mark {
     background-color:transparent;
     font-family:'steelplateTextura', 'pfefferBold', serif;
@@ -95,6 +97,14 @@ h3 {
     font-size: 1.7em;
     font-weight: 300;
 }
+
+h4 {
+    font-size: 1.2em;
+    font-weight: 100;
+	line-height: 1.6em;
+	padding; 5vw;
+}
+
 
 /**********************************     ***************************************/
 /******************************   GRAPHICS   **********************************/
@@ -399,6 +409,39 @@ body {
 }
 #leftPanel p {
 	display: none;
+}
+#leftPanel:hover p {
+	display: inline;
+}
+
+#planMini {
+	position:absolute;
+	display : inline;
+	width:20vw;
+	margin-top: 50vh;
+	right:1vw;
+    transform: translate(0, -50%);
+	text-align:  center;
+}
+#planMini svg {
+	float :right;
+	transform: rotate(-90deg);
+}
+#planMini #planMiniBG {
+	float: right;
+	width: 100%;
+	opacity:1;
+}
+#planMini path {
+	position:absolute;
+	right:0;
+}
+#planMini #planMiniVisit {
+	position: absolute;
+	right: 0;
+	width: 100%;
+	float: right;
+	opacity:0.7;
 }
 
 #plan {
