@@ -2,9 +2,10 @@ $(function(){
 	
 	var body = document.body; // Make the body go full screen.
 	
-	var interface = document.getElementById('interface');
+	var basicInterface = document.getElementsByClassName("basicInterface");
+	var accueil = document.getElementsByClassName("accueil");
+	var interface3D = document.getElementsByClassName("interface3D");
 	
-	var basicInterface = document.getElementById('basicInterface');
 	var logo = document.getElementById('logo');	
 	
 	var infosDeployButton = document.getElementById( 'infosDeploy' );
@@ -16,8 +17,12 @@ $(function(){
 	var muteButton = document.getElementById('mute');
 	var audio = new Audio('./data/sound/cathSound.mp3');
 	var mute = false;
+	var planButton = document.getElementById('planControls');
+	var plan = document.getElementById('plan');
 	
-	var accueil = document.getElementById('accueil');
+	var path = document.getElementById('visit');
+	var length = path.getTotalLength();
+	
 	var startButton = document.getElementById('startButton');
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
@@ -39,7 +44,6 @@ $(function(){
 		
 		infosDeployButton.addEventListener( 'click', function ( event ) {
 			navigateBetweenPage(0);
-			manageTrailer(1);
 		}, false );
 		
 		projetButton.addEventListener( 'click', function ( event ) {
@@ -87,69 +91,120 @@ $(function(){
 			manageTrailer(1);
 		});
 		
+		planButton.addEventListener("click", function(event) {
+			showPlan();
+		});
+		planButton.addEventListener("mouseover", function(event) {
+			draw();
+		});
+		
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		if (pageToMoveTo == 0) {
 			projetInfos.style.opacity = 0;
-			equipePage.style.opacity = 0;
-			partenairePage.style.opacity = 0;
-			centralInfo.style.opacity = 1;
+			equipeInfos.style.opacity = 0;
+			partenaireInfos.style.opacity = 0;
+			title.style.opacity = 1;
 		}
 		if (pageToMoveTo == 1) {
-			projetPage.style.opacity = 1;
-			equipePage.style.opacity = 0;
-			partenairePage.style.opacity = 0;
-			centralInfo.style.opacity = 0;
+			projetInfos.style.opacity = 1;
+			equipeInfos.style.opacity = 0;
+			partenaireInfos.style.opacity = 0;
+			title.style.opacity = 0;
 		}
 		if (pageToMoveTo == 2) {
-			projetPage.style.opacity = 0;
-			equipePage.style.opacity = 1;
-			partenairePage.style.opacity = 0;
-			centralInfo.style.opacity = 0;
+			projetInfos.style.opacity = 0;
+			equipeInfos.style.opacity = 1;
+			partenaireInfos.style.opacity = 0;
+			title.style.opacity = 0;
 		}
 		if (pageToMoveTo == 3) {
-			projetPage.style.opacity = 0;
-			equipePage.style.opacity = 0;
-			partenairePage.style.opacity = 1;
-			centralInfo.style.opacity = 0;
+			projetInfos.style.opacity = 0;
+			equipeInfos.style.opacity = 0;
+			partenaireInfos.style.opacity = 1;
+			title.style.opacity = 0;
 		}
 		
 	}
 	
 	function startVisit() {
-		
+		background.style.display = 'none';
+		trailer.style.display = 'none';
+		for (i = 0; i < accueil.length; i++) {
+			accueil[i].style.display = 'none';
+			accueil[i].style.opacity = 0;
+		}
 	}
 	
 	function showPlan () {
-		plan.style.opacity = 1;
+		if (plan.style.display == 'inline'){
+			plan.style.display = 'none'
+		}
+		else {
+			plan.style.display = 'inline'
+		}
 	}
 	
-	function unShowPlan () {
-
+	function draw() {
+		// Clear any previous transition
+		path.style.transition = path.style.WebkitTransition = 'none';
+		
+		// Set up the starting positions
+		path.style.strokeDasharray = length + ' ' + length;
+		path.style.strokeDashoffset = length;
+		
+		// Trigger a layout so styles are calculated & the browser
+		// picks up the starting position before animating
+		path.getBoundingClientRect();
+		// Define our transition
+		path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 10s ease-in-out';
+		
+		// Go!
+		path.style.strokeDashoffset = '0';
 	}
 	
 	function manageTrailer(toDo) {
 		if (toDo == 0) {
 			vid.pause();
 			audio.play();
-			background.style.opacity = 0.3;
+			background.style.opacity = 0.9;
 			trailer.style.opacity = 0;
-			interface.style.display = 'inline';
-			interface.style.opacity = 1;
-			webGL.style.display = 'inline';
-			basicInterface.style.display = 'inline';
-			accueil.style.display = 'inline';
-			equipeInfos.style.disaply = 'none';
-			projetInfos.style.disaply = 'none';
-			partenaireInfosInfos.style.disaply = 'none';
+			for (i = 0; i < accueil.length; i++) {
+				accueil[i].style.display = 'inline';
+				accueil[i].style.opacity = 1;
+			}
+			for (i = 0; i < basicInterface.length; i++) {
+				basicInterface[i].style.display = 'inline';
+				basicInterface[i].style.opacity = 1;
+			}
+			startButton.style.opacity = 0.3;
+			watchTheTrailer.style.opacity = 0.3;
+			projetInfos.style.opacity = 0;
+			partenairesInfos.style.opacity = 0;
+			equipeInfos.style.opacity = 0;
+			planButton.style.opacity = 0.3;
+			title.opacity=1;
 		}
 		if (toDo == 1) {
 			audio.pause();
 			background.style.opacity = 1;
 			trailer.style.opacity = 1;
-			interface.style.display = 'none';
-			interface.style.opacity = 0;
+			for (i = 0; i < accueil.length; i++) {
+				accueil[i].style.display = 'none';
+				accueil[i].style.opacity = 0;
+			}
+			for (i = 0; i < basicInterface.length; i++) {
+				basicInterface[i].style.display = 'none';
+				basicInterface[i].style.opacity = 0;
+			}
+			startButton.style.opacity = 0;
+			watchTheTrailer.style.opacity = 0;
+			projetInfos.style.opacity = 0;
+			partenairesInfos.style.opacity = 0;
+			equipeInfos.style.opacity = 0;
+			planButton.style.opacity = 0;
+			title.opacity=0;
 		}
 		
 	}

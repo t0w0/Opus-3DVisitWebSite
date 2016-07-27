@@ -79,7 +79,7 @@ h1 {
     font-size: 4.2em;
     font-weight: normal;
 	text-align:left;
-	padding-bottom: 30px;
+	padding-bottom: 10px;
     color: #B9A64B;
 }
 
@@ -102,6 +102,9 @@ h3 {
 
 body {
     background-color: #1E1E28;
+	width:100%;
+	height:100%;
+	overflow: hidden;
 }
 
 /**********************************     ***************************************/
@@ -111,46 +114,43 @@ body {
 
 /*****************************   INTERFACE   *********************************/
 
-#interface {
-	position:absolute;
-	width:100%;
-	height:100%;
-	overflow: hidden;
-	-webkit-transition: 1s linear 0.2s;
-    -o-transition: 1s linear 0.2s;
-    transition: 1s linear 0.2s;
-	z-index: 3;
+.basicInterface {
+	display: inline;
+	opacity:0;
+	z-index:4;
+}
+.accueil {
+	display: none;
+	opacity:0;
+	z-index:4;
+}
+.interface3D {
+	z-index:3;
 }
 
 /*****************************   Basic Interface   ******************************/
 
-#interface #basicInterface {
-	position:absolute;
-	width:100%;
-	height:100%;
-	z-index:1;
-}
-#interface #basicInterface #logo {
+#logo {
 	position:absolute;
     margin-top: 2vh;
     margin-left: 2vw;
 }
-#interface #basicInterface #infosMenu {
+#infosMenu {
 	position:absolute;
 	padding:0px;
 	margin:0;
 	left:2vw;
 	bottom:4vh;
 }
-#interface #basicInterface #infosMenu button {
+#infosMenu button {
 	margin-left:50%;
 	transform:translateX(-50%);
 	opacity : 0.3;
 }
-#interface #basicInterface #infosMenu button:hover {
+#infosMenu button:hover {
 	opacity : 1;
 }
-#interface #basicInterface #infosMenu #infosList {
+#infosMenu #infosList {
 	padding-bottom: 1vh;
 	padding-top: 1vh;
     -webkit-transform-origin: 50% 0%;
@@ -158,7 +158,7 @@ body {
     transform-origin: 50% 0%;
 }
 
-#interface #basicInterface #infosMenu #infosList #projet {
+#infosMenu #infosList #projet {
 	opacity: 0;
 	transform: translateY(25px);
     -webkit-transition: 0.2s linear 0.6s;
@@ -166,7 +166,7 @@ body {
     transition: 0.2s linear 0.6s;
 }
 
-#interface #basicInterface #infosMenu #infosList #equipe {
+#infosMenu #infosList #equipe {
 	opacity: 0;
 	transform: translateY(35px);
     -webkit-transition: 0.2s linear 0.4s;
@@ -174,7 +174,7 @@ body {
     transition: 0.2s linear 0.4s;
 }
 
-#interface #basicInterface #infosMenu #infosList #partenaires {
+#infosMenu #infosList #partenaires {
 	opacity: 0;
 	transform: translateY(45px);
     -webkit-transition: 0.2s linear 0.2s;
@@ -182,21 +182,21 @@ body {
     transition: 0.2s linear 0.2s;
 }
 
-#interface #basicInterface #infosMenu:hover #infosList #projet {
+#infosMenu:hover #infosList #projet {
 	opacity: 0.7;
     transform: translateY(0px);
 	 -webkit-transition: 0.2s linear 0.2s;
     -o-transition: 0.2s linear 0.2s;
     transition: 0.2s linear 0.2s;
 }
-#interface #basicInterface #infosMenu:hover #infosList #equipe {
+#infosMenu:hover #infosList #equipe {
 	opacity: 0.7;
     transform: translateY(0px);
 	 -webkit-transition: 0.2s linear 0.3s;
     -o-transition: 0.2s linear 0.3s;
     transition: 0.2s linear 0.3s;
 }
-#interface #basicInterface #infosMenu:hover #infosList #partenaires {
+#infosMenu:hover #infosList #partenaires {
 	opacity: 0.7;
     transform:translateY(0px);
 	-webkit-transition: 0.2s linear 0.4s;
@@ -204,87 +204,126 @@ body {
     transition: 0.2s linear 0.4s;
 }
 
-#interface #basicInterface #controls {
+#controls {
 	position:absolute;
 	bottom:4vh;
 	right: 2vw;
 }
-#interface #basicInterface #controls ul {
+#controls ul {
 	opacity:0.3;
 	float: right;
 	-webkit-transition: 0.2s linear 0.0s;
     -o-transition: 0.2s linear 0.0s;
     transition: 0.2s linear 0.0s;
 }
-#interface #basicInterface #controls ul:hover {
+#controls ul:hover {
 	opacity:0.7;
 }
-#interface #basicInterface #controls li {
+#controls li {
 	display:inline-block;
 	vertical-align:middle;
 	padding-left:1vw;
 }
-#interface #basicInterface #controls ul p {
+#controls ul p {
 	display:none;
 }
-#interface #basicInterface #controls ul:hover p {
+#controls ul:hover p {
 	display:inline;
 }
-#interface #basicInterface #controls ul img {
+#controls ul img {
 	/*width:2vw;*/
+}
+
+#planControls {
+	position: absolute;
+	bottom: 4vh;
+	left : 6vw;
+}
+#planControls {
+	opacity:0.3;
+	display: none;
+	float: left;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#planControls {
+	opacity:0.7;
+}
+#planControls li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#planControls p {
+	display:none;
+}
+#planControls:hover p {
+	display:inline;
 }
 
 /***************************   interface d'accueil   *****************************/
 
-#interface #accueil{
-	display: none;
-	position:absolute;
-	width:100%;
-	height:100%;
-	z-index:1
-}
-#interface #accueil #startButton {
+#startButton {
 	position: absolute;
+	opacity:0;
 	bottom: 4vh;
 	margin-left: 50vw;
 	transform: translate(-50%, 0);
 	color: rgba(255,255,255,0.75);
 	outline: 1px solid rgba(255,255,255,0.75);
 	padding: 25px 50px;
+	-webkit-transition: 0.6s linear 0.0s;
+    -o-transition: 0.6s linear 0.0s;
+    transition: 0.6s linear 0.0s;
 }
-#interface #accueil #startButton:hover {
+#startButton:hover {
 	background-color: rgba(255,255,255,0.5);
 }
-#interface #accueil #startButton:active {
+#startButton:active {
 	color: #000000;
 	background-color: rgba(255,255,255,0.75);
 }
-#interface #accueil #title{
+#watchTheTrailer {
+	position: absolute;
+	color:white;
+	opacity: 0.3;
+	bottom: 1vh;
+	margin-left: 50vw;
+	transform: translate(-50%, 0);
+}
+	
+#watchTheTrailer:hover {
+	opacity:.7;
+}
+
+#title{
 	position : absolute;
     text-align: center;
 	margin-left: 50vw;
     margin-top: 50vh;
-	opacity:1;
-	-webkit-transition: 0.2s linear 0.2s;
-    -o-transition: 0.2s linear 0.2s;
-    transition: 0.2s linear 0.2s;
+	opacity:0;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
     transform: translate(-50%, -50%);
 }
-#interface #accueil #title h1{
+#title h1{
 	text-align: center;
 }
-#interface #accueil #projetInfos{
+#projetInfos{
 	position : absolute;
 	margin-left:20vw;
 	margin-right:20vw;
     margin-top: 50vh;
+	height:60vh;
     transform: translate(0, -50%);
 	opacity: 0;
-	-webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
 }
-#interface #accueil #equipeInfos{
+#equipeInfos{
 	position : absolute;
 	overflow: hidden;
 	margin-left:20vw;
@@ -293,11 +332,11 @@ body {
 	height: 60vh;
     transform: translate(0, -50%);
 	opacity:0;
-	-webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
 }
-#interface #accueil #equipeInfos #equipeList{
+#equipeInfos #equipeList{
 	height: 30vh;
 	width: 700%;
 	transform:translate(0,0);
@@ -314,7 +353,7 @@ body {
 	width: 10vw;
 }
 
-#interface #accueil #partenairesInfos{
+#partenairesInfos{
 	position : absolute;
 	overflow: hidden;
 	margin-left:20vw;
@@ -323,16 +362,16 @@ body {
 	height: 60vh;
     transform: translate(0, -50%);
 	opacity:0;
-	-webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
 }
-#interface #accueil #partenairesInfos #partenairesList {
+#partenairesInfos #partenairesList {
 	height: 20vh;
 	width:700%;
 	transform:translate(0%,0);
 }
-#interface #accueil #partenairesInfos #partenairesList .partenairesListElement {
+#partenairesInfos #partenairesList .partenairesListElement {
 	width:15vw;
 	display:inline-block;
 	text-align: center;
@@ -340,48 +379,37 @@ body {
 	vertical-align:top;
 	padding: 7px;
 }
-#interface #accueil #partenairesInfos #partenairesList .partenairesListElement img {
+#partenairesInfos #partenairesList .partenairesListElement img {
 	width:10vw;
 }
 
 /*****************************   Interface 3D  *********************************/
 
-#interface3D {
-	display: none;
-	position:absolute;
-	width:100%;
-	height:100%;
-	z-index:1
-}
-
-#interface3D #leftPanel {
+#leftPanel {
 	position : absolute;
-	top: 5vh;
+	bottom: 5vh;
 	width:20vw;
 	float: left;
 	padding: 2vw;
 	opacity:0;
-	display:none;
 	background-color: #1E1E28;
-	-webkit-transition: 0.1s linear 0.2s;
-    -o-transition: 0.1s linear 0.2s;
-    transition: 0.1s linear 0.2s;
+	-webkit-transition: 0.2s linear 0s;
+    -o-transition: 0.2s linear 0s;
+    transition: 0.2s linear 0s;
 }
-#interface3D#leftPanel p {
+#leftPanel p {
 	display: none;
 }
 
-#interface3D#plan {
+#plan {
 	position:absolute;
 	display : none;
 	width:100%;
 	margin-top: 50vh;
     transform: translate(0, -50%);
 	text-align:  center;
-	z-index: 1;
 }
-
-#interface3D #plan #planBG {
+#plan #planBG {
 	position:absolute;
 	width:100%;
 	height:100%;
@@ -393,8 +421,7 @@ body {
     -o-transition: 0.2s linear 0.0s;
     transition: 0.2s linear 0.0s;
 }
-
-#interface3D #plan #visit {
+#plan #visit {
 	width:100%;
 	height:100%;
 	opacity: 1;
@@ -420,13 +447,12 @@ body {
     left: 0px;
     width: 100vw;
     height: auto;
-	z-index: 0;
 }
 #trailer #skipTrailer {
+	position: absolute;
+	bottom:1vh;
 	color: white;
 	opacity: .3;
-	margin-top:90vh;
-	z-index: 1;
 }
 #trailer #skipTrailer:hover {
 	opacity:.7;
@@ -440,16 +466,18 @@ body {
 	width:100%;
 	height:100%;
 	background-color: #1e1e28;
-	opacity:0.9;
-	z-index: 0;
-	-webkit-transition: 1s linear 0s;
-    -o-transition: 1s linear 0s;
-    transition: 1s linear 0s;
+	opacity:1;
+	-webkit-transition: 2s linear 0s;
+    -o-transition: 2s linear 0s;
+    transition: 2s linear 0s;
+	z-index:1;
 }
 
 /*****************************   WEBGL   *********************************/
 
 #webGL-container {
-	display:none;
-	z-index:1;
+	width: 100%;
+	height:100%;
+	display:inline;
+	z-index:0;
 }
