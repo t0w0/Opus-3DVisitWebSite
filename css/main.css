@@ -397,7 +397,7 @@ body {
 
 #leftPanel {
 	position : absolute;
-	bottom: 5vh;
+	bottom: 10vh;
 	width:20vw;
 	float: left;
 	padding: 2vw;
@@ -407,10 +407,10 @@ body {
     -o-transition: 0.2s linear 0s;
     transition: 0.2s linear 0s;
 }
-#leftPanel p {
-	display: none;
+#leftPanel .interestPointDescription {
+	display:none;
 }
-#leftPanel:hover p {
+#leftPanel:hover .interestPointDescription {
 	display: inline;
 }
 

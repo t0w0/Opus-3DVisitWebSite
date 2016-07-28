@@ -1,4 +1,5 @@
 $(function(){
+	var container;
 	var scene, camera, renderer;
     var controls, guiControls, datGUI;
     var stats;
@@ -7,16 +8,37 @@ $(function(){
     var SCREEN_WIDTH, SCREEN_HEIGHT;
     var loader = new  THREE.ColladaLoader();
 	var domEvents;
-	var interestPoint = [0,0,0, "This Is a Cube", "Lorem Ipsum",
-						 10,30,-20, "This Is another Cube", "Lroem Ipusm",
-						 -10,10,20, "This Is a Cube, again", "Morel Ispum",
-						 40,10,-5, "This Is a ... Cube !", "Romel Sipum",
-						 50,30,-10, "You know what it is", "Losum Iprem",
-						 -5,10,20, "C.U.B.E", "Lorei Upsim",
-						 10,15,20, "Another One", "Orem Lipsum",
-						 -15,1,10, "Interesting... a CUBE !", "Ormel Pumis"
-						]
-	var interestPoints3D = [];
+	var clock = new THREE.Clock();
+	
+	var interestPoints = 
+		{
+		"ID01": {"x":0, 	"y":0, 		"z":0, 		
+				 "title":"This is a Cube", 				
+				 "description": "Lorem Ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID01": {"x":1, 	"y":-5, 	"z":2, 		
+				 "title":"This Is another Cube", 		
+				 "description": "Lroem Ipusm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID02": {"x":-1, 	"y":5, 		"z":7, 		
+				 "title":"This Is a Cube, again", 		
+				 "description": "Morel Ispum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID03": {"x":2, 	"y":6, 		"z":9, 		
+				 "title":"This Is a ... Cube !", 		
+				 "description": "Romel Sipum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID04": {"x":-2, 	"y":-6, 	"z":5, 		
+				 "title":"You know what it is", 			
+				 "description": "Losum Iprem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID05": {"x":3, 	"y":3, 		"z":-4, 	
+				 "title":"C.U.B.E", 					
+				 "description": "Lorei Upsim Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID06": {"x":-3, 	"y":-3, 	"z":-2, 	
+				 "title":"Another One", 					
+				 "description": "Orem Lipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
+		"ID07": {"x":4,	 	"y":2, 		"z":-6, 	
+				 "title":"Interesting... a CUBE !", 		
+				 "description": "Ormel Pumis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."}
+		};
+	
+	var interestPoints3D = {};
 
     loader.options.convertUpAxis = true;
 
@@ -31,6 +53,7 @@ $(function(){
     });
 
     function init(){
+		
         /*creates empty scene object and renderer*/
         scene = new THREE.Scene();
         camera =  new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, .1, 500);
@@ -43,8 +66,14 @@ $(function(){
         renderer.shadowMapSoft = true;
         
         /*add controls*/
-        controls = new THREE.OrbitControls( camera, renderer.domElement );
-        controls.addEventListener( 'change', render );
+        //controls = new THREE.OrbitControls( camera, renderer.domElement );
+        //controls.addEventListener( 'change', render );
+		controls = new THREE.FlyControls( camera );
+				controls.movementSpeed = 1000;
+				controls.domElement =  container;
+				controls.rollSpeed = Math.PI / 24;
+				controls.autoForward = false;
+				controls.dragToLook = false;
 		
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
                     
@@ -76,6 +105,8 @@ $(function(){
 		
         $("#webGL-container").append(renderer.domElement);
 		
+		window.addEventListener( 'resize', onWindowResize, false );
+		
         /*stats*/
         /*stats = new Stats();        
         stats.domElement.style.position = 'absolute';
@@ -89,55 +120,72 @@ $(function(){
 		var geometry = new THREE.BoxGeometry( .5, .5, .5 );
 		var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
 		var new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
-		interestPoints3D.length = interestPoint.length/5;
 		
-		for (var i = 0 ; i < interestPoint.length ; i += 5){
-			interestPoints3D[i/5] = new THREE.Mesh( geometry, material );
-			interestPoints3D[i/5].position.x = interestPoint[i];
-			interestPoints3D[i/5].position.y = interestPoint[i+1];
-			interestPoints3D[i/5].position.z = interestPoint[i+2];
+		var title = document.createElement( 'h1' );
+			title.className = 'interestPointTitle';
+			leftPanel.appendChild( title );
+		
+		var description = document.createElement( 'p' );
+			description.className = 'interestPointDescription';
+			leftPanel.appendChild( description );
+		
+		for (var attr in interestPoints) {
+			if (interestPoints[attr].hasOwnProperty) {
+				var mesh = new THREE.Mesh( geometry, material );
+				mesh.position.x = interestPoints[attr].x;
+				mesh.position.y = interestPoints[attr].y;
+				mesh.position.z = interestPoints[attr].z;
+				mesh.metaData = 
+					{
+						"title": interestPoints[attr].title,
+						"description": interestPoints[attr].description
+					}
+				//alert(interestPoints[attr].description)
+				scene.add(mesh);
+				
+				domEvents.addEventListener(mesh, 'mouseover', function(event) {
+					event.target.material = new_material;
+					leftPanel.style.display = 'inline';
+					leftPanel.style.opacity = 1;
+					
+					title.textContent = event.target.metaData.title;
+					description.textContent = event.target.metaData.description;
+					//alert(event.target.metaData.description);
+					
+					return renderer.render(scene, camera);
+				});
+				
+				domEvents.addEventListener(mesh, 'mouseout', function(event) {
+					event.target.material = material;
+					return renderer.render(scene, camera);
+				});
+			}
 		}
-		
-		for (var i = 0 ; i < interestPoints3D.length ; i++) {
-			
-			scene.add(interestPoints3D[i]);
-			
-			domEvents.addEventListener(interestPoints3D[i], 'mouseover', function(event) {
-				interestPoints3D[i].material = new_material;
-				leftPanel.style.display = 'inline';
-				leftPanel.style.opacity = 1;
-				return renderer.render(scene, camera);
-			});
-		
-      		domEvents.addEventListener(interestPoints3D[i], 'mouseout', function(event) {
-				interestPoints3D[i] = material;
-				leftPanel.style.opacity = 0;
-				return renderer.render(scene, camera);
-			});
-		}
-		//document.write(interestPoints3D.join(", "));
 	}
-	
-	function hoverInterestingPoint (event) {
-		
-	}
-
-    function render() {   
     
-    }
-    
-    function animate(){
+    function animate() {
         requestAnimationFrame(animate);
-        //stats.update();     
-        renderer.render(scene, camera);
+        //stats.update();
+		render ();
     }
+	
+	function render () {
+		
+		var delta = clock.getDelta();
+		controls.movementSpeed = 0.33;
+		//controls.update( delta );
+		renderer.render(scene, camera);
+	}
 
-	$(window).resize(function(){
-		SCREEN_WIDTH = window.innerWidth;
+	function onWindowResize( event ) {
+
 		SCREEN_HEIGHT = window.innerHeight;
-
-		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+		SCREEN_WIDTH  = window.innerWidth;
 
 		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-	});
+
+		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+		camera.updateProjectionMatrix();
+
+	}
 });
