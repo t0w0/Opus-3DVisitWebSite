@@ -4,11 +4,14 @@
 
 html, body {
 	height: 100%;
+	background-color: #1e1e28;
+	cursor: crosshair;
 }
 
-body, h1, h2, h3, h4, h5, blockquote, a {
+body, h1, h2, h3, h4, h5, blockquote, a, p {
     margin: 0px;
     padding: 0px;
+	cursor: crosshair;
 }
 
 ul, li {
@@ -22,6 +25,12 @@ button {
 	padding:0;
 	background: transparent;
 	border: 0px;
+	cursor:crosshair;
+}
+
+img {
+	margin:0;
+	padding:0;
 }
 
 /**********************************     ***************************************/
@@ -46,6 +55,15 @@ body {
     color: white; 
 }
 
+p{
+	text-decoration: none;
+    font-family:'Raleway', sans-serif;
+    font-style: normal;
+    font-size:  12px;
+    font-weight: 100;
+    color:white;
+}
+
 a {
     text-decoration: none;
     font-family:'Raleway', sans-serif;
@@ -60,8 +78,12 @@ h1 {
     font-style: normal;
     font-size: 4.2em;
     font-weight: normal;
+	text-align:left;
+	padding-bottom: 10px;
     color: #B9A64B;
 }
+
+
 
 mark {
     background-color:transparent;
@@ -76,63 +98,194 @@ h3 {
     font-weight: 300;
 }
 
+h4 {
+    font-size: 1.2em;
+    font-weight: 100;
+	line-height: 1.6em;
+	padding; 5vw;
+}
+
+
 /**********************************     ***************************************/
 /******************************   GRAPHICS   **********************************/
 /**********************************     ***************************************/
 
 body {
     background-color: #1E1E28;
+	width:100%;
+	height:100%;
+	overflow: hidden;
 }
 
 /**********************************     ***************************************/
 /*****************************   CONTAINERS   *********************************/
 /**********************************     ***************************************/
-body {
 
+
+/*****************************   INTERFACE   *********************************/
+
+.basicInterface {
+	display: inline;
+	opacity:0;
+	z-index:4;
+}
+.accueil {
+	display: none;
+	opacity:0;
+	z-index:4;
+}
+.interface3D {
+	z-index:3;
 }
 
-.logoMenu {
-	position: absolute;
+/*****************************   Basic Interface   ******************************/
+
+#logo {
+	position:absolute;
     margin-top: 2vh;
     margin-left: 2vw;
 }
-
-#centralInfo {
-	position : absolute;
-    text-align: center;
-	margin-left: 50vw;
-    margin-top: 50vh;
-	opacity:1;
-	-webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
-    transform: translate(-50%, -50%);
+#infosMenu {
+	position:absolute;
+	padding:0px;
+	margin:0;
+	left:2vw;
+	bottom:4vh;
+}
+#infosMenu button {
+	margin-left:50%;
+	transform:translateX(-50%);
+	opacity : 0.3;
+}
+#infosMenu button:hover {
+	opacity : 1;
+}
+#infosMenu #infosList {
+	padding-bottom: 1vh;
+	padding-top: 1vh;
+    -webkit-transform-origin: 50% 0%;
+    -o-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
 }
 
-#projetPage{
-	position : absolute;
-	width:40%;
-	margin-left: 50vw;
-    margin-top: 50vh;
-    transform: translate(-50%, -50%);
-	opacity:0;
-	-webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
+#infosMenu #infosList #projet {
+	opacity: 0;
+	transform: translateY(25px);
+    -webkit-transition: 0.2s linear 0.6s;
+    -o-transition: 0.2s linear 0.6s;
+    transition: 0.2s linear 0.6s;
 }
 
-#menu {
+#infosMenu #infosList #equipe {
+	opacity: 0;
+	transform: translateY(35px);
+    -webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#infosMenu #infosList #partenaires {
+	opacity: 0;
+	transform: translateY(45px);
+    -webkit-transition: 0.2s linear 0.2s;
+    -o-transition: 0.2s linear 0.2s;
+    transition: 0.2s linear 0.2s;
+}
+
+#infosMenu:hover #infosList #projet {
+	opacity: 0.7;
+    transform: translateY(0px);
+	 -webkit-transition: 0.2s linear 0.2s;
+    -o-transition: 0.2s linear 0.2s;
+    transition: 0.2s linear 0.2s;
+}
+#infosMenu:hover #infosList #equipe {
+	opacity: 0.7;
+    transform: translateY(0px);
+	 -webkit-transition: 0.2s linear 0.3s;
+    -o-transition: 0.2s linear 0.3s;
+    transition: 0.2s linear 0.3s;
+}
+#infosMenu:hover #infosList #partenaires {
+	opacity: 0.7;
+    transform:translateY(0px);
+	-webkit-transition: 0.2s linear 0.4s;
+    -o-transition: 0.2s linear 0.4s;
+    transition: 0.2s linear 0.4s;
+}
+
+#controls {
+	position:absolute;
+	bottom:4vh;
+	right: 2vw;
+}
+#controls ul {
+	opacity:0.3;
+	float: right;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#controls ul:hover {
+	opacity:0.7;
+}
+#controls li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#controls ul p {
+	display:none;
+}
+#controls ul:hover p {
+	display:inline;
+}
+#controls ul img {
+	/*width:2vw;*/
+}
+
+#planControls {
 	position: absolute;
-	bottom: 2vh;
-	width: 100%;
-	text-align: center;
+	bottom: 4vh;
+	left : 6vw;
 }
+#planControls {
+	opacity:0.3;
+	display: none;
+	float: left;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#planControls {
+	opacity:0.7;
+}
+#planControls li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#planControls p {
+	display:none;
+}
+#planControls:hover p {
+	display:inline;
+}
+
+/***************************   interface d'accueil   *****************************/
 
 #startButton {
+	position: absolute;
+	opacity:0;
+	bottom: 4vh;
+	margin-left: 50vw;
+	transform: translate(-50%, 0);
 	color: rgba(255,255,255,0.75);
 	outline: 1px solid rgba(255,255,255,0.75);
 	padding: 25px 50px;
-	cursor: pointer;
+	-webkit-transition: 0.6s linear 0.0s;
+    -o-transition: 0.6s linear 0.0s;
+    transition: 0.6s linear 0.0s;
 }
 #startButton:hover {
 	background-color: rgba(255,255,255,0.5);
@@ -141,81 +294,233 @@ body {
 	color: #000000;
 	background-color: rgba(255,255,255,0.75);
 }
-
-#infosMenu {
-	position:absolute;
-	padding:0px;
-	margin:0;
-	width:auto;
-	left:2vw;
-	bottom:0px;
+#watchTheTrailer {
+	position: absolute;
+	color:white;
+	opacity: 0.3;
+	bottom: 1vh;
+	margin-left: 50vw;
+	transform: translate(-50%, 0);
+}
+	
+#watchTheTrailer:hover {
+	opacity:.7;
 }
 
-#infosDeploy {
-	cursor: pointer;
-}
-#infosDeploy img {
-	height: 5vh;
-}
-
-#infosList {
-	overflow: hidden;
-	position:absolute;
-	left:0;
-	bottom:0px;
-	margin:0px;
-	padding:0px;
-	cursor: pointer;
-}
-
-#infosList li {
-	padding-bottom: 30px;
-	padding-top: 30px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+#title{
+	position : absolute;
+    text-align: center;
+	margin-left: 50vw;
+    margin-top: 50vh;
 	opacity:0;
-    -webkit-transform-origin: 50% 0%;
-    -o-transform-origin: 50% 0%;
-    transform-origin: 50% 0%;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+    transform: translate(-50%, -50%);
+}
+#title h1{
+	text-align: center;
+}
+#projetInfos{
+	position : absolute;
+	margin-left:20vw;
+	margin-right:20vw;
+    margin-top: 50vh;
+	height:60vh;
+    transform: translate(0, -50%);
+	opacity: 0;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+}
+#equipeInfos{
+	position : absolute;
+	overflow: hidden;
+	margin-left:20vw;
+	margin-right:20vw;
+    margin-top: 50vh;
+	height: 60vh;
+    transform: translate(0, -50%);
+	opacity:0;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+}
+#equipeInfos #equipeList{
+	height: 30vh;
+	width: 700%;
+	transform:translate(0,0);
+}
+.equipeListElement {
+	width: 15vw;
+	display:inline-block;
+	text-align: center;
+	overflow: hidden;
+	vertical-align: top;
+	padding: 7px;
+}
+.equipeListElement img {
+	width: 10vw;
 }
 
-#infosList #projet {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.8s;
-    -o-transition: 0.2s linear 0.8s;
-    transition: 0.2s linear 0.8s;
+#partenairesInfos{
+	position : absolute;
+	overflow: hidden;
+	margin-left:20vw;
+	margin-right:20vw;
+    margin-top: 50vh;
+	height: 60vh;
+    transform: translate(0, -50%);
+	opacity:0;
+	-webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+}
+#partenairesInfos #partenairesList {
+	height: 20vh;
+	width:700%;
+	transform:translate(0%,0);
+}
+#partenairesInfos #partenairesList .partenairesListElement {
+	width:15vw;
+	display:inline-block;
+	text-align: center;
+	overflow: hidden;
+	vertical-align:top;
+	padding: 7px;
+}
+#partenairesInfos #partenairesList .partenairesListElement img {
+	width:10vw;
 }
 
-#infosList #equipe {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.6s;
-    -o-transition: 0.2s linear 0.6s;
-    transition: 0.2s linear 0.6s;
-}
+/*****************************   Interface 3D  *********************************/
 
-#infosList #partenaires {
-	transform: translateY(50px);
-    -webkit-transition: 0.2s linear 0.4s;
-    -o-transition: 0.2s linear 0.4s;
-    transition: 0.2s linear 0.4s;
-}
-
-#infosMenu:hover #infosList li {
-    transform:translateY(-25px);
-	opacity:1;
-    -webkit-transition: 0.2s linear 0s;
+#leftPanel {
+	position : absolute;
+	bottom: 10vh;
+	width:20vw;
+	float: left;
+	padding: 2vw;
+	opacity:0;
+	background-color: #1E1E28;
+	-webkit-transition: 0.2s linear 0s;
     -o-transition: 0.2s linear 0s;
     transition: 0.2s linear 0s;
 }
-
-#controls li {
-	margin: 5px;
-	display:block;
-	position: absolute;
-	bottom:0px;
-	right: 0px;
+#leftPanel .interestPointDescription {
+	display:none;
+}
+#leftPanel:hover .interestPointDescription {
+	display: inline;
 }
 
-#controls img {
-	height: 5vh;
+#planMini {
+	position:absolute;
+	display : inline;
+	width:20vw;
+	margin-top: 50vh;
+	right:1vw;
+    transform: translate(0, -50%);
+	text-align:  center;
+}
+#planMini svg {
+	float :right;
+	transform: rotate(-90deg);
+}
+#planMini #planMiniBG {
+	float: right;
+	width: 100%;
+	opacity:1;
+}
+#planMini path {
+	position:absolute;
+	right:0;
+}
+#planMini #planMiniVisit {
+	position: absolute;
+	right: 0;
+	width: 100%;
+	float: right;
+	opacity:0.7;
+}
+
+#plan {
+	position:absolute;
+	display : none;
+	width:100%;
+	margin-top: 50vh;
+    transform: translate(0, -50%);
+	text-align:  center;
+}
+#plan #planBG {
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	opacity:0.3;
+	left: 50%;
+	transform: translate(-50%, 0);
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#plan #visit {
+	width:100%;
+	height:100%;
+	opacity: 1;
+}
+
+/*****************************   TRAILER   *********************************/
+
+#trailer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	overflow: hidden;
+	z-index: 2;
+	-webkit-transition: 1s linear 0s;
+    -o-transition: 1s linear 0s;
+    transition: 1s linear 0s;
+}
+#trailer video {
+    position: absolute;  
+    top: 50vh;
+	transform: translate(0, -50%);
+    left: 0px;
+    width: 100vw;
+    height: auto;
+}
+#trailer #skipTrailer {
+	position: absolute;
+	bottom:1vh;
+	color: white;
+	opacity: .3;
+}
+#trailer #skipTrailer:hover {
+	opacity:.7;
+}
+
+/*****************************  BACKGROUND  *********************************/
+
+#background {
+	position: absolute;
+	display: inline;
+	width:100%;
+	height:100%;
+	background-color: #1e1e28;
+	opacity:1;
+	-webkit-transition: 2s linear 0s;
+    -o-transition: 2s linear 0s;
+    transition: 2s linear 0s;
+	z-index:1;
+}
+
+/*****************************   WEBGL   *********************************/
+
+#webGL-container {
+	width: 100%;
+	height:100%;
+	display:inline;
+	z-index:0;
 }
