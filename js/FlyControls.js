@@ -16,11 +16,15 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.dragToLook = false;
 	this.autoForward = false;
-
+	
+	this.enabled  = true;
+	
 	// disable default target object behavior
 
 	// internals
-
+	
+	var scope = this;
+	
 	this.tmpQuaternion = new THREE.Quaternion();
 
 	this.mouseStatus = 0;
@@ -41,7 +45,7 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.keydown = function( event ) {
 
-		if ( event.altKey ) {
+		if ( event.altKey || scope.enabled == false ) {
 
 			return;
 
@@ -79,7 +83,9 @@ THREE.FlyControls = function ( object, domElement ) {
 	};
 
 	this.keyup = function( event ) {
-
+		
+		if (scope.enabled == false ) {return;}
+		
 		switch ( event.keyCode ) {
 
 			case 16: /* shift */ this.movementSpeedMultiplier = 1; break;
@@ -110,7 +116,9 @@ THREE.FlyControls = function ( object, domElement ) {
 	};
 
 	this.mousedown = function( event ) {
-
+		
+		if (scope.enabled == false ) {return;}
+		
 		if ( this.domElement !== document ) {
 
 			this.domElement.focus();
@@ -140,7 +148,9 @@ THREE.FlyControls = function ( object, domElement ) {
 	};
 
 	this.mousemove = function( event ) {
-
+		
+		if (scope.enabled == false ) {return;}
+		
 		if ( ! this.dragToLook || this.mouseStatus > 0 ) {
 
 			var container = this.getContainerDimensions();
@@ -158,6 +168,8 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.mouseup = function( event ) {
 
+		if (scope.enabled == false ) {return;}
+		
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -185,6 +197,8 @@ THREE.FlyControls = function ( object, domElement ) {
 	};
 
 	this.update = function( delta ) {
+		
+		if (scope.enabled == false ) {return;}
 
 		var moveMult = delta * this.movementSpeed;
 		var rotMult = delta * this.rollSpeed;
@@ -218,7 +232,7 @@ THREE.FlyControls = function ( object, domElement ) {
 
 		this.rotationVector.x = ( - this.moveState.pitchDown + this.moveState.pitchUp );
 		this.rotationVector.y = ( - this.moveState.yawRight  + this.moveState.yawLeft );
-		this.rotationVector.z = ( - this.moveState.rollRight + this.moveState.rollLeft );
+		//this.rotationVector.z = ( - this.moveState.rollRight + this.moveState.rollLeft );
 
 		//console.log( 'rotate:', [ this.rotationVector.x, this.rotationVector.y, this.rotationVector.z ] );
 

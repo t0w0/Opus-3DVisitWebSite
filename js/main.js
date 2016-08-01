@@ -1,4 +1,4 @@
-$(function(){
+document.addEventListener("DOMContentLoaded", function(event){
 	
 	var body = document.body; // Make the body go full screen.
 	
@@ -17,6 +17,7 @@ $(function(){
 	var muteButton = document.getElementById('mute');
 	var audio = new Audio('./data/sound/cathSound.mp3');
 	var mute = false;
+	var visitButton = document.getElementById('visitModeControl');
 	var planButton = document.getElementById('planControls');
 	var plan = document.getElementById('plan');
 	
@@ -96,6 +97,11 @@ $(function(){
 		});
 		planButton.addEventListener("mouseover", function(event) {
 			draw();
+		});
+		visitButton.addEventListener("click", function(event) {
+			alert("click");
+			getScript('js/webGL.js', actualizeVisitMode());
+			
 		});
 		
 	}
@@ -234,5 +240,23 @@ $(function(){
 			}
 		}
 	}
+	
+	function getScript(source, callback) {
+    var script = document.createElement('script');
+    var prior = document.getElementsByTagName('script')[0];
+    script.async = 1;
+    prior.parentNode.insertBefore(script, prior);
+
+    script.onload = script.onreadystatechange = function( _, isAbort ) {
+        if(isAbort || !script.readyState || /loaded|complete/.test(script.readyState) ) {
+            script.onload = script.onreadystatechange = null;
+            script = undefined;
+
+            if(!isAbort) { if(callback) callback(); }
+        }
+    };
+
+    script.src = source;
+}
 	
 });

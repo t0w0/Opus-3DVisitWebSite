@@ -247,7 +247,7 @@ body {
 #planControls {
 	position: absolute;
 	bottom: 4vh;
-	left : 6vw;
+	left : 20vw;
 }
 #planControls {
 	opacity:0.3;
@@ -269,6 +269,33 @@ body {
 	display:none;
 }
 #planControls:hover p {
+	display:inline;
+}
+#visitModeControl {
+	position: absolute;
+	bottom: 4vh;
+	right : 20vw;
+}
+#visitModeControl {
+	opacity:0.3;
+	display: none;
+	float: left;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#visitModeControl {
+	opacity:0.7;
+}
+#visitModeControl li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#visitModeControl p {
+	display:none;
+}
+#visitModeControl:hover p {
 	display:inline;
 }
 
