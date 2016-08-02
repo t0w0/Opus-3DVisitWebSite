@@ -2,15 +2,17 @@
     <head>
         <meta charset="utf-8" />
         <title>OPUS - Cathédrale Notre Dame d'Amiens</title>
-        <link type="text/css" rel= stylesheet href="./css/main.css">
+        <link type="text/css" rel= stylesheet href="./css/style.css">
         <link href='https://fonts.googleapis.com/css?family=Raleway:300,300italic,100italic,100' rel='stylesheet' type='text/css'>
 		
-        <script type="text/javascript" src= "js/three.min.js"></script>
-		<script type="text/javascript" src= "js/ColladaLoader.js"></script>
-		<script type="text/javascript" src= "js/stats.min.js"></script>
-		<script type="text/javascript" src= "js/FlyControls.js"></script>
-		<script type="text/javascript" src= "js/TrackballControls.js"></script>
-		<script type="text/javascript" src= "js/threex.domevents.js"></script>
+        <script type="text/javascript" src= "js/lib/three.min.js"></script>
+		<script type='text/javascript' src='js/lib/tween.js'></script>
+		<script type="text/javascript" src= "js/lib/ColladaLoader.js"></script>
+		<script type="text/javascript" src= "js/lib/threex.domevents.js"></script>
+		<script type="text/javascript" src= "js/lib/FlyControls.js"></script>
+		<script type="text/javascript" src= "js/lib/TrackballControls.js"></script>
+		
+		<script type="text/javascript" src= "js/lib/stats.min.js"></script>
     </head>
     <body>
 		<div id="webGL-container"></div>
@@ -24,6 +26,7 @@
 		<div id="logo" class='basicInterface'>
 			<a href="index.html"><img src="data/img/logoMenu.png"></a>
 		</div>
+		<div><p id="visitModeIndicator" class='basicInterface'></p></div> 
 		<div id="infosMenu" class='basicInterface'>
 			<ul id = "infosList">
 				<li id="partenaires">
@@ -262,7 +265,6 @@
 		<div id ="leftPanel" class= 'interface3D'>
 			<!-- Javascript is creating title and description of the hover interest point here -->
 		</div>
-		<script type="text/javascript" src="js/webGL.js"></script>
-       	<script type="text/javascript" src="js/main.js"></script>
+       	<script type="text/javascript" src="js/application.js"></script>
     </body>
 </html>

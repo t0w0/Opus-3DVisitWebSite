@@ -244,33 +244,14 @@ body {
 	/*width:2vw;*/
 }
 
-#planControls {
+#visitModeIndicator {
 	position: absolute;
-	bottom: 4vh;
-	left : 20vw;
+	right: 50vw;
+	top: 4vh;
+	transform: translateX(50%);
+	opacity: 0.3;
 }
-#planControls {
-	opacity:0.3;
-	display: none;
-	float: left;
-	-webkit-transition: 0.2s linear 0.0s;
-    -o-transition: 0.2s linear 0.0s;
-    transition: 0.2s linear 0.0s;
-}
-#planControls {
-	opacity:0.7;
-}
-#planControls li {
-	display:inline-block;
-	vertical-align:middle;
-	padding-left:1vw;
-}
-#planControls p {
-	display:none;
-}
-#planControls:hover p {
-	display:inline;
-}
+
 #visitModeControl {
 	position: absolute;
 	bottom: 4vh;
@@ -296,6 +277,34 @@ body {
 	display:none;
 }
 #visitModeControl:hover p {
+	display:inline;
+}
+
+#planControls {
+	position: absolute;
+	bottom: 4vh;
+	left : 20vw;
+}
+#planControls {
+	opacity:0.3;
+	display: none;
+	float: left;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+#planControls {
+	opacity:0.7;
+}
+#planControls li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#planControls p {
+	display:none;
+}
+#planControls:hover p {
 	display:inline;
 }
 
@@ -520,6 +529,8 @@ body {
 }
 #trailer #skipTrailer {
 	position: absolute;
+	left: 50vw;
+	transform : translateX(-50%);
 	bottom:1vh;
 	color: white;
 	opacity: .3;
