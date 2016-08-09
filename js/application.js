@@ -24,13 +24,18 @@ window.onload = function() {
 	var muteButton = document.getElementById('mute');
 	var audio = new Audio('./data/sound/cathSound.mp3');
 	var mute = false;
-	var planButton = document.getElementById('planControls');
+	var planButton = document.getElementById('planControl');
 	var plan = document.getElementById('plan');
+	var planMini = document.getElementById('planMini');
 	var visitButton = document.getElementById('visitModeControl');
+	var wheelButton = document.getElementById('wheelControl');
+	var wheel = document.getElementById('radialSliderContainer');
 	
 	var path = document.getElementById('visit');
 	var length = path.getTotalLength();
 	
+	
+	var infosMenu = document.getElementById('infosMenu');
 	var startButton = document.getElementById('startButton');
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
@@ -54,29 +59,26 @@ window.onload = function() {
 
 	//What we're gonna use in Three scene
 	var loader = new  THREE.ColladaLoader(); 
-	var dae, daeMat;
+	var cathModel;
+	var cathModelStep;
 	var	spotLight;
 
 	//The THREEx library needs to make hoverable a cube in space.
 	var domEvents;
-		//var that we need to create the interest points.
-		var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
-		var new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
+	//var that we need to create the interest points.
+	var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+		material.transparent = true;
+		material.opacity = 0.3;
+		material.blending = THREE.AdditiveBlending;
+	var new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
+		new_material.transparent = true;
+		material.opacity = 0.7;
+		new_material.blending = THREE.AdditiveBlending;
 
 	//3D Controls
 	var controlModes = {"trackball": 0, "fly": 1};
 	var controlMode = controlModes.trackball;
 	var control;
-	var flag = 0;
-	var mouseDownID;
-	
-	var visitModes = {"guide": 0, "free": 1};
-	var visitMode = visitModes.guide;
-	var visitModeIndicator = document.getElementById('visitModeIndicator');
-	var interval;
-	var cpt = 0;
-	var speed = .01;
-	var tween;
 	
 	//Here is an object which got JSONObject as parameters that store all the interest points.
 	var interestPoints = 
@@ -104,34 +106,63 @@ window.onload = function() {
 				 "description": "Orem Lipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
 		"ID07": {"x":22.5,	 	"y":70, 		"z":0, 	
 				 "title":"Interesting... a CUBE !", 		
-				 "description": "Ormel Pumis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."}
+				 "description": "Ormel Pumis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
 		};
 
 	//Table that store the THREE.JS object interestpoints after instantiation.
 	var interestPoints3D = [];
 	//Variable that store the actual targetPoint - Should be a static variable
 	var targetInterestPoint = null;
+	
+	var visitModes = {"guide": 0, "free": 1};
+	var visitMode = visitModes.guide;
+	var visitModeIndicator = document.getElementById('visitModeIndicator');
 
 	var visits = [
-			[0, 1, 2],
+			[0, 1, 2, 0, 3, 4, 5, 7, 0, 5, 4, 6, 7, 2, 0, 1, 3],
 			[1, 3, 5, 7, 0, 2, 4, 6],
 	];
+	var visitSpeed = .01;
 	var currentVisit;
+	var visiting = false;
 	var visitState;
 	var visitStatePos;
-	var camPos;
-	var pathTweens = [];
+	var nextPointVisit;
+	var pathTweensForward = [];
+	var pathTweensBackward = [];
+	var visitTween = new TWEEN.Tween(0,0,0);
+	var cathMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+		cathMat.transparent = true;
+		cathMat.blending = THREE.AdditiveBlending;
+	var partsMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+		partsMat.transparent = true;
+		partsMat.opacity = 0.3;
+	var partsMatHover = new THREE.MeshBasicMaterial({color: 0x0DAAFF});
+		partsMatHover.transparent = true;
+		partsMatHover.blending = THREE.AdditiveBlending;
+	
+	var parts = [];
+	
+	var wheelMode = false;
 	
 	//Start by loading the 3D model and launch Init()
 	loader.options.convertUpAxis = true;
-	loader.load('http://localhost/opus0a/models/cath.dae', function (model) {
-		dae = model.scene;
-		dae.scale.x = dae.scale.y = dae.scale.z = 3;
-		dae.updateMatrix();
-		dae.receiveShadow = true;
-		dae.castShadow = true;
+	loader.load ('http://localhost/opus0b/models/cath.dae', function (model) {
+		cathModel = model.scene;
 		
+		cathModel.updateMatrix();
+		cathModel.receiveShadow = true;
+		cathModel.castShadow = true;
 		init();
+		
+	}); 
+	loader.load('http://localhost/opus0b/models/cathStepbyStep.dae', function (model) {
+		cathModelStep = model.scene;
+		
+		cathModelStep.updateMatrix();
+		cathModelStep.receiveShadow = true;
+		cathModelStep.castShadow = true;
+		
 	}); 
 	
 	function init() {
@@ -186,15 +217,20 @@ window.onload = function() {
 		planButton.addEventListener("mouseover", function(event) {
 			draw();
 		});
+		
 		visitModeIndicator.textContent = 'Visite guidée';
 		visitButton.addEventListener("click", function(event) {
 			manageVisitMode ();
 		});
 		
+		wheelButton.addEventListener("click", function(event) {
+			manageWheel();
+		});
+		
 		/********************************************************************************/
 		/*		Building the THREE.js Scene				*/
 		/********************************************************************************/
-
+		
 		/*creates empty scene object and renderer*/
 		scene = new THREE.Scene();
 		camera =  new THREE.PerspectiveCamera(45, 	window.innerWidth/window.innerHeight, .1, 500);
@@ -202,7 +238,6 @@ window.onload = function() {
 			camera.position.y = 0;
 			camera.position.z = 0;
 			camera.lookAt(scene.position);
-		visitStatePos = new THREE.Vector3(45, 0, 0);
 
 		renderer = new THREE.WebGLRenderer({antialias:true});
 					renderer.setClearColor(0x1E1E28);
@@ -211,13 +246,18 @@ window.onload = function() {
 					renderer.domElement.style.position = 'absolute';
 					renderer.shadowMap.enabled = true;
 					renderer.shadowMapSoft = true;
-
-		/*adds the dae model*/
-			//daeMat = new THREE.MeshPhongMaterial ({transparent:true, blending:'alpha'});
-			//dae.material = daeMat;
-			dae.position.y = 30;
-			dae.name = "Cathédrale";
-		scene.add(dae);
+		
+		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+		window.addEventListener( 'resize', onWindowResize, false );
+		window.scene = scene;
+		
+		/*adds the cathModel model*/
+			//cathModelMat = new THREE.MeshPhongMaterial ({transparent:true, blending:'alpha'});
+			//cathModel.material = cathModelMat;
+			cathModel.position.y = 30;
+			cathModel.scale.x = cathModel.scale.y = cathModel.scale.z = 3;
+			cathModel.name = "cathedrale";
+		scene.add(cathModel);
 
 		/*adds spot light with starting parameters*/
 		spotLight = new THREE.SpotLight(0x1E1E28);
@@ -234,89 +274,109 @@ window.onload = function() {
 			spotLight.shadow.bias = 0;
 		scene.add(spotLight);
 		
-		/*Instantiate html elements to be modified by the hover*/
-		leftPanel = document.getElementById('leftPanel');
-
-		interestPointTitle = document.createElement( 'h1' );
-			interestPointTitle.className = 'interestPointTitle';
-			leftPanel.appendChild( interestPointTitle );
-
-		interestPointDescription = document.createElement( 'p' );
-			interestPointDescription.className = 'interestPointDescription';
-			leftPanel.appendChild( interestPointDescription );
-
-		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+		setUpInterestPoints();
 		
-		domEvents.addEventListener(dae, 'mousedown', function (event) {
-			pathTweens[visitState].start();
-			console.log(visitStatePos);
+		container.appendChild( renderer.domElement );
+		
+		/********************************************************************************/
+		/*		Building paths for visits			*/
+		/********************************************************************************/
+		
+		switchControlsTo(controlModes.fly);
+		
+		//Initialize visit value
+		
+		currentVisit = visits[0];
+		visitState = 0;
+		visitStatePos = new THREE.Vector3(45, 0, 0);
+		pathTweensForward = [];
+		pathTweensBackward = [];
+		
+		domEvents.addEventListener(cathModel, 'mousedown', function(event) {
+			
+			switch (visitMode) {
+					
+				case visitModes.free:
+					break;
+					
+				case visitModes.guide:
+					switch (event.origDomEvent.button) {
+							
+						case 0:
+							//console.log('left button start');
+							visitTween.stop();
+							manageVisitProgress(1);
+							break;
+						case 1:
+							//console.log('middle button start');
+							break;
+						case 2:
+							//console.log('right button start');
+							visitTween.stop();
+							manageVisitProgress(-1);
+							break;
+					break;
+				
+				}
+			}
+		});
+								   
+		domEvents.addEventListener(cathModel, 'mouseup', function(event) {
+			
+			switch (event.origDomEvent.button) {
+				case 0:
+					//console.log('left button stop');
+					visitTween.stop();
+					visiting = false;
+					
+					break;
+				case 1:
+					//console.log('middle button stop');
+					break;
+				case 2:
+					//console.log('right button stop');
+					visitTween.stop();
+					visiting = false;
+					break;
+        	}
 		});
 		
-		domEvents.addEventListener(dae, 'mouseup', function (event) {
-			for (var i = 0 ; i < currentVisit.length ; i ++) {
-				pathTweens[i].stop();
+		domEvents.addEventListener(cathModel, 'mouseout', function(event) {
+			console.log('left button stop');
+			visitTween.stop();
+			visiting = false;
+		});
+		
+		cathModel.traverse( function(node) {
+			if (node instanceof THREE.Mesh) {
+				node.material = cathMat;
 			}
 		});
 		
-		//followPath();
-		
-		setUpInterestPoints();
+		cathModelStep.traverse( function(node) {
+			if (node instanceof THREE.Mesh) {
+				node.material = partsMat;
+				domEvents.addEventListener(node, 'mouseover', function(event) {
+					event.target.material = partsMatHover;
+				});
 
-		container.appendChild( renderer.domElement );
-
-		window.addEventListener( 'resize', onWindowResize, false );
-		window.scene = scene;
-
-		/*init controls*/
-		//manageVisitProgress(1);
-		currentVisit = visits[0];
-		visitState = 0;
-		targetInterestPoint = interestPoints3D[currentVisit[visitState]];
-		//console.log(targetInterestPoint);
-		//targetInterestPointIs (targetInterestPoint);
-		switchControlsTo(controlModes.fly);
-		
-		createPath();
+				//Event when mouseOut an interestPoint
+				domEvents.addEventListener(node, 'mouseout', function(event) {
+					event.target.material = partsMat;
+				});
+			}
+		});
 		
 		/*stats*/
-		stats = new Stats();        
+		/*stats = new Stats();        
 		stats.domElement.style.position = 'absolute';
 		stats.domElement.style.left = '0px';
 		stats.domElement.style.top = '0px';     
-		container.appendChild( stats.domElement );  
+		container.appendChild( stats.domElement ); */
 
 		animate();
 		
 	}
-	
-	/*function createPath () {
-		for (var i = 0 ; i <= currentVisit.length ; i ++) {
-			
-			if (i != currentVisit.length) {
-				
-				tween = new TWEEN.Tween(visitStatePos).to(interestPoints3D[currentVisit[i]].position, 2000 )
-					.easing (TWEEN.Easing.Quadratic.InOut)
-					.onComplete(function() {visitState++})
-					.onUpdate(function() {camera.position = visitStatePos});
-				pathTweens.push(tween);
-				if (i > 0) {
-					pathTweens[i-1].chain(pathTweens[i]);
-				}
-			}
-			
-			else {
-				tween = new TWEEN.Tween(visitStatePos).to(interestPoints3D[currentVisit[0]].position, 2000 )
-					.easing (TWEEN.Easing.Quadratic.InOut)
-					.onComplete(function() {visitState = 0})
-					.onUpdate(function() {camera.position = visitStatePos});
-				pathTweens.push(tween);
-				pathTweens[i-1].chain(pathTweens[i]);
-				pathTweens[i].chain(pathTweens[0]);
-				console.log(pathTweens);
-				console.log(i);
-			}
-		}
-	}*/
 	
 	/********************************************************************************/
 	/*		HTML Display Function				*/
@@ -360,6 +420,7 @@ window.onload = function() {
 	function startVisit() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
+		infosMenu.style.display = 'none'
 		for (i = 0; i < accueil.length; i++) {
 			accueil[i].style.display = 'none';
 			accueil[i].style.opacity = 0;
@@ -394,6 +455,17 @@ window.onload = function() {
 	}
 	
 	function setUpInterestPoints() {
+		
+		/*Instantiate html elements to be modified by the hover*/
+		leftPanel = document.getElementById('leftPanel');
+
+		interestPointTitle = document.createElement( 'h1' );
+			interestPointTitle.className = 'interestPointTitle';
+			leftPanel.appendChild( interestPointTitle );
+
+		interestPointDescription = document.createElement( 'p' );
+			interestPointDescription.className = 'interestPointDescription';
+			leftPanel.appendChild( interestPointDescription );
 
 		//creating a 3D object for each parameter and override metaData to add title & description to the THREE.Mesh object.
 		for (var attr in interestPoints) {
@@ -411,9 +483,9 @@ window.onload = function() {
 					}
 				scene.add(mesh);
 				interestPoints3D.push(mesh);
-				console.log(interestPoints3D);
+				//console.log(interestPoints3D);
 
-				//Event when mouseOver an interestPoint
+				//Event when mouseover an interestPoint
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
 					event.target.material = new_material;
 					interestPointTitle.textContent = event.target.metaData.title;
@@ -457,6 +529,7 @@ window.onload = function() {
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
 			targetPoint.material = new_material;
+			targetInterestPoint = targetPoint;
 			switchControlsTo(controlModes.trackball)
 			control.target = targetPoint.position;
 			camera.lookAt(targetPoint);
@@ -474,55 +547,99 @@ window.onload = function() {
 		
 		switch (dir) {
 			case 1 : {
-				tween = new TWEEN.Tween(camera.position).to(interestPoints3D[currentVisit[visitState+1]].position, 2000 )
+				visitStatePos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+		
+				if (visitState != 0) {
+					var goingPoint = interestPoints3D[currentVisit[visitState-1]].position;
+					var animDist = visitStatePos.distanceTo(interestPoints3D[currentVisit[visitState-1]].position);
+				}
+				else {
+					var goingPoint = interestPoints3D[currentVisit[currentVisit.length-1]].position;
+					var animDist = visitStatePos.distanceTo(interestPoints3D[currentVisit[currentVisit.length-1]].position);
+				}
+
+				var animTime = animDist/visitSpeed;
+				console.log(visitState);
+
+				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
-					.onComplete(function () {
-						visitState++;
-						manageVisitProgress(1);
-					});
+					.onComplete(function() {
+						if (visitState != 0) {visitState--;}
+						else {visitState=currentVisit.length-1};
+						//console.log(visitState);
+					})
+					.onUpdate(function() {
+						camera.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
+					})
+					.start();
 				break;
 			}
 			case -1 : {
-				tween = new TWEEN.Tween(camera.position).to(interestPoints3D[currentVisit[visitState-1]].position, 2000 )
+				visitStatePos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+		
+				var goingPoint = interestPoints3D[currentVisit[visitState]].position;
+				var animDist = visitStatePos.distanceTo(interestPoints3D[currentVisit[visitState]].position);
+
+				var animTime = animDist/visitSpeed;
+				console.log(visitState);
+
+				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
-					.onComplete(function () {
-						visitState++;
-						manageVisitProgress(1);
-					});
+					.onComplete(function() {
+						if (visitState != currentVisit.length-1) {visitState++;}
+						else {visitState=0};
+						//console.log(visitState);
+					})
+					.onUpdate(function() {
+						camera.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
+					})
+					.start();
 				break;
 			}
 			default : {
 				console.warn ("direction of the visit incorrect. dir needs to be 1 or -1");
 			}
 		}
-		console.log(cpt);
-		
-		if (cpt > 1000) {
-			visitState++;
-		}
-		else if (cpt < 0) {
-			visitState--;
-		}
 	}
 	
 	function manageVisitMode() {
+		visitTween.stop();
 		switch (visitMode) {
 			case visitModes.guide :
 				visitModeIndicator.textContent = 'Visite libre';
-				
-				switchControlsTo(controlModes.fly);
-				
 				visitMode = visitModes.free;
+				switchControlsTo(controlModes.fly);
 				break;
 			case visitModes.free :
 				visitModeIndicator.textContent = 'Visite guidée';
-				
-				switchControlsTo(controlModes.trackball);
-				
 				visitMode = visitModes.guide;
+				
+				switchControlsTo(controlModes.fly);
 				break;
 		}
-		console.log(visitMode);
+	}
+	
+	function manageWheel () {
+		switch (wheelMode) {
+			case true: 
+				wheelMode = false;
+				wheel.style.display = "none";
+				planMini.style.display = "inline";
+				break;
+			case false:
+				wheelMode = true;
+				wheel.style.display = "inline";
+				planMini.style.display = "none";
+				for( var i = scene.children.length - 1; i >= 0; i--) { scene.remove(scene.children[i])}
+				cathModelStep.position.y = -70;
+				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1;
+				cathModelStep.name = "cathedraleStep";
+				targetPoint = scene;
+				switchControlsTo(controlModes.trackball);
+				control.minDistance = 300;
+				scene.add(cathModelStep);
+				break;
+		}
 	}
 
 	function switchControlsTo (m) {
@@ -531,12 +648,15 @@ window.onload = function() {
 				control = new THREE.FlyControls( camera, renderer.domElement);
 				control.handleEvent( 'change', animate );
 				
-				control.movementSpeed = 3;
+				
+				control.movementSpeed = (visitMode == visitModes.free) ? 10 : 0;
 				control.rollSpeed = .5;
 
 				control.dragToLook = false;
 				control.autoForward = false;
-				control.canMove = (visitMode = visitModes.free) ? true : false;
+				
+				//console.log(visitMode);
+				//console.log(control.canMove);
 				
 				controlMode = controlModes.fly;
 				break;
@@ -553,7 +673,7 @@ window.onload = function() {
 				control.noZoom = false;
 				control.noPan = false;
 
-				control.staticMoving = false;
+				control.staticMoving = true;
 				control.dynamicDampingFactor = 0.2;
 
 				control.minDistance = 5;
@@ -579,7 +699,7 @@ window.onload = function() {
 			control.update(dt);
 		}
 		
-		stats.update();
+		//stats.update();
 		TWEEN.update();
 		
 		requestAnimationFrame(animate);
@@ -699,4 +819,109 @@ window.onload = function() {
 		camera.updateProjectionMatrix();
 
 	}
+	
+	/********************************************************************************/
+	/*		Radial Slider			*/
+	/********************************************************************************/
+	
+	var radialSliderContainer = document.getElementById("radialSliderContainer");
+	var	radialSliderSlider  = document.getElementById("slider");
+	var	radialSliderFill = document.getElementById("radialSliderFill");
+
+	var mPos;
+
+	var ctx = radialSliderFill.getContext('2d');
+	var fillImg = document.getElementById('fillImg');
+	fillImg.src = "data/img/radialFill.png";
+
+	var sliderWidth = radialSliderSlider.offsetWidth;
+	var sliderHeight = radialSliderSlider.offsetHeight;
+	var radius = radialSliderContainer.offsetWidth/2;
+	var deg = 0;
+
+	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
+	var Y = Math.round(radius *  - Math.cos(deg*Math.PI/180));
+
+	var sliderCSS = { left: X+radius-sliderWidth/2, top: Y+radius-sliderHeight/2 };
+
+	var mdown = false;
+
+	radialSliderSlider.addEventListener('mouseover',function (e) {
+		radialSliderSlider.style.transform = 'scale(1.5)';
+	});
+	radialSliderSlider.addEventListener('mouseout',function (e) {
+		radialSliderSlider.style.transform = 'scale(1)';
+	});
+
+	window.addEventListener('mousedown',function (e) {
+			mdown = true;
+			console.log(mdown);
+		});
+	window.addEventListener('mouseup',function (e) { mdown = false; });
+	window.addEventListener('mousemove',function (e) { 
+		if(mdown)
+		{
+			
+			console.log(e);
+			// firefox compatibility
+			if(typeof e.offsetX === "undefined" || typeof e.offsetY === "undefined") {
+			   var targetOffset = e.target.offset();
+			   e.offsetX = e.pageX - targetOffset.left;
+			   e.offsetY = e.pageY - targetOffset.top;
+			}
+
+			if(e.target == radialSliderContainer)
+				mPos = {x: e.offsetX, y: e.offsetY};
+			if (e.target == radialSliderSlider)
+				mPos = {x: e.target.offsetLeft + e.offsetX, y: e.target.offsetTop + e.offsetY};
+			else
+				mPos = {x: e.offsetX, y: e.offsetY};
+
+			var atan = Math.atan2(mPos.x-radius, mPos.y-radius);
+			deg = -atan/(Math.PI/180) + 180; // final (0-360 positive) degrees from mouse position 
+
+			console.log(mPos);
+
+			if(deg == 360)
+				deg = 0;
+
+			X = Math.round(radius* Math.sin(deg*Math.PI/180));
+			Y = Math.round(radius*  -Math.cos(deg*Math.PI/180));
+
+			console.log(X);
+			
+			radialSliderSlider.style.left =  X+radius-sliderWidth/2;
+			radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
+			drawMask();
+		}
+	});
+
+	// When the image is loaded, draw it
+	fillImg.onload = function () {
+		drawMask();
+	}
+
+	function drawMask () {
+		console.log("Draw");
+		ctx.clearRect(0, 0, radialSliderFill.width, radialSliderFill.height);
+
+	// Save the state, so we can undo the clipping
+		ctx.save();
+
+	// Create a shape, of some sort
+		ctx.beginPath();
+		ctx.moveTo(105, 105);
+		ctx.lineTo(210,105);
+		ctx.arc(105, 105, radius, 0, (deg-90) * Math.PI / 180, true);
+		//ctx.fill();
+		ctx.closePath();
+	// Clip to the current path
+		ctx.clip();
+
+		ctx.drawImage(fillImg, 0, 0);
+
+	// Undo the clipping
+		ctx.restore();
+	}
+	
 }

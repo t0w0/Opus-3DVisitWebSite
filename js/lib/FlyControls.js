@@ -1,7 +1,6 @@
 /**
  * @author James Baicoianu / http://www.baicoianu.com/
  */
-var canMove;
 
 THREE.FlyControls = function ( object, domElement ) {
 
@@ -14,10 +13,10 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.movementSpeed = 1.0;
 	this.rollSpeed = 0.005;
+	this.angleClamp = 60;
 
 	this.dragToLook = false;
 	this.autoForward = false;
-	this.canMove = true;
 
 	// disable default target object behavior
 
@@ -190,31 +189,24 @@ THREE.FlyControls = function ( object, domElement ) {
 
 		var moveMult = delta * this.movementSpeed;
 		var rotMult = delta * this.rollSpeed;
-
+	
 		this.object.translateX( this.moveVector.x * moveMult );
 		this.object.translateY( this.moveVector.y * moveMult );
 		this.object.translateZ( this.moveVector.z * moveMult );
 
 		this.tmpQuaternion.set( this.rotationVector.x * rotMult, this.rotationVector.y * rotMult, this.rotationVector.z * rotMult, 1 ).normalize();
+		//this.rotation = new THREE.Euler().setFromQuaternion(this.object.quaternion);
+		//console.log(this.object.rotation.x*180/Math.PI);
 		this.object.quaternion.multiply( this.tmpQuaternion );
 
 		// expose the rotation vector for convenience
 		this.object.rotation.setFromQuaternion( this.object.quaternion, this.object.rotation.order );
 
-
 	};
 
 	this.updateMovementVector = function() {
-		
-		if (!canMove) {
-			this.moveVector.x = 0;
-			this.moveVector.y = 0;
-			this.moveVector.z = 0;
-			return;
-		}
 
 		var forward = ( this.moveState.forward || ( this.autoForward && ! this.moveState.back ) ) ? 1 : 0;
-
 		this.moveVector.x = ( - this.moveState.left    + this.moveState.right );
 		this.moveVector.y = ( - this.moveState.down    + this.moveState.up );
 		this.moveVector.z = ( - forward + this.moveState.back );
@@ -224,8 +216,8 @@ THREE.FlyControls = function ( object, domElement ) {
 	};
 
 	this.updateRotationVector = function() {
-
-		this.rotationVector.x = ( - this.moveState.pitchDown + this.moveState.pitchUp );
+		
+		this.rotationVector.x = ( - this.moveState.pitchDown  + this.moveState.pitchUp );
 		this.rotationVector.y = ( - this.moveState.yawRight  + this.moveState.yawLeft );
 		this.rotationVector.z = ( - this.moveState.rollRight + this.moveState.rollLeft );
 
@@ -297,6 +289,7 @@ THREE.FlyControls = function ( object, domElement ) {
 	window.addEventListener( 'keyup',   _keyup, false );
 
 	this.updateMovementVector();
+	
 	this.updateRotationVector();
 
 };

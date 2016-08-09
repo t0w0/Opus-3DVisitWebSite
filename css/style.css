@@ -4,7 +4,7 @@
 
 html, body {
 	height: 100%;
-	background-color: #1e1e28;
+	/*background-color: #1e1e28;*/
 	cursor: crosshair;
 }
 
@@ -280,12 +280,12 @@ body {
 	display:inline;
 }
 
-#planControls {
+#planControl {
 	position: absolute;
-	bottom: 4vh;
-	left : 20vw;
+	top: 40vh;
+	right : 2vw;
 }
-#planControls {
+#planControl {
 	opacity:0.3;
 	display: none;
 	float: left;
@@ -293,18 +293,45 @@ body {
     -o-transition: 0.2s linear 0.0s;
     transition: 0.2s linear 0.0s;
 }
-#planControls {
+#planControl {
 	opacity:0.7;
 }
-#planControls li {
+#planControl li {
 	display:inline-block;
 	vertical-align:middle;
 	padding-left:1vw;
 }
-#planControls p {
+#planControl p {
 	display:none;
 }
-#planControls:hover p {
+#planControl:hover p {
+	display:inline;
+}
+#wheelControl {
+	position: absolute;
+	bottom: 4vh;
+	left : 20vw;
+}
+#wheelControl {
+	opacity:0.3;
+	display: none;
+	float: left;
+	-webkit-transition: 0.2s linear 0.0s;
+    -o-transition: 0.2s linear 0.0s;
+    transition: 0.2s linear 0.0s;
+}
+wheelnContros {
+	opacity:0.7;
+}
+#wheelControl li {
+	display:inline-block;
+	vertical-align:middle;
+	padding-left:1vw;
+}
+#wheelControl p {
+	display:none;
+}
+#wheelControl:hover p {
 	display:inline;
 }
 
@@ -452,12 +479,18 @@ body {
 
 #planMini {
 	position:absolute;
-	display : inline;
+	opacity:0;
 	width:20vw;
 	margin-top: 50vh;
 	right:1vw;
     transform: translate(0, -50%);
 	text-align:  center;
+	-webkit-transition: 0.2s linear 0s;
+    -o-transition: 0.2s linear 0s;
+    transition: 0.2s linear 0s;
+}
+#planMini:hover {
+	opacity : 1;
 }
 #planMini svg {
 	float :right;
@@ -504,6 +537,44 @@ body {
 	width:100%;
 	height:100%;
 	opacity: 1;
+}
+#radialSliderContainer {
+	position: absolute;
+	display: none;
+	left:50%;
+	bottom:2vh;
+	transform: translate(-50%,0);
+	width:320px;
+	height:320px;
+	border-radius: 160px;
+	margin: 50px auto;
+	cursor: default;
+	user-drag: none; 
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+#radialSliderFill {
+	position: absolute;
+	right:50%;
+	top:50%;
+	transform: translate(50%, -50%);
+}
+#fillImg {
+	width:100%;
+	height:100%;
+	-webkit-transition: 0.15s linear 0s;
+	-o-transition: 0.15s linear 0s;
+	transition: 0.15s linear 0s;
+}
+#slider {
+	position: absolute;
+	height: 15px;
+	width: 15px;
+	border-radius: 7.5px;
+	cursor: pointer;
 }
 
 /*****************************   TRAILER   *********************************/

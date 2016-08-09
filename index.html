@@ -6,7 +6,7 @@
         <link href='https://fonts.googleapis.com/css?family=Raleway:300,300italic,100italic,100' rel='stylesheet' type='text/css'>
 		
         <script type="text/javascript" src= "js/lib/three.min.js"></script>
-		<script type='text/javascript' src='js/lib/tween.js'></script>
+		<script type='text/javascript' src='js/lib/tween.min.js'></script>
 		<script type="text/javascript" src= "js/lib/ColladaLoader.js"></script>
 		<script type="text/javascript" src= "js/lib/threex.domevents.js"></script>
 		<script type="text/javascript" src= "js/lib/FlyControls.js"></script>
@@ -152,15 +152,23 @@
 		<button id="watchTheTrailer" class= 'accueil'>Regarder le trailer</button>
 		<ul id= "visitModeControl" class='basicInterface'>
 			<li>
-				<img src="data/img/picto/mute.png">
+				<img src="data/img/picto/freeVisit.png">
 			</li>
 			<li>
 				<p>Changer de mode de visite</p>
 			</li>
 		</ul>
-		<ul id= "planControls" class='basicInterface'>
+		<ul id= "wheelControl" class='basicInterface'>
 			<li>
-				<img src="data/img/picto/mute.png">
+				<img src="data/img/picto/wheel.png">
+			</li>
+			<li>
+				<p>Naviguer dans le temps</p>
+			</li>
+		</ul>
+		<ul id= "planControl" class='basicInterface'>
+			<li>
+				<img src="data/img/picto/map.png">
 			</li>
 			<li>
 				<p>Accéder au plan</p>
@@ -264,6 +272,15 @@
 		</div>
 		<div id ="leftPanel" class= 'interface3D'>
 			<!-- Javascript is creating title and description of the hover interest point here -->
+		</div>
+		<div id ="radialSliderContainer" class='interface3D'>
+			<img src = data/img/radialBG.png draggable= "false">
+			<canvas id= "radialSliderFill" width="210px" height="210px" draggable= "false">
+				<img id="fillImg">
+			</canvas>
+			<div id= "slider">
+				<img src="data/img/radialNode.png" draggable= "false">
+			</div>
 		</div>
        	<script type="text/javascript" src="js/application.js"></script>
     </body>
