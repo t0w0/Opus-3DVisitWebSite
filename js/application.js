@@ -16,7 +16,7 @@ window.onload = function() {
 	var fullScreenButton = document.getElementById('fullScreen');
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
-	var audio = new Audio('../data/sound/cathSound.mp3');
+	var audio = new Audio('./data/sound/cathSound.mp3');
 	var mute = false;
 	
 	var openningInterface = document.getElementsByClassName("openningInterface");
@@ -121,17 +121,17 @@ window.onload = function() {
 		cathModel.updateMatrix();
 		cathModel.receiveShadow = true;
 		cathModel.castShadow = true;
-		init();
 		
-	}); 
-	loader.load('http://localhost/opus0b/models/cathStepbyStep.dae', function (model) {
+		loader.load('http://localhost/opus0b/models/cathStepbyStep.dae', function (model) {
 		cathModelStep = model.scene;
 		
 		cathModelStep.updateMatrix();
 		cathModelStep.receiveShadow = true;
 		cathModelStep.castShadow = true;
-		
+		init();
 	}); 
+	}); 
+	
 	
 	function init() {
 		/********************************************************************************/
@@ -200,12 +200,12 @@ window.onload = function() {
 			camera.lookAt(scene.position);
 
 		renderer = new THREE.WebGLRenderer({antialias:true});
-					renderer.setClearColor(0x1E1E28);
-					renderer.setSize(window.innerWidth, window.innerHeight);
-					renderer.setPixelRatio( window.devicePixelRatio );
-					renderer.domElement.style.position = 'absolute';
-					renderer.shadowMap.enabled = true;
-					renderer.shadowMapSoft = true;
+			renderer.setClearColor(0x1E1E28);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.domElement.style.position = 'absolute';
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMapSoft = true;
 		
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 		window.addEventListener( 'resize', onWindowResize, false );
@@ -233,6 +233,15 @@ window.onload = function() {
 			spotLight.shadow.camera.fov = 68;
 			spotLight.shadow.bias = 0;
 		scene.add(spotLight);
+		
+		var planeGeometry = new THREE.PlaneGeometry( 1000, 1000 );
+		planeGeometry.receiveShadow = true;
+		planeGeometry.castShadow = true;
+		var planeMaterial = new THREE.MeshLambertMaterial( { color: 0x1E1E28 } );
+		var floor = new THREE.Mesh( planeGeometry, planeMaterial );
+		floor.rotation.x = 3 * Math.PI/2;
+		floor.position.y = -15;
+		scene.add(floor);
 		
 		setUpInterestPoints();
 		
@@ -302,7 +311,7 @@ window.onload = function() {
 		});
 		
 		domEvents.addEventListener(cathModel, 'mouseout', function(event) {
-			console.log('left button stop');
+			//console.log('left button stop');
 			visitTween.stop();
 			visiting = false;
 		});
@@ -316,15 +325,20 @@ window.onload = function() {
 		cathModelStep.traverse( function(node) {
 			if (node instanceof THREE.Mesh) {
 				node.material = partsMat;
+				node.castShadow = true;
+				node.receiveShadow = true;
 				domEvents.addEventListener(node, 'mouseover', function(event) {
 					event.target.material = partsMatHover;
 				});
+				node.visible = false;
 
 				//Event when mouseOut an interestPoint
 				domEvents.addEventListener(node, 'mouseout', function(event) {
 					event.target.material = partsMat;
 				});
+				parts.push(node);
 			}
+			//console.log(parts);
 		});
 		
 		/*stats*/
@@ -388,7 +402,6 @@ window.onload = function() {
 			interface3D[i].style.display = 'inline';
 			interface3D[i].style.opacity = 1;
 		}
-		console.log(interface3D);
 	}
 	
 	function setUpInterestPoints() {
@@ -495,7 +508,6 @@ window.onload = function() {
 				}
 
 				var animTime = animDist/visitSpeed;
-				console.log(visitState);
 
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
@@ -517,7 +529,6 @@ window.onload = function() {
 				var animDist = visitStatePos.distanceTo(interestPoints3D[currentVisit[visitState]].position);
 
 				var animTime = animDist/visitSpeed;
-				console.log(visitState);
 
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
@@ -564,13 +575,14 @@ window.onload = function() {
 			case false:
 				wheelMode = true;
 				wheel.style.display = "inline";
-				for( var i = scene.children.length - 1; i >= 0; i--) { scene.remove(scene.children[i])}
-				cathModelStep.position.y = -70;
-				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1;
+				for( var i = scene.children.length - 1; i >= 0; i--) { scene.children[i].visible = false}
+				cathModelStep.position.y = -4;
+				cathModelStep.position.z = 2;
+				cathModelStep.rotation.y = -1;
+				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1/16;
 				cathModelStep.name = "cathedraleStep";
 				targetPoint = scene;
 				switchControlsTo(controlModes.trackball);
-				control.minDistance = 300;
 				scene.add(cathModelStep);
 				break;
 		}
@@ -673,7 +685,6 @@ window.onload = function() {
 			default :
 				console.warn ("fullScreen should be true or false");
 		}
-		console.log(requestMethod);
 		
 		if (requestMethod) { // Native full screen.
 			if (fullScreen) {
@@ -774,7 +785,8 @@ window.onload = function() {
 	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
 	var Y = Math.round(radius *  - Math.cos(deg*Math.PI/180));
 
-	var sliderCSS = { left: X+radius-sliderWidth/2, top: Y+radius-sliderHeight/2 };
+	radialSliderSlider.style.left =  X+radius-sliderWidth/2;
+	radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
 
 	var mdown = false;
 
@@ -785,12 +797,12 @@ window.onload = function() {
 		radialSliderSlider.style.transform = 'scale(1)';
 	});
 
-	window.addEventListener('mousedown',function (e) {
+	radialSliderContainer.addEventListener('mousedown',function (e) {
 			mdown = true;
-			console.log(mdown);
+			//console.log(mdown);
 		});
-	window.addEventListener('mouseup',function (e) { mdown = false; });
-	window.addEventListener('mousemove',function (e) { 
+	radialSliderContainer.addEventListener('mouseup',function (e) { mdown = false; });
+	radialSliderContainer.addEventListener('mousemove',function (e) { 
 		if(mdown)
 		{
 			// firefox compatibility
@@ -800,25 +812,37 @@ window.onload = function() {
 			   e.offsetY = e.pageY - targetOffset.top;
 			}
 
-			if(e.target == radialSliderContainer)
+			if(e.target == radialSliderContainer) {
 				mPos = {x: e.offsetX, y: e.offsetY};
-			if (e.target == radialSliderSlider)
+			}
+			else if(e.target == radialSliderFill) {
+				mPos = {x: e.offsetX + e.target.offsetLeft, y: e.offsetY + e.target.offsetTop};
+			}
+			else {
 				mPos = {x: e.target.offsetLeft + e.offsetX, y: e.target.offsetTop + e.offsetY};
-			else
-				mPos = {x: e.offsetX, y: e.offsetY};
+			}
 
 			var atan = Math.atan2(mPos.x-radius, mPos.y-radius);
-			deg = -atan/(Math.PI/180) + 180; // final (0-360 positive) degrees from mouse position 
-
-			console.log(mPos);
+			deg = -atan/(Math.PI/180)+180; // final (0-360 positive) degrees from mouse position 
+			//console.log(e.target);
+			//console.log(mPos);
 
 			if(deg == 360)
 				deg = 0;
-
-			X = Math.round(radius* Math.sin(deg*Math.PI/180));
-			Y = Math.round(radius*  -Math.cos(deg*Math.PI/180));
 			
-			actualizeDate(deg);
+			var halfDeg = 0;
+			if (deg >= 270 && deg < 360) {
+				halfDeg = deg - 270;
+			}
+			else if (deg >= 0 && deg <= 90) {
+				halfDeg = deg + 90;
+			}
+			console.log(halfDeg);
+
+			X = Math.round(radius * Math.sin(deg*Math.PI/180));
+			Y = Math.round(radius *  -Math.cos(deg*Math.PI/180));
+			
+			actualizeDate(halfDeg);
 			
 			radialSliderSlider.style.left =  X+radius-sliderWidth/2;
 			radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
@@ -832,7 +856,6 @@ window.onload = function() {
 	};
 
 	function drawMask () {
-		console.log("Draw");
 		ctx.clearRect(0, 0, radialSliderFill.width, radialSliderFill.height);
 
 	// Save the state, so we can undo the clipping
@@ -841,8 +864,8 @@ window.onload = function() {
 	// Create a shape, of some sort
 		ctx.beginPath();
 		ctx.moveTo(105, 105);
-		ctx.lineTo(105,0);
-		ctx.arc(105, 105, radius, 1.5*Math.PI, (deg-90) * Math.PI / 180, true);
+		ctx.lineTo(0,105);
+		ctx.arc(105, 105, radius, Math.PI, (deg-90) * Math.PI / 180, false);
 		//ctx.fill();
 		ctx.closePath();
 	// Clip to the current path
@@ -858,7 +881,7 @@ window.onload = function() {
 		var minDate = 334;
 		var maxDates = 1528;
 		
-		var date = (deg * ((1528 - 334)/360)) + 334;
+		var date = (deg * ((1528 - 334)/180)) + 334;
 		
 		for (var attr in interestDates) {
 			if (interestDates[attr].hasOwnProperty) {
@@ -868,10 +891,21 @@ window.onload = function() {
 					interestPointTitle.textContent = interestDates[attr].title;
 					interestPointDescription.textContent = interestDates[attr].description;
 					interestPointDescription.style.display = "inline";
+					
+					//On efface tout les blocks affichés
+					for (var i = 0 ; i < parts.length ; i ++) {
+						parts[i].visible = false;
+					} 
+					if (interestDates[attr].blocksToAdd != null) {
+						//On parcours le tableau et on affiche tout les blocks correspondant à cette date
+						for (var i = 0 ; i < interestDates[attr].blocksToAdd.length ; i ++){
+							parts[interestDates[attr].blocksToAdd[i]].visible = true;
+							console.log(i);
+						}
+					}
 				}
 			}
 		}
-		console.log(date);
 	}
 	
 	function loadJSON(file, callback) {   
