@@ -15,19 +15,25 @@
 		<script type="text/javascript" src= "js/lib/stats.min.js"></script>
     </head>
     <body>
-		<div id="webGL-container"></div>
-		<div id="background"></div>
+		
 		<div id="trailer">
 			<video src="data/vid/trailer.mp4" type="video/mp4" id="trailerVid" autoplay>
 				Your browser does not support the video tag.
 			</video>
 			<button id="skipTrailer">Passer le trailer</button>
 		</div>
-		<div id="logo" class='basicInterface'>
+		<div id="webGL-container"></div>
+		<div id="background"></div>
+		<div id="logo" class='openningInterface interface3D' class='interface3D'>
 			<a href="index.html"><img src="data/img/logoMenu.png"></a>
 		</div>
-		<div><p id="visitModeIndicator" class='basicInterface'></p></div> 
-		<div id="infosMenu" class='basicInterface'>
+		<div><p id="visitModeIndicator" class='interface3D'></p></div>
+		
+		<!-------------------------------------------------------------------------->
+		<!-------------------------- Buttons & Links ------------------------------->
+		<!-------------------------------------------------------------------------->
+		
+		<div id="infosMenu" class='openningInterface'>
 			<ul id = "infosList">
 				<li id="partenaires">
 					<button>
@@ -52,7 +58,7 @@
 				<img src="data/img/picto/infos.png"><img>
 			</button>
 		</div>
-		<div id = "controls" class='basicInterface'>
+		<div id = "controls" class='openningInterface interface3D'>
 			<ul id= "mute">
 				<li>
 					<p>Mute</p>
@@ -70,7 +76,39 @@
 				</li>
 			</ul>
 		</div>
-		<div id="title" class= 'accueil'>
+		<button id="startButton" class='openningInterface'>DÉCOUVRIR</button>
+		<button id="watchTheTrailer" class='openningInterface'>Regarder le trailer</button>
+		<ul id= "visitModeControl" class='interface3D'>
+			<li>
+				<img src="data/img/picto/freeVisit.png">
+			</li>
+			<li>
+				<p>Changer de mode de visite</p>
+			</li>
+		</ul>
+		<ul id= "wheelControl" class='interface3D'>
+			<li>
+				<img src="data/img/picto/wheel.png">
+			</li>
+			<li>
+				<p>Naviguer dans le temps</p>
+			</li>
+		</ul>
+		<div id ="radialSliderContainer">
+			<img src = data/img/radialBG.png draggable= "false">
+			<canvas id= "radialSliderFill" width="210px" height="210px" draggable= "false">
+				<img id="fillImg">
+			</canvas>
+			<div id= "slider">
+				<img src="data/img/radialNode.png" draggable= "false">
+			</div>
+		</div>
+		
+		<!-------------------------------------------------------------------------->
+		<!---------------------- Informations containers --------------------------->
+		<!-------------------------------------------------------------------------->
+		
+		<div id="title" class='openningInterface'>
 			<h3>Bienvenue à la</h3> <br/>
 			<h1><mark>C</mark>athédrale <br/>
 				<mark>N</mark>otre <mark>D</mark>ame <br/>
@@ -80,7 +118,7 @@
 				Pénétrez avec nous dans ce monument gothique <br/>
 				et découvrez les secrets de son élévation.</h4>
 		</div>
-		<div id="projetInfos" class= 'accueil'>
+		<div id="projetInfos" class='openningInterface'>
 			<h1><mark>L</mark>e <mark>P</mark>rojet </h1>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed hendrerit ante. Curabitur consequat, justo et vulputate pellentesque, ex mi ornare nibh, id imperdiet mauris mauris vel enim. In in leo purus. Duis rutrum vulputate odio, et posuere mi dapibus sollicitudin. Donec ornare lacinia tincidunt. Suspendisse accumsan, justo id vehicula consectetur, sem risus egestas mauris, quis aliquam tortor purus aliquet velit. Nam commodo sem at leo euismod, finibus commodo justo iaculis. Quisque mollis, eros sit amet rhoncus tempor, magna libero volutpat est, eget mollis dolor eros a tortor. Curabitur eu felis sit amet mi facilisis eleifend. Phasellus ultrices ultrices dolor ac faucibus. Suspendisse nisi est, eleifend eu aliquet id, laoreet sit amet orci. Sed blandit orci nec purus consectetur accumsan.<br/><br/>
 
@@ -88,7 +126,7 @@
 
 			Aenean et lacinia erat. Donec non eros elementum lacus accumsan condimentum. Maecenas condimentum, nibh ac scelerisque vulputate, nibh massa feugiat erat, in luctus nibh diam in leo. Sed non tempus purus, sed dignissim arcu. Sed sollicitudin, velit vitae lobortis ornare, lectus nunc imperdiet tellus, congue condimentum est felis vehicula dolor. Nullam rhoncus fermentum leo vel ullamcorper. Nullam placerat enim eu massa lacinia varius. Phasellus vel luctus felis. In eu ipsum et urna eleifend pretium sit amet ut massa. Praesent faucibus gravida dolor, quis mattis felis congue non. Aliquam libero turpis, malesuada ac nibh euismod, consequat eleifend orci. Ut maximus blandit nulla, vel euismod est tincidunt sed. Nulla at lacinia arcu. Fusce a viverra ligula, eget malesuada libero. Nulla quis tempor magna. Nam eget ex in purus venenatis dignissim.</p>
 		</div>
-		<div id="equipeInfos" class= 'accueil'>
+		<div id="equipeInfos" class='openningInterface'>
 			<h1><mark>N</mark>otre <mark>É</mark>quipe </h1>
 			<ul id="equipeList">
 				<li class="equipeListElement">
@@ -113,7 +151,7 @@
 				</li>
 			</ul>
 		</div>
-		<div id="partenairesInfos" class= 'accueil'>
+		<div id="partenairesInfos" class='openningInterface'>
 			<h1><mark>N</mark>os <mark>P</mark>artenaires </h1>
 			<ul id='partenairesList'>
 				<li class="partenairesListElement">
@@ -148,140 +186,11 @@
 				</li>
 			</ul>
 		</div>
-		<button id="startButton" class= 'accueil'>DÉCOUVRIR</button>
-		<button id="watchTheTrailer" class= 'accueil'>Regarder le trailer</button>
-		<ul id= "visitModeControl" class='basicInterface'>
-			<li>
-				<img src="data/img/picto/freeVisit.png">
-			</li>
-			<li>
-				<p>Changer de mode de visite</p>
-			</li>
-		</ul>
-		<ul id= "wheelControl" class='basicInterface'>
-			<li>
-				<img src="data/img/picto/wheel.png">
-			</li>
-			<li>
-				<p>Naviguer dans le temps</p>
-			</li>
-		</ul>
-		<ul id= "planControl" class='basicInterface'>
-			<li>
-				<img src="data/img/picto/map.png">
-			</li>
-			<li>
-				<p>Accéder au plan</p>
-			</li>
-		</ul>
-		<div id="plan" class= 'interface3D'>
-			<svg xmlns="http://www.w3.org/2000/svg"
-				width="10.3139in" height="4.20892in"
-				viewBox="0 0 990 404" id="planBG">
-				<path
-					fill="none" stroke="white" stroke-width="1"
-					d="M 609.00,53.00
-					   C 609.00,53.00 609.00,132.00 609.00,132.00
-						 609.00,132.00 733.00,132.00 733.00,132.00
-						 761.42,132.00 784.20,128.94 809.00,146.44
-						 852.22,176.93 853.10,242.22 811.00,274.10
-						 797.73,284.15 780.66,289.98 764.00,290.00
-						 764.00,290.00 746.00,289.00 746.00,289.00
-						 746.00,289.00 609.00,289.00 609.00,289.00
-						 609.00,289.00 609.00,371.00 609.00,371.00
-						 609.00,371.00 449.00,371.00 449.00,371.00
-						 449.00,371.00 449.00,289.00 449.00,289.00
-						 449.00,289.00 190.00,289.00 190.00,289.00
-						 190.00,289.00 190.00,132.00 190.00,132.00
-						 190.00,132.00 449.00,132.00 449.00,132.00
-						 449.00,132.00 449.00,53.00 449.00,53.00
-						 449.00,53.00 609.00,53.00 609.00,53.00 Z" />
-			</svg>
-			<svg xmlns="http://www.w3.org/2000/svg"
-				width="10.3139in" height="4.20892in"
-				viewBox="0 0 990 404">
-			  <path
-					fill="none" stroke="white" stroke-width="1" stroke-dasharray="988.00 988.00" stroke-dashoffset="988.00" id="visit"
-					d="M 217.00,213.00
-					   C 217.00,213.00 221.00,178.00 269.00,176.00
-						 319.00,176.00 385.00,151.00 438.00,150.00
-						 491.00,149.00 457.00,99.00 485.00,81.00
-						 513.00,63.00 565.00,61.00 574.00,80.00
-						 583.00,99.00 525.00,151.00 523.00,195.00
-						 521.00,239.00 575.00,203.00 578.00,233.00
-						 581.00,263.00 604.00,347.00 558.00,345.00
-						 512.00,343.00 467.00,369.00 461.00,339.00
-						 455.00,309.00 504.00,254.00 474.00,243.00
-						 444.00,232.00 239.00,288.00 228.00,259.00
-						 217.00,230.00 372.00,196.00 402.00,205.00
-						 432.00,214.00 579.00,269.00 641.00,274.00
-						 703.00,279.00 791.00,275.00 800.00,228.00
-						 809.00,181.00 812.00,165.00 762.00,152.00
-						 712.00,139.00 610.00,133.00 571.00,152.00
-						 532.00,171.00 553.00,199.00 607.00,206.00
-						 661.00,213.00 730.00,206.00 730.00,206.00" />
-			</svg>
-		</div>
-		<div id="planMini" class= 'interface3D'>
-			<svg xmlns="http://www.w3.org/2000/svg"
-				width="10.3139in" height="4.20892in"
-				viewBox="0 0 990 404" id="planMiniBG">
-				<path
-					fill="none" stroke="white" stroke-width="3"
-					d="M 609.00,53.00
-					   C 609.00,53.00 609.00,132.00 609.00,132.00
-						 609.00,132.00 733.00,132.00 733.00,132.00
-						 761.42,132.00 784.20,128.94 809.00,146.44
-						 852.22,176.93 853.10,242.22 811.00,274.10
-						 797.73,284.15 780.66,289.98 764.00,290.00
-						 764.00,290.00 746.00,289.00 746.00,289.00
-						 746.00,289.00 609.00,289.00 609.00,289.00
-						 609.00,289.00 609.00,371.00 609.00,371.00
-						 609.00,371.00 449.00,371.00 449.00,371.00
-						 449.00,371.00 449.00,289.00 449.00,289.00
-						 449.00,289.00 190.00,289.00 190.00,289.00
-						 190.00,289.00 190.00,132.00 190.00,132.00
-						 190.00,132.00 449.00,132.00 449.00,132.00
-						 449.00,132.00 449.00,53.00 449.00,53.00
-						 449.00,53.00 609.00,53.00 609.00,53.00 Z" />
-			</svg>
-			<svg xmlns="http://www.w3.org/2000/svg"
-				width="10.3139in" height="4.20892in"
-				viewBox="0 0 990 404" id="planMiniVisit">
-			  <path
-					fill="none" stroke="white" stroke-width="3"
-					d="M 217.00,213.00
-					   C 217.00,213.00 221.00,178.00 269.00,176.00
-						 319.00,176.00 385.00,151.00 438.00,150.00
-						 491.00,149.00 457.00,99.00 485.00,81.00
-						 513.00,63.00 565.00,61.00 574.00,80.00
-						 583.00,99.00 525.00,151.00 523.00,195.00
-						 521.00,239.00 575.00,203.00 578.00,233.00
-						 581.00,263.00 604.00,347.00 558.00,345.00
-						 512.00,343.00 467.00,369.00 461.00,339.00
-						 455.00,309.00 504.00,254.00 474.00,243.00
-						 444.00,232.00 239.00,288.00 228.00,259.00
-						 217.00,230.00 372.00,196.00 402.00,205.00
-						 432.00,214.00 579.00,269.00 641.00,274.00
-						 703.00,279.00 791.00,275.00 800.00,228.00
-						 809.00,181.00 812.00,165.00 762.00,152.00
-						 712.00,139.00 610.00,133.00 571.00,152.00
-						 532.00,171.00 553.00,199.00 607.00,206.00
-						 661.00,213.00 730.00,206.00 730.00,206.00" />
-			</svg>
-		</div>
-		<div id ="leftPanel" class= 'interface3D'>
+
+		<div id ="leftPanel">
 			<!-- Javascript is creating title and description of the hover interest point here -->
 		</div>
-		<div id ="radialSliderContainer" class='interface3D'>
-			<img src = data/img/radialBG.png draggable= "false">
-			<canvas id= "radialSliderFill" width="210px" height="210px" draggable= "false">
-				<img id="fillImg">
-			</canvas>
-			<div id= "slider">
-				<img src="data/img/radialNode.png" draggable= "false">
-			</div>
-		</div>
        	<script type="text/javascript" src="js/application.js"></script>
+		
     </body>
 </html>

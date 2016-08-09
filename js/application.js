@@ -8,72 +8,69 @@ window.onload = function() {
 	
 	var body = document.body;
 	
-	var basicInterface = document.getElementsByClassName("basicInterface");
-	var accueil = document.getElementsByClassName("accueil");
-	var interface3D = document.getElementsByClassName("interface3D");
+	var trailer = document.getElementById("trailer");
+	var vid = document.getElementById("trailerVid");
+	var skipTrailer = document.getElementById ('skipTrailer');
 	
 	var logo = document.getElementById('logo');	
+	var fullScreenButton = document.getElementById('fullScreen');
+	var fullScreen = false;
+	var muteButton = document.getElementById('mute');
+	var audio = new Audio('../data/sound/cathSound.mp3');
+	var mute = false;
 	
+	var openningInterface = document.getElementsByClassName("openningInterface");
+	
+	var infosMenu = document.getElementById('infosMenu');
 	var infosDeployButton = document.getElementById( 'infosDeploy' );
 	var projetButton = document.getElementById( 'projet' );
 	var equipeButton = document.getElementById('equipe');
 	var partenaireButton = document.getElementById('partenaires');
-	
-	var fullScreenButton = document.getElementById('fullScreen');
-	var fullScreen = false;
-	var muteButton = document.getElementById('mute');
-	var audio = new Audio('./data/sound/cathSound.mp3');
-	var mute = false;
-	var planButton = document.getElementById('planControl');
-	var plan = document.getElementById('plan');
-	var planMini = document.getElementById('planMini');
-	var visitButton = document.getElementById('visitModeControl');
-	var wheelButton = document.getElementById('wheelControl');
-	var wheel = document.getElementById('radialSliderContainer');
-	
-	var path = document.getElementById('visit');
-	var length = path.getTotalLength();
-	
-	
-	var infosMenu = document.getElementById('infosMenu');
 	var startButton = document.getElementById('startButton');
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
 	var projetInfos = document.getElementById('projetInfos');
 	var equipeInfos = document.getElementById('equipeInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
+	
+	var interface3D = document.getElementsByClassName("interface3D");
+	
+	var visitButton = document.getElementById('visitModeControl');
+	var visitModeIndicator = document.getElementById('visitModeIndicator');
+	var wheelButton = document.getElementById('wheelControl');
+	var wheel = document.getElementById('radialSliderContainer');
+	var leftPanel = document.getElementById('leftPanel');
+	
 	var background = document.getElementById('background');
 	
-	var trailer = document.getElementById("trailer");
-	var vid = document.getElementById("trailerVid");
-	var skipTrailer = document.getElementById ('skipTrailer');
-	
 	var stats;
-	var leftPanel, interestPointDescription, interestPointTitle;
 	
 	//THREEJS
 	var container = document.getElementById("webGL-container");
 	var scene, camera, renderer;
 	var clock = new THREE.Clock();
+	var loader = new  THREE.ColladaLoader();
+	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
 
 	//What we're gonna use in Three scene
-	var loader = new  THREE.ColladaLoader(); 
 	var cathModel;
 	var cathModelStep;
 	var	spotLight;
-
-	//The THREEx library needs to make hoverable a cube in space.
-	var domEvents;
+	//Table that store the THREE.JS object interestpoints after instantiation.
+	var interestPoints3D = [];
+	//Variable that store the actual targetPoint - Should be a static variable
+	var targetInterestPoint = null;
+	
 	//var that we need to create the interest points.
-	var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
-		material.transparent = true;
-		material.opacity = 0.3;
-		material.blending = THREE.AdditiveBlending;
-	var new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
-		new_material.transparent = true;
-		material.opacity = 0.7;
-		new_material.blending = THREE.AdditiveBlending;
+	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+		interestPointMat.transparent = true;
+		interestPointMat.opacity = 0.3;
+		interestPointMat.blending = THREE.AdditiveBlending;
+	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
+		interestPointMatHover.transparent = true;
+		interestPointMatHover.opacity = 0.7;
+		interestPointMatHover.blending = THREE.AdditiveBlending;
 
 	//3D Controls
 	var controlModes = {"trackball": 0, "fly": 1};
@@ -81,42 +78,12 @@ window.onload = function() {
 	var control;
 	
 	//Here is an object which got JSONObject as parameters that store all the interest points.
-	var interestPoints = 
-		{
-		"ID00": {"x":-60, 	"y":22, 		"z":0, 		
-				 "title":"This is a Cube", 				
-				 "description": "Lorem Ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID01": {"x":22, 	"y":-5, 	"z":0, 		
-				 "title":"This Is another Cube", 		
-				 "description": "Lroem Ipusm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID02": {"x":22, 	"y":-2, 		"z":17, 		
-				 "title":"This Is a Cube, again", 		
-				 "description": "Morel Ispum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID03": {"x":22, 	"y":-2, 		"z":-17, 		
-				 "title":"This Is a ... Cube !", 		
-				 "description": "Romel Sipum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID04": {"x":50, 	"y":-5, 	"z":0, 		
-				 "title":"You know what it is", 			
-				 "description": "Losum Iprem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID05": {"x":-30, 	"y":-10, 		"z":-15, 	
-				 "title":"C.U.B.E", 					
-				 "description": "Lorei Upsim Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID06": {"x":-30, 	"y":-10, 	"z":15, 	
-				 "title":"Another One", 					
-				 "description": "Orem Lipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID07": {"x":22.5,	 	"y":70, 		"z":0, 	
-				 "title":"Interesting... a CUBE !", 		
-				 "description": "Ormel Pumis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		};
-
-	//Table that store the THREE.JS object interestpoints after instantiation.
-	var interestPoints3D = [];
-	//Variable that store the actual targetPoint - Should be a static variable
-	var targetInterestPoint = null;
+	var interestPoints;
+	var interestPointsJSON = loadJSON("./data/interestPoints.json", function (response) {interestPoints = JSON.parse(response);});
 	
+	//Visits
 	var visitModes = {"guide": 0, "free": 1};
 	var visitMode = visitModes.guide;
-	var visitModeIndicator = document.getElementById('visitModeIndicator');
 
 	var visits = [
 			[0, 1, 2, 0, 3, 4, 5, 7, 0, 5, 4, 6, 7, 2, 0, 1, 3],
@@ -124,13 +91,14 @@ window.onload = function() {
 	];
 	var visitSpeed = .01;
 	var currentVisit;
-	var visiting = false;
-	var visitState;
+
 	var visitStatePos;
-	var nextPointVisit;
-	var pathTweensForward = [];
-	var pathTweensBackward = [];
+
 	var visitTween = new TWEEN.Tween(0,0,0);
+	
+	var interestDates;
+	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
+	
 	var cathMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
 		cathMat.transparent = true;
 		cathMat.blending = THREE.AdditiveBlending;
@@ -166,7 +134,6 @@ window.onload = function() {
 	}); 
 	
 	function init() {
-		
 		/********************************************************************************/
 		/*		Adding Events to the HTML elements				*/
 		/********************************************************************************/
@@ -209,13 +176,6 @@ window.onload = function() {
 		
 		watchTheTrailer.addEventListener("click", function(event) {
 			manageTrailer(1);
-		});
-		
-		planButton.addEventListener("click", function(event) {
-			showPlan();
-		});
-		planButton.addEventListener("mouseover", function(event) {
-			draw();
 		});
 		
 		visitModeIndicator.textContent = 'Visite guidée';
@@ -420,44 +380,20 @@ window.onload = function() {
 	function startVisit() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
-		infosMenu.style.display = 'none'
-		for (i = 0; i < accueil.length; i++) {
-			accueil[i].style.display = 'none';
-			accueil[i].style.opacity = 0;
+		for (i = 0 ; i < openningInterface.length ; i++) {
+			openningInterface[i].style.display = 'none';
+			openningInterface[i].style.opacity = 0;
 		}
-	}
-	
-	function showPlan () {
-		if (plan.style.display == 'inline'){
-			plan.style.display = 'none'
+		for (i=0 ; i < interface3D.length ; i ++) {
+			interface3D[i].style.display = 'inline';
+			interface3D[i].style.opacity = 1;
 		}
-		else {
-			plan.style.display = 'inline'
-		}
-	}
-	
-	function draw() {
-		// Clear any previous transition
-		path.style.transition = path.style.WebkitTransition = 'none';
-		
-		// Set up the starting positions
-		path.style.strokeDasharray = length + ' ' + length;
-		path.style.strokeDashoffset = length;
-		
-		// Trigger a layout so styles are calculated & the browser
-		// picks up the starting position before animating
-		path.getBoundingClientRect();
-		// Define our transition
-		path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 10s ease-in-out';
-		
-		// Go!
-		path.style.strokeDashoffset = '0';
+		console.log(interface3D);
 	}
 	
 	function setUpInterestPoints() {
 		
 		/*Instantiate html elements to be modified by the hover*/
-		leftPanel = document.getElementById('leftPanel');
 
 		interestPointTitle = document.createElement( 'h1' );
 			interestPointTitle.className = 'interestPointTitle';
@@ -471,7 +407,7 @@ window.onload = function() {
 		for (var attr in interestPoints) {
 			if (interestPoints[attr].hasOwnProperty) {
 				var geometry = new THREE.BoxGeometry( .5, .5, .5 );
-				var mesh = new THREE.Mesh( geometry, material );
+				var mesh = new THREE.Mesh( geometry, interestPointMat );
 				mesh.position.x = interestPoints[attr].x;
 				mesh.position.y = interestPoints[attr].y;
 				mesh.position.z = interestPoints[attr].z;
@@ -487,7 +423,7 @@ window.onload = function() {
 
 				//Event when mouseover an interestPoint
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
-					event.target.material = new_material;
+					event.target.material = interestPointMatHover;
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
@@ -499,11 +435,11 @@ window.onload = function() {
 						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (event.target != targetInterestPoint){
-							event.target.material = material;
+							event.target.material = interestPointMat;
 						}
 					}
 					else {
-						event.target.material = material;
+						event.target.material = interestPointMat;
 						leftPanel.style.opacity = 0;
 					}
 
@@ -521,14 +457,14 @@ window.onload = function() {
 		//If last interestPoint wasn't null so if we weren't in fly control
 		if  (targetInterestPoint != null) {
 			targetInterestPoint.geometry.scale(2/3, 2/3, 2/3);
-			targetInterestPoint.material = material;
+			targetInterestPoint.material = interestPointMat;
 		}
 
 		if (targetPoint != null) {
 			interestPointTitle.textContent = targetPoint.metaData.title;
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
-			targetPoint.material = new_material;
+			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
 			switchControlsTo(controlModes.trackball)
 			control.target = targetPoint.position;
@@ -536,7 +472,7 @@ window.onload = function() {
 
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
-			targetInterestPoint.material = material;
+			targetInterestPoint.material = interestPointMat;
 			leftPanel.style.opacity = 0;
 			switchControlsTo(controlModes.fly);
 		}
@@ -624,12 +560,10 @@ window.onload = function() {
 			case true: 
 				wheelMode = false;
 				wheel.style.display = "none";
-				planMini.style.display = "inline";
 				break;
 			case false:
 				wheelMode = true;
 				wheel.style.display = "inline";
-				planMini.style.display = "none";
 				for( var i = scene.children.length - 1; i >= 0; i--) { scene.remove(scene.children[i])}
 				cathModelStep.position.y = -70;
 				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1;
@@ -766,40 +700,38 @@ window.onload = function() {
 				audio.play();
 				background.style.opacity = 0.9;
 				trailer.style.opacity = 0;
-				for (i = 0; i < accueil.length; i++) {
-					accueil[i].style.display = 'inline';
-					accueil[i].style.opacity = 1;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
 				}
-				for (i = 0; i < basicInterface.length; i++) {
-					basicInterface[i].style.display = 'inline';
-					basicInterface[i].style.opacity = 1;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
 				}
 				startButton.style.opacity = 0.3;
 				watchTheTrailer.style.opacity = 0.3;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
-				planButton.style.opacity = 0.3;
 				title.opacity=1;
 				break;
 			case 1 :
 				audio.pause();
 				background.style.opacity = 1;
 				trailer.style.opacity = 1;
-				for (i = 0; i < accueil.length; i++) {
-					accueil[i].style.display = 'none';
-					accueil[i].style.opacity = 0;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
 				}
-				for (i = 0; i < basicInterface.length; i++) {
-					basicInterface[i].style.display = 'none';
-					basicInterface[i].style.opacity = 0;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
 				}
 				startButton.style.opacity = 0;
 				watchTheTrailer.style.opacity = 0;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
-				planButton.style.opacity = 0;
 				title.opacity=0;
 				break;
 			default :
@@ -836,7 +768,7 @@ window.onload = function() {
 
 	var sliderWidth = radialSliderSlider.offsetWidth;
 	var sliderHeight = radialSliderSlider.offsetHeight;
-	var radius = radialSliderContainer.offsetWidth/2;
+	var radius = 320/2;
 	var deg = 0;
 
 	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
@@ -861,8 +793,6 @@ window.onload = function() {
 	window.addEventListener('mousemove',function (e) { 
 		if(mdown)
 		{
-			
-			console.log(e);
 			// firefox compatibility
 			if(typeof e.offsetX === "undefined" || typeof e.offsetY === "undefined") {
 			   var targetOffset = e.target.offset();
@@ -887,8 +817,8 @@ window.onload = function() {
 
 			X = Math.round(radius* Math.sin(deg*Math.PI/180));
 			Y = Math.round(radius*  -Math.cos(deg*Math.PI/180));
-
-			console.log(X);
+			
+			actualizeDate(deg);
 			
 			radialSliderSlider.style.left =  X+radius-sliderWidth/2;
 			radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
@@ -899,7 +829,7 @@ window.onload = function() {
 	// When the image is loaded, draw it
 	fillImg.onload = function () {
 		drawMask();
-	}
+	};
 
 	function drawMask () {
 		console.log("Draw");
@@ -911,17 +841,51 @@ window.onload = function() {
 	// Create a shape, of some sort
 		ctx.beginPath();
 		ctx.moveTo(105, 105);
-		ctx.lineTo(210,105);
-		ctx.arc(105, 105, radius, 0, (deg-90) * Math.PI / 180, true);
+		ctx.lineTo(105,0);
+		ctx.arc(105, 105, radius, 1.5*Math.PI, (deg-90) * Math.PI / 180, true);
 		//ctx.fill();
 		ctx.closePath();
 	// Clip to the current path
 		ctx.clip();
 
 		ctx.drawImage(fillImg, 0, 0);
-
 	// Undo the clipping
 		ctx.restore();
+	};
+	
+	function actualizeDate (deg) {
+		//Mappig degrees to extremes dates.
+		var minDate = 334;
+		var maxDates = 1528;
+		
+		var date = (deg * ((1528 - 334)/360)) + 334;
+		
+		for (var attr in interestDates) {
+			if (interestDates[attr].hasOwnProperty) {
+				//console.log(interestDates[attr].startDate);
+				if (date >= interestDates[attr].startDate) {
+					leftPanel.style.opacity = 1;
+					interestPointTitle.textContent = interestDates[attr].title;
+					interestPointDescription.textContent = interestDates[attr].description;
+					interestPointDescription.style.display = "inline";
+				}
+			}
+		}
+		console.log(date);
 	}
+	
+	function loadJSON(file, callback) {   
+
+		var xobj = new XMLHttpRequest();
+		xobj.overrideMimeType("application/json");
+		xobj.open('GET', file, true); // Replace 'my_data' with the path to your file
+		xobj.onreadystatechange = function () {
+			  if (xobj.readyState == 4 && xobj.status == "200") {
+				// Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+				callback(xobj.responseText);
+			  }
+		};
+		xobj.send(null);  
+ 	}
 	
 }
