@@ -124,7 +124,7 @@ body {
 
 /*****************************   INTERFACE   *********************************/
 
-.basicInterface {
+.openningInterface {
 	display: inline;
 	opacity:0;
 	z-index:4;
@@ -135,6 +135,8 @@ body {
 	z-index:4;
 }
 .interface3D {
+	opacity:0;
+	display:none;
 	z-index:3;
 }
 

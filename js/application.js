@@ -8,8 +8,7 @@ window.onload = function() {
 	
 	var body = document.body;
 	
-	var basicInterface = document.getElementsByClassName("basicInterface");
-	var accueil = document.getElementsByClassName("accueil");
+	var openningInterface = document.getElementsByClassName("openningInterface");
 	var interface3D = document.getElementsByClassName("interface3D");
 	
 	var logo = document.getElementById('logo');	
@@ -22,18 +21,11 @@ window.onload = function() {
 	var fullScreenButton = document.getElementById('fullScreen');
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
-	var audio = new Audio('./data/sound/cathSound.mp3');
+	var audio = new Audio('../data/sound/cathSound.mp3');
 	var mute = false;
-	var planButton = document.getElementById('planControl');
-	var plan = document.getElementById('plan');
-	var planMini = document.getElementById('planMini');
 	var visitButton = document.getElementById('visitModeControl');
 	var wheelButton = document.getElementById('wheelControl');
 	var wheel = document.getElementById('radialSliderContainer');
-	
-	var path = document.getElementById('visit');
-	var length = path.getTotalLength();
-	
 	
 	var infosMenu = document.getElementById('infosMenu');
 	var startButton = document.getElementById('startButton');
@@ -209,13 +201,6 @@ window.onload = function() {
 		
 		watchTheTrailer.addEventListener("click", function(event) {
 			manageTrailer(1);
-		});
-		
-		planButton.addEventListener("click", function(event) {
-			showPlan();
-		});
-		planButton.addEventListener("mouseover", function(event) {
-			draw();
 		});
 		
 		visitModeIndicator.textContent = 'Visite guidée';
@@ -421,37 +406,15 @@ window.onload = function() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
 		infosMenu.style.display = 'none'
-		for (i = 0; i < accueil.length; i++) {
-			accueil[i].style.display = 'none';
-			accueil[i].style.opacity = 0;
+		for (i = 0 ; i < openningInterface.length ; i++) {
+			openningInterface[i].style.display = 'none';
+			openningInterface[i].style.opacity = 0;
 		}
-	}
-	
-	function showPlan () {
-		if (plan.style.display == 'inline'){
-			plan.style.display = 'none'
+		for (i=0 ; i < interface3D.length ; i ++) {
+			interface3D[i].style.display = 'inline';
+			interface3D[i].style.opacity = 1;
 		}
-		else {
-			plan.style.display = 'inline'
-		}
-	}
-	
-	function draw() {
-		// Clear any previous transition
-		path.style.transition = path.style.WebkitTransition = 'none';
-		
-		// Set up the starting positions
-		path.style.strokeDasharray = length + ' ' + length;
-		path.style.strokeDashoffset = length;
-		
-		// Trigger a layout so styles are calculated & the browser
-		// picks up the starting position before animating
-		path.getBoundingClientRect();
-		// Define our transition
-		path.style.transition = path.style.WebkitTransition = 'stroke-dashoffset 10s ease-in-out';
-		
-		// Go!
-		path.style.strokeDashoffset = '0';
+		console.log(interface3D);
 	}
 	
 	function setUpInterestPoints() {
@@ -624,12 +587,10 @@ window.onload = function() {
 			case true: 
 				wheelMode = false;
 				wheel.style.display = "none";
-				planMini.style.display = "inline";
 				break;
 			case false:
 				wheelMode = true;
 				wheel.style.display = "inline";
-				planMini.style.display = "none";
 				for( var i = scene.children.length - 1; i >= 0; i--) { scene.remove(scene.children[i])}
 				cathModelStep.position.y = -70;
 				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1;
@@ -766,40 +727,38 @@ window.onload = function() {
 				audio.play();
 				background.style.opacity = 0.9;
 				trailer.style.opacity = 0;
-				for (i = 0; i < accueil.length; i++) {
-					accueil[i].style.display = 'inline';
-					accueil[i].style.opacity = 1;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
 				}
-				for (i = 0; i < basicInterface.length; i++) {
-					basicInterface[i].style.display = 'inline';
-					basicInterface[i].style.opacity = 1;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
 				}
 				startButton.style.opacity = 0.3;
 				watchTheTrailer.style.opacity = 0.3;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
-				planButton.style.opacity = 0.3;
 				title.opacity=1;
 				break;
 			case 1 :
 				audio.pause();
 				background.style.opacity = 1;
 				trailer.style.opacity = 1;
-				for (i = 0; i < accueil.length; i++) {
-					accueil[i].style.display = 'none';
-					accueil[i].style.opacity = 0;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
 				}
-				for (i = 0; i < basicInterface.length; i++) {
-					basicInterface[i].style.display = 'none';
-					basicInterface[i].style.opacity = 0;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
 				}
 				startButton.style.opacity = 0;
 				watchTheTrailer.style.opacity = 0;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
-				planButton.style.opacity = 0;
 				title.opacity=0;
 				break;
 			default :
