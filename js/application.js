@@ -96,6 +96,9 @@ window.onload = function() {
 
 	var visitTween = new TWEEN.Tween(0,0,0);
 	
+	var interestDates;
+	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
+	
 	var cathMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
 		cathMat.transparent = true;
 		cathMat.blending = THREE.AdditiveBlending;
@@ -131,7 +134,6 @@ window.onload = function() {
 	}); 
 	
 	function init() {
-		
 		/********************************************************************************/
 		/*		Adding Events to the HTML elements				*/
 		/********************************************************************************/
@@ -766,7 +768,7 @@ window.onload = function() {
 
 	var sliderWidth = radialSliderSlider.offsetWidth;
 	var sliderHeight = radialSliderSlider.offsetHeight;
-	var radius = radialSliderContainer.offsetWidth/2;
+	var radius = 320/2;
 	var deg = 0;
 
 	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
@@ -791,8 +793,6 @@ window.onload = function() {
 	window.addEventListener('mousemove',function (e) { 
 		if(mdown)
 		{
-			
-			console.log(e);
 			// firefox compatibility
 			if(typeof e.offsetX === "undefined" || typeof e.offsetY === "undefined") {
 			   var targetOffset = e.target.offset();
@@ -817,8 +817,8 @@ window.onload = function() {
 
 			X = Math.round(radius* Math.sin(deg*Math.PI/180));
 			Y = Math.round(radius*  -Math.cos(deg*Math.PI/180));
-
-			console.log(X);
+			
+			actualizeDate(deg);
 			
 			radialSliderSlider.style.left =  X+radius-sliderWidth/2;
 			radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
@@ -841,18 +841,38 @@ window.onload = function() {
 	// Create a shape, of some sort
 		ctx.beginPath();
 		ctx.moveTo(105, 105);
-		ctx.lineTo(210,105);
-		ctx.arc(105, 105, radius, 0, (deg-90) * Math.PI / 180, true);
+		ctx.lineTo(105,0);
+		ctx.arc(105, 105, radius, 1.5*Math.PI, (deg-90) * Math.PI / 180, true);
 		//ctx.fill();
 		ctx.closePath();
 	// Clip to the current path
 		ctx.clip();
 
 		ctx.drawImage(fillImg, 0, 0);
-
 	// Undo the clipping
 		ctx.restore();
 	};
+	
+	function actualizeDate (deg) {
+		//Mappig degrees to extremes dates.
+		var minDate = 334;
+		var maxDates = 1528;
+		
+		var date = (deg * ((1528 - 334)/360)) + 334;
+		
+		for (var attr in interestDates) {
+			if (interestDates[attr].hasOwnProperty) {
+				//console.log(interestDates[attr].startDate);
+				if (date >= interestDates[attr].startDate) {
+					leftPanel.style.opacity = 1;
+					interestPointTitle.textContent = interestDates[attr].title;
+					interestPointDescription.textContent = interestDates[attr].description;
+					interestPointDescription.style.display = "inline";
+				}
+			}
+		}
+		console.log(date);
+	}
 	
 	function loadJSON(file, callback) {   
 
