@@ -8,64 +8,69 @@ window.onload = function() {
 	
 	var body = document.body;
 	
-	var openningInterface = document.getElementsByClassName("openningInterface");
-	var interface3D = document.getElementsByClassName("interface3D");
+	var trailer = document.getElementById("trailer");
+	var vid = document.getElementById("trailerVid");
+	var skipTrailer = document.getElementById ('skipTrailer');
 	
 	var logo = document.getElementById('logo');	
-	
-	var infosDeployButton = document.getElementById( 'infosDeploy' );
-	var projetButton = document.getElementById( 'projet' );
-	var equipeButton = document.getElementById('equipe');
-	var partenaireButton = document.getElementById('partenaires');
-	
 	var fullScreenButton = document.getElementById('fullScreen');
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
 	var audio = new Audio('../data/sound/cathSound.mp3');
 	var mute = false;
-	var visitButton = document.getElementById('visitModeControl');
-	var wheelButton = document.getElementById('wheelControl');
-	var wheel = document.getElementById('radialSliderContainer');
+	
+	var openningInterface = document.getElementsByClassName("openningInterface");
 	
 	var infosMenu = document.getElementById('infosMenu');
+	var infosDeployButton = document.getElementById( 'infosDeploy' );
+	var projetButton = document.getElementById( 'projet' );
+	var equipeButton = document.getElementById('equipe');
+	var partenaireButton = document.getElementById('partenaires');
 	var startButton = document.getElementById('startButton');
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
 	var projetInfos = document.getElementById('projetInfos');
 	var equipeInfos = document.getElementById('equipeInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
+	
+	var interface3D = document.getElementsByClassName("interface3D");
+	
+	var visitButton = document.getElementById('visitModeControl');
+	var visitModeIndicator = document.getElementById('visitModeIndicator');
+	var wheelButton = document.getElementById('wheelControl');
+	var wheel = document.getElementById('radialSliderContainer');
+	var leftPanel = document.getElementById('leftPanel');
+	
 	var background = document.getElementById('background');
 	
-	var trailer = document.getElementById("trailer");
-	var vid = document.getElementById("trailerVid");
-	var skipTrailer = document.getElementById ('skipTrailer');
-	
 	var stats;
-	var leftPanel, interestPointDescription, interestPointTitle;
 	
 	//THREEJS
 	var container = document.getElementById("webGL-container");
 	var scene, camera, renderer;
 	var clock = new THREE.Clock();
+	var loader = new  THREE.ColladaLoader();
+	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
 
 	//What we're gonna use in Three scene
-	var loader = new  THREE.ColladaLoader(); 
 	var cathModel;
 	var cathModelStep;
 	var	spotLight;
-
-	//The THREEx library needs to make hoverable a cube in space.
-	var domEvents;
+	//Table that store the THREE.JS object interestpoints after instantiation.
+	var interestPoints3D = [];
+	//Variable that store the actual targetPoint - Should be a static variable
+	var targetInterestPoint = null;
+	
 	//var that we need to create the interest points.
-	var material = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
-		material.transparent = true;
-		material.opacity = 0.3;
-		material.blending = THREE.AdditiveBlending;
-	var new_material = new THREE.MeshBasicMaterial({color:0x317DFA});
-		new_material.transparent = true;
-		material.opacity = 0.7;
-		new_material.blending = THREE.AdditiveBlending;
+	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+		interestPointMat.transparent = true;
+		interestPointMat.opacity = 0.3;
+		interestPointMat.blending = THREE.AdditiveBlending;
+	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
+		interestPointMatHover.transparent = true;
+		interestPointMatHover.opacity = 0.7;
+		interestPointMatHover.blending = THREE.AdditiveBlending;
 
 	//3D Controls
 	var controlModes = {"trackball": 0, "fly": 1};
@@ -73,42 +78,12 @@ window.onload = function() {
 	var control;
 	
 	//Here is an object which got JSONObject as parameters that store all the interest points.
-	var interestPoints = 
-		{
-		"ID00": {"x":-60, 	"y":22, 		"z":0, 		
-				 "title":"This is a Cube", 				
-				 "description": "Lorem Ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID01": {"x":22, 	"y":-5, 	"z":0, 		
-				 "title":"This Is another Cube", 		
-				 "description": "Lroem Ipusm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID02": {"x":22, 	"y":-2, 		"z":17, 		
-				 "title":"This Is a Cube, again", 		
-				 "description": "Morel Ispum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID03": {"x":22, 	"y":-2, 		"z":-17, 		
-				 "title":"This Is a ... Cube !", 		
-				 "description": "Romel Sipum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID04": {"x":50, 	"y":-5, 	"z":0, 		
-				 "title":"You know what it is", 			
-				 "description": "Losum Iprem Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID05": {"x":-30, 	"y":-10, 		"z":-15, 	
-				 "title":"C.U.B.E", 					
-				 "description": "Lorei Upsim Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID06": {"x":-30, 	"y":-10, 	"z":15, 	
-				 "title":"Another One", 					
-				 "description": "Orem Lipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		"ID07": {"x":22.5,	 	"y":70, 		"z":0, 	
-				 "title":"Interesting... a CUBE !", 		
-				 "description": "Ormel Pumis Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc dolor ex, dictum vitae justo maximus, dictum posuere purus. Ut placerat risus urna, quis elementum magna porta dictum. Aliquam sed dui lorem. Ut bibendum gravida urna sed pulvinar. Phasellus ullamcorper semper fermentum. Pellentesque id posuere sapien. Cras faucibus ante nisl, in fringilla sapien faucibus sit amet. In hac habitasse platea dictumst. Etiam non molestie enim, vel elementum arcu."},
-		};
-
-	//Table that store the THREE.JS object interestpoints after instantiation.
-	var interestPoints3D = [];
-	//Variable that store the actual targetPoint - Should be a static variable
-	var targetInterestPoint = null;
+	var interestPoints;
+	var interestPointsJSON = loadJSON("./data/interestPoints.json", function (response) {interestPoints = JSON.parse(response);});
 	
+	//Visits
 	var visitModes = {"guide": 0, "free": 1};
 	var visitMode = visitModes.guide;
-	var visitModeIndicator = document.getElementById('visitModeIndicator');
 
 	var visits = [
 			[0, 1, 2, 0, 3, 4, 5, 7, 0, 5, 4, 6, 7, 2, 0, 1, 3],
@@ -116,13 +91,11 @@ window.onload = function() {
 	];
 	var visitSpeed = .01;
 	var currentVisit;
-	var visiting = false;
-	var visitState;
+
 	var visitStatePos;
-	var nextPointVisit;
-	var pathTweensForward = [];
-	var pathTweensBackward = [];
+
 	var visitTween = new TWEEN.Tween(0,0,0);
+	
 	var cathMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
 		cathMat.transparent = true;
 		cathMat.blending = THREE.AdditiveBlending;
@@ -405,7 +378,6 @@ window.onload = function() {
 	function startVisit() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
-		infosMenu.style.display = 'none'
 		for (i = 0 ; i < openningInterface.length ; i++) {
 			openningInterface[i].style.display = 'none';
 			openningInterface[i].style.opacity = 0;
@@ -420,7 +392,6 @@ window.onload = function() {
 	function setUpInterestPoints() {
 		
 		/*Instantiate html elements to be modified by the hover*/
-		leftPanel = document.getElementById('leftPanel');
 
 		interestPointTitle = document.createElement( 'h1' );
 			interestPointTitle.className = 'interestPointTitle';
@@ -434,7 +405,7 @@ window.onload = function() {
 		for (var attr in interestPoints) {
 			if (interestPoints[attr].hasOwnProperty) {
 				var geometry = new THREE.BoxGeometry( .5, .5, .5 );
-				var mesh = new THREE.Mesh( geometry, material );
+				var mesh = new THREE.Mesh( geometry, interestPointMat );
 				mesh.position.x = interestPoints[attr].x;
 				mesh.position.y = interestPoints[attr].y;
 				mesh.position.z = interestPoints[attr].z;
@@ -450,7 +421,7 @@ window.onload = function() {
 
 				//Event when mouseover an interestPoint
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
-					event.target.material = new_material;
+					event.target.material = interestPointMatHover;
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
@@ -462,11 +433,11 @@ window.onload = function() {
 						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (event.target != targetInterestPoint){
-							event.target.material = material;
+							event.target.material = interestPointMat;
 						}
 					}
 					else {
-						event.target.material = material;
+						event.target.material = interestPointMat;
 						leftPanel.style.opacity = 0;
 					}
 
@@ -484,14 +455,14 @@ window.onload = function() {
 		//If last interestPoint wasn't null so if we weren't in fly control
 		if  (targetInterestPoint != null) {
 			targetInterestPoint.geometry.scale(2/3, 2/3, 2/3);
-			targetInterestPoint.material = material;
+			targetInterestPoint.material = interestPointMat;
 		}
 
 		if (targetPoint != null) {
 			interestPointTitle.textContent = targetPoint.metaData.title;
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
-			targetPoint.material = new_material;
+			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
 			switchControlsTo(controlModes.trackball)
 			control.target = targetPoint.position;
@@ -499,7 +470,7 @@ window.onload = function() {
 
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
-			targetInterestPoint.material = material;
+			targetInterestPoint.material = interestPointMat;
 			leftPanel.style.opacity = 0;
 			switchControlsTo(controlModes.fly);
 		}
@@ -858,7 +829,7 @@ window.onload = function() {
 	// When the image is loaded, draw it
 	fillImg.onload = function () {
 		drawMask();
-	}
+	};
 
 	function drawMask () {
 		console.log("Draw");
@@ -881,6 +852,20 @@ window.onload = function() {
 
 	// Undo the clipping
 		ctx.restore();
-	}
+	};
+	
+	function loadJSON(file, callback) {   
+
+		var xobj = new XMLHttpRequest();
+		xobj.overrideMimeType("application/json");
+		xobj.open('GET', file, true); // Replace 'my_data' with the path to your file
+		xobj.onreadystatechange = function () {
+			  if (xobj.readyState == 4 && xobj.status == "200") {
+				// Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+				callback(xobj.responseText);
+			  }
+		};
+		xobj.send(null);  
+ 	}
 	
 }
