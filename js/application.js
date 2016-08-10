@@ -129,6 +129,7 @@ window.onload = function() {
 		addEventsToHTMLElements();
 		setUpThreeJSBasics();
 		createMyScenes();
+		setUpRadialSlider();
 		
 		switchControlsTo(controlModes.fly);
 		
@@ -138,10 +139,14 @@ window.onload = function() {
 	}
 	
 	function Update () {
+		//console.log(camera.position);
 		if (mode = controlModes.fly) {
 			var dt = clock.getDelta();
 			control.update(dt);
 		}
+		/*camera.position.x = 0;
+		camera.position.y = 0;
+		camera.position.z = 0;*/
 		
 		if (stats != null )
 			stats.update();
@@ -152,7 +157,7 @@ window.onload = function() {
 	}
 	
 	/********************************************************************************/
-	/*		HTML Display Function				*/
+	/*		HTML Display Function & Media Controls			*/
 	/********************************************************************************/
 	
 	function addEventsToHTMLElements() {
@@ -206,6 +211,164 @@ window.onload = function() {
 			manageWheel();
 		});
 	}
+	
+	function navigateBetweenPage (pageToMoveTo) {
+		switch (pageToMoveTo) {
+			case 0 : {
+				projetInfos.style.opacity = 0;
+				equipeInfos.style.opacity = 0;
+				partenaireInfos.style.opacity = 0;
+				title.style.opacity = 1;
+				break;
+			}
+			case 1 : {
+				projetInfos.style.opacity = 1;
+				equipeInfos.style.opacity = 0;
+				partenaireInfos.style.opacity = 0;
+				title.style.opacity = 0;
+				break;
+			}
+			case 2 : {
+				projetInfos.style.opacity = 0;
+				equipeInfos.style.opacity = 1;
+				partenaireInfos.style.opacity = 0;
+				title.style.opacity = 0;
+				break;
+			}
+			case 3 : {
+				projetInfos.style.opacity = 0;
+				equipeInfos.style.opacity = 0;
+				partenaireInfos.style.opacity = 1;
+				title.style.opacity = 0;
+				break;
+			}
+		}
+		
+	}
+	
+	function startVisit() {
+		background.style.display = 'none';
+		trailer.style.display = 'none';
+		for (i = 0 ; i < openningInterface.length ; i++) {
+			openningInterface[i].style.display = 'none';
+			openningInterface[i].style.opacity = 0;
+		}
+		for (i=0 ; i < interface3D.length ; i ++) {
+			interface3D[i].style.display = 'inline';
+			interface3D[i].style.opacity = 1;
+		}
+	}
+	
+	function manageSound() {
+		switch (mute) {
+			case true :
+				audio.play();
+				mute = false;
+				break;
+			case false :
+				audio.pause();
+				mute = true;
+				break;
+			default :
+				console.warn ("mute should be true or false");
+		}
+	}
+	
+	function manageFullScreen(element) {
+		var requestMethod;
+		switch (fullScreen) {
+			case false :
+				requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+				fullScreen = true;
+				break;
+			case true :
+				requestMethod = element.exitFullScreen || element.webkitExitFullscreen || element.mozCancelFullScreen || element.msExitFullScreen;
+				fullScreen = false;
+				break;
+			default :
+				console.warn ("fullScreen should be true or false");
+		}
+		
+		if (requestMethod) { // Native full screen.
+			if (fullScreen) {
+				requestMethod.call(element);
+			}
+			else {
+				requestMethod.call(element);
+			}
+		} 
+		else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+			var wscript = new ActiveXObject("WScript.Shell");
+			if (wscript !== null) {
+				wscript.SendKeys("{F11}");
+			}
+		}
+		// Supports most browsers and their versions.
+			
+	}
+	
+	function manageTrailer(toDo) {
+		switch (toDo) {
+			case 0 :
+				vid.pause();
+				audio.play();
+				background.style.opacity = 0.9;
+				trailer.style.opacity = 0;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
+				}
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'inline';
+					openningInterface[i].style.opacity = 1;
+				}
+				startButton.style.opacity = 0.3;
+				watchTheTrailer.style.opacity = 0.3;
+				projetInfos.style.opacity = 0;
+				partenairesInfos.style.opacity = 0;
+				equipeInfos.style.opacity = 0;
+				title.opacity=1;
+				break;
+			case 1 :
+				audio.pause();
+				background.style.opacity = 1;
+				trailer.style.opacity = 1;
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
+				}
+				for (i = 0; i < openningInterface.length; i++) {
+					openningInterface[i].style.display = 'none';
+					openningInterface[i].style.opacity = 0;
+				}
+				startButton.style.opacity = 0;
+				watchTheTrailer.style.opacity = 0;
+				projetInfos.style.opacity = 0;
+				partenairesInfos.style.opacity = 0;
+				equipeInfos.style.opacity = 0;
+				title.opacity=0;
+				break;
+			default :
+				console.warn ("The function manageTrailer() takes 1 argument : 0 : stop, 1 : play");
+		}
+		
+	}
+	
+	function onWindowResize( event ) {
+
+		SCREEN_HEIGHT = window.innerHeight;
+		SCREEN_WIDTH  = window.innerWidth;
+
+		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+		camera.updateProjectionMatrix();
+
+	}
+	
+	/********************************************************************************/
+	/*		3D Stuff				*/
+	/********************************************************************************/
 	
 	function setUpThreeJSBasics () {
 		scene = new THREE.Scene();
@@ -385,8 +548,7 @@ window.onload = function() {
 		sceneSteps.add(pointLight1);
 		
 		setUpInterestPoints();
-		setUpVisit();
-		addEventsToMesh ();
+		addEventsToRenderer ();
 		
 		scene.add(sceneSteps);
 		scene.add(sceneVisit);
@@ -395,14 +557,14 @@ window.onload = function() {
 		sceneSteps.visible = false;
 	}
 	
-	function addEventsToMesh () {
-		domEvents.addEventListener(cathModel, 'mousedown', function(event) {
+	function addEventsToRenderer () {
+		renderer.domElement.addEventListener('mousedown', function(event) {
 			switch (visitMode) {	
 				case visitModes.free:
 					break;
 					
 				case visitModes.guide:
-					switch (event.origDomEvent.button) {		
+					switch (event.button) {		
 						case 0:
 							//console.log('left button start');
 							visitTween.stop();
@@ -421,9 +583,9 @@ window.onload = function() {
 			}
 		});
 								   
-		domEvents.addEventListener(cathModel, 'mouseup', function(event) {
+		renderer.domElement.addEventListener('mouseup', function(event) {
 			
-			switch (event.origDomEvent.button) {
+			switch (event.button) {
 				case 0:
 					//console.log('left button stop');
 					visitTween.stop();
@@ -441,62 +603,19 @@ window.onload = function() {
         	}
 		});
 		
-		domEvents.addEventListener(cathModel, 'mouseout', function(event) {
-			//console.log('left button stop');
+		renderer.domElement.addEventListener('mouseout', function(event) {
 			visitTween.stop();
 			visiting = false;
+			if (controlMode = controlModes.fly) {
+				control.rollSpeed = 0;
+			}
 		});
-	}
-	
-	function setUpVisit () {
 		
-	}
-	
-	function navigateBetweenPage (pageToMoveTo) {
-		switch (pageToMoveTo) {
-			case 0 : {
-				projetInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
-				partenaireInfos.style.opacity = 0;
-				title.style.opacity = 1;
-				break;
+		renderer.domElement.addEventListener('mouseover', function(event) {
+			if (controlMode = controlModes.fly) {
+				control.rollSpeed = .5;
 			}
-			case 1 : {
-				projetInfos.style.opacity = 1;
-				equipeInfos.style.opacity = 0;
-				partenaireInfos.style.opacity = 0;
-				title.style.opacity = 0;
-				break;
-			}
-			case 2 : {
-				projetInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 1;
-				partenaireInfos.style.opacity = 0;
-				title.style.opacity = 0;
-				break;
-			}
-			case 3 : {
-				projetInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
-				partenaireInfos.style.opacity = 1;
-				title.style.opacity = 0;
-				break;
-			}
-		}
-		
-	}
-	
-	function startVisit() {
-		background.style.display = 'none';
-		trailer.style.display = 'none';
-		for (i = 0 ; i < openningInterface.length ; i++) {
-			openningInterface[i].style.display = 'none';
-			openningInterface[i].style.opacity = 0;
-		}
-		for (i=0 ; i < interface3D.length ; i ++) {
-			interface3D[i].style.display = 'inline';
-			interface3D[i].style.opacity = 1;
-		}
+		});
 	}
 	
 	function setUpInterestPoints() {
@@ -525,10 +644,8 @@ window.onload = function() {
 						"title": interestPoints[attr].title,
 						"description": interestPoints[attr].description
 					}
-				//scene.add(mesh);
 				sceneVisit.add(mesh);
 				interestPoints3D.push(mesh);
-				//console.log(interestPoints3D);
 
 				//Event when mouseover an interestPoint
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
@@ -557,6 +674,7 @@ window.onload = function() {
 				//Event when click on an interestPoint
 				domEvents.addEventListener(mesh, 'click', function(event) {
 					targetInterestPointIs (event.target);
+					console.log(event.target);
 				});
 			}
 		}
@@ -575,10 +693,10 @@ window.onload = function() {
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
 			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
-			switchControlsTo(controlModes.trackball)
-			control.target = targetPoint.position;
+			switchControlsTo(controlModes.trackball);
+			
+			//control.target = targetPoint.position;
 			camera.lookAt(targetPoint);
-
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
 			targetInterestPoint.material = interestPointMat;
@@ -693,8 +811,6 @@ window.onload = function() {
 		switch (m) {
 			case controlModes.fly :
 				control = new THREE.FlyControls( camera, renderer.domElement);
-				control.handleEvent( 'change', Update );
-				
 				
 				control.movementSpeed = (visitMode == visitModes.free) ? 10 : 0;
 				control.rollSpeed = .5;
@@ -702,30 +818,26 @@ window.onload = function() {
 				control.dragToLook = false;
 				control.autoForward = false;
 				
-				//console.log(visitMode);
-				//console.log(control.canMove);
-				
 				controlMode = controlModes.fly;
 				break;
 
 			case controlModes.trackball :
 				control = new THREE.TrackballControls(camera, renderer.domElement);
-				control.handleEvent( 'change', Update );
-
+				
 				control.rotateSpeed = 1.0;
 				control.zoomSpeed = 1.2;
 				control.panSpeed = 0.3;
 
 				control.noRotate = false;
 				control.noZoom = false;
-				control.noPan = false;
+				control.noPan = true;
 
 				control.staticMoving = true;
 				control.dynamicDampingFactor = 0.2;
 
-				control.minDistance = 5;
-				control.maxDistance = 30;
-				if (targetInterestPoint) {
+				control.minDistance = 10;
+				control.maxDistance = 50;
+				if (targetInterestPoint != null) {
 					control.target = targetInterestPoint.position;
 				}
 				else {
@@ -733,6 +845,7 @@ window.onload = function() {
 					console.warn("trackballControl need a target to be use");
 				}
 				controlMode = controlModes.trackball;
+				//console.log(camera.position);
 				break;
 				
 			default :
@@ -741,260 +854,155 @@ window.onload = function() {
 	}
 	
 	/********************************************************************************/
-	/*		Media controls			*/
-	/********************************************************************************/
-	
-	function manageSound() {
-		switch (mute) {
-			case true :
-				audio.play();
-				mute = false;
-				break;
-			case false :
-				audio.pause();
-				mute = true;
-				break;
-			default :
-				console.warn ("mute should be true or false");
-		}
-	}
-	
-	function manageFullScreen(element) {
-		var requestMethod;
-		switch (fullScreen) {
-			case false :
-				requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-				fullScreen = true;
-				break;
-			case true :
-				requestMethod = element.exitFullScreen || element.webkitExitFullscreen || element.mozCancelFullScreen || element.msExitFullScreen;
-				fullScreen = false;
-				break;
-			default :
-				console.warn ("fullScreen should be true or false");
-		}
-		
-		if (requestMethod) { // Native full screen.
-			if (fullScreen) {
-				requestMethod.call(element);
-			}
-			else {
-				requestMethod.call(element);
-			}
-		} 
-		else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-			var wscript = new ActiveXObject("WScript.Shell");
-			if (wscript !== null) {
-				wscript.SendKeys("{F11}");
-			}
-		}
-		// Supports most browsers and their versions.
-			
-	}
-	
-	function manageTrailer(toDo) {
-		switch (toDo) {
-			case 0 :
-				vid.pause();
-				audio.play();
-				background.style.opacity = 0.9;
-				trailer.style.opacity = 0;
-				for (i = 0; i < openningInterface.length; i++) {
-					openningInterface[i].style.display = 'inline';
-					openningInterface[i].style.opacity = 1;
-				}
-				for (i = 0; i < openningInterface.length; i++) {
-					openningInterface[i].style.display = 'inline';
-					openningInterface[i].style.opacity = 1;
-				}
-				startButton.style.opacity = 0.3;
-				watchTheTrailer.style.opacity = 0.3;
-				projetInfos.style.opacity = 0;
-				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
-				title.opacity=1;
-				break;
-			case 1 :
-				audio.pause();
-				background.style.opacity = 1;
-				trailer.style.opacity = 1;
-				for (i = 0; i < openningInterface.length; i++) {
-					openningInterface[i].style.display = 'none';
-					openningInterface[i].style.opacity = 0;
-				}
-				for (i = 0; i < openningInterface.length; i++) {
-					openningInterface[i].style.display = 'none';
-					openningInterface[i].style.opacity = 0;
-				}
-				startButton.style.opacity = 0;
-				watchTheTrailer.style.opacity = 0;
-				projetInfos.style.opacity = 0;
-				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
-				title.opacity=0;
-				break;
-			default :
-				console.warn ("The function manageTrailer() takes 1 argument : 0 : stop, 1 : play");
-		}
-		
-	}
-	
-	function onWindowResize( event ) {
-
-		SCREEN_HEIGHT = window.innerHeight;
-		SCREEN_WIDTH  = window.innerWidth;
-
-		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-
-		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-		camera.updateProjectionMatrix();
-
-	}
-	
-	/********************************************************************************/
 	/*		Radial Slider			*/
 	/********************************************************************************/
 	
-	var radialSliderContainer = document.getElementById("radialSliderContainer");
-	var	radialSliderSlider  = document.getElementById("slider");
-	var	radialSliderFill = document.getElementById("radialSliderFill");
+	function setUpRadialSlider () {
+		var radialSliderContainer = document.getElementById("radialSliderContainer");
+		var	radialSliderSlider  = document.getElementById("slider");
+		var	radialSliderFill = document.getElementById("radialSliderFill");
 
-	var mPos;
+		var mPos;
 
-	var ctx = radialSliderFill.getContext('2d');
-	var fillImg = document.getElementById('fillImg');
-	fillImg.src = "data/img/radialFill.png";
+		var ctx = radialSliderFill.getContext('2d');
+		var fillImg = document.getElementById('fillImg');
+		fillImg.src = "data/img/radialFill.png";
 
-	var sliderWidth = radialSliderSlider.offsetWidth;
-	var sliderHeight = radialSliderSlider.offsetHeight;
-	var radius = 320/2;
-	var deg = 270;
+		var sliderWidth = radialSliderSlider.offsetWidth;
+		var sliderHeight = radialSliderSlider.offsetHeight;
+		var radius = 320/2;
+		var deg = 270;
 
-	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
-	var Y = Math.round(radius *  - Math.cos(deg*Math.PI/180));
+		var X = Math.round(radius * Math.sin(deg*Math.PI/180));
+		var Y = Math.round(radius *  - Math.cos(deg*Math.PI/180));
 
-	radialSliderSlider.style.left =  X+radius-sliderWidth/2;
-	radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
+		radialSliderSlider.style.left =  X+radius-sliderWidth/2;
+		radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
 
-	var mdown = false;
+		var mdown = false;
 
-	radialSliderSlider.addEventListener('mouseover',function (e) {
-		radialSliderSlider.style.transform = 'scale(1.5)';
-	});
-	radialSliderSlider.addEventListener('mouseout',function (e) {
-		radialSliderSlider.style.transform = 'scale(1)';
-	});
-
-	radialSliderContainer.addEventListener('mousedown',function (e) {
-			mdown = true;
-			//console.log(mdown);
+		radialSliderSlider.addEventListener('mouseover',function (e) {
+			radialSliderSlider.style.transform = 'scale(1.5)';
 		});
-	radialSliderContainer.addEventListener('mouseup',function (e) { mdown = false; });
-	radialSliderContainer.addEventListener('mousemove',function (e) { 
-		if(mdown)
-		{
-			// firefox compatibility
-			if(typeof e.offsetX === "undefined" || typeof e.offsetY === "undefined") {
-			   var targetOffset = e.target.offset();
-			   e.offsetX = e.pageX - targetOffset.left;
-			   e.offsetY = e.pageY - targetOffset.top;
-			}
+		radialSliderSlider.addEventListener('mouseout',function (e) {
+			radialSliderSlider.style.transform = 'scale(1)';
+		});
 
-			if(e.target == radialSliderContainer) {
-				mPos = {x: e.offsetX, y: e.offsetY};
-			}
-			else if(e.target == radialSliderFill) {
-				mPos = {x: e.offsetX + e.target.offsetLeft, y: e.offsetY + e.target.offsetTop};
-			}
-			else {
-				mPos = {x: e.target.offsetLeft + e.offsetX, y: e.target.offsetTop + e.offsetY};
-			}
+		radialSliderContainer.addEventListener('mousedown',function (e) {
+				mdown = true;
+				//console.log(mdown);
+			});
+		radialSliderContainer.addEventListener('mouseup',function (e) { mdown = false; });
+		radialSliderContainer.addEventListener('mousemove',function (e) { 
+			if(mdown)
+			{
+				// firefox compatibility
+				if(typeof e.offsetX === "undefined" || typeof e.offsetY === "undefined") {
+				   var targetOffset = e.target.offset();
+				   e.offsetX = e.pageX - targetOffset.left;
+				   e.offsetY = e.pageY - targetOffset.top;
+				}
 
-			var atan = Math.atan2(mPos.x-radius, mPos.y-radius);
-			deg = -atan/(Math.PI/180)+180; // final (0-360 positive) degrees from mouse position 
-			//console.log(e.target);
-			//console.log(mPos);
+				if(e.target == radialSliderContainer) {
+					mPos = {x: e.offsetX, y: e.offsetY};
+				}
+				else if(e.target == radialSliderFill) {
+					mPos = {x: e.offsetX + e.target.offsetLeft, y: e.offsetY + e.target.offsetTop};
+				}
+				else {
+					mPos = {x: e.target.offsetLeft + e.offsetX, y: e.target.offsetTop + e.offsetY};
+				}
 
-			if(deg == 360)
-				deg = 0;
-			
-			var halfDeg = 0;
-			if (deg >= 270 && deg < 360) {
-				halfDeg = deg - 270;
-			}
-			else if (deg >= 0 && deg <= 90) {
-				halfDeg = deg + 90;
-			}
-			console.log(halfDeg);
+				var atan = Math.atan2(mPos.x-radius, mPos.y-radius);
+				deg = -atan/(Math.PI/180)+180; // final (0-360 positive) degrees from mouse position 
+				//console.log(e.target);
+				//console.log(mPos);
 
-			X = Math.round(radius * Math.sin(deg*Math.PI/180));
-			Y = Math.round(radius *  -Math.cos(deg*Math.PI/180));
-			
-			actualizeDate(halfDeg);
-			
-			radialSliderSlider.style.left =  X+radius-sliderWidth/2;
-			radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
+				if(deg == 360)
+					deg = 0;
+
+				var halfDeg = 0;
+				if (deg >= 270 && deg < 360) {
+					halfDeg = deg - 270;
+				}
+				else if (deg >= 0 && deg <= 90) {
+					halfDeg = deg + 90;
+				}
+				console.log(halfDeg);
+
+				X = Math.round(radius * Math.sin(deg*Math.PI/180));
+				Y = Math.round(radius *  -Math.cos(deg*Math.PI/180));
+
+				actualizeDate(halfDeg);
+
+				radialSliderSlider.style.left =  X+radius-sliderWidth/2;
+				radialSliderSlider.style.top =  Y+radius-sliderHeight/2;
+				drawMask();
+			}
+		});
+
+		// When the image is loaded, draw it
+		fillImg.onload = function () {
 			drawMask();
-		}
-	});
+		};
 
-	// When the image is loaded, draw it
-	fillImg.onload = function () {
-		drawMask();
-	};
+		function drawMask () {
+			ctx.clearRect(0, 0, radialSliderFill.width, radialSliderFill.height);
 
-	function drawMask () {
-		ctx.clearRect(0, 0, radialSliderFill.width, radialSliderFill.height);
+		// Save the state, so we can undo the clipping
+			ctx.save();
 
-	// Save the state, so we can undo the clipping
-		ctx.save();
+		// Create a shape, of some sort
+			ctx.beginPath();
+			ctx.moveTo(105, 105);
+			ctx.lineTo(0,105);
+			ctx.arc(105, 105, radius, Math.PI, (deg-90) * Math.PI / 180, false);
+			//ctx.fill();
+			ctx.closePath();
+		// Clip to the current path
+			ctx.clip();
 
-	// Create a shape, of some sort
-		ctx.beginPath();
-		ctx.moveTo(105, 105);
-		ctx.lineTo(0,105);
-		ctx.arc(105, 105, radius, Math.PI, (deg-90) * Math.PI / 180, false);
-		//ctx.fill();
-		ctx.closePath();
-	// Clip to the current path
-		ctx.clip();
+			ctx.drawImage(fillImg, 0, 0);
+		// Undo the clipping
+			ctx.restore();
+		};
 
-		ctx.drawImage(fillImg, 0, 0);
-	// Undo the clipping
-		ctx.restore();
-	};
-	
-	function actualizeDate (deg) {
-		//Mappig degrees to extremes dates.
-		var minDate = interestDates[0].startDate;
-		var maxDate = interestDates[interestDates.length-1].startDate;
-		
-		var date = (deg * ((maxDate - minDate)/180)) + minDate;
-		
-		for (var attr in interestDates) {
-			if (interestDates[attr].hasOwnProperty) {
-				//console.log(interestDates[attr].startDate);
-				if (date >= interestDates[attr].startDate) {
-					leftPanel.style.opacity = 1;
-					interestPointTitle.textContent = interestDates[attr].title;
-					interestPointDescription.textContent = interestDates[attr].description;
-					interestPointDescription.style.display = "inline";
-					
-					//On efface tout les blocks affichés
-					for (var i = 0 ; i < parts.length ; i ++) {
-						parts[i].visible = false;
-					} 
-					if (interestDates[attr].blocksToAdd != null) {
-						//On parcours le tableau et on affiche tout les blocks correspondant à cette date
-						for (var i = 0 ; i < interestDates[attr].blocksToAdd.length ; i ++){
-							parts[interestDates[attr].blocksToAdd[i]].visible = true;
-							console.log(i);
+		function actualizeDate (deg) {
+			//Mappig degrees to extremes dates.
+			var minDate = interestDates[0].startDate;
+			var maxDate = interestDates[interestDates.length-1].startDate;
+
+			var date = (deg * ((maxDate - minDate)/180)) + minDate;
+
+			for (var attr in interestDates) {
+				if (interestDates[attr].hasOwnProperty) {
+					//console.log(interestDates[attr].startDate);
+					if (date >= interestDates[attr].startDate) {
+						leftPanel.style.opacity = 1;
+						interestPointTitle.textContent = interestDates[attr].title;
+						interestPointDescription.textContent = interestDates[attr].description;
+						interestPointDescription.style.display = "inline";
+
+						//On efface tout les blocks affichés
+						for (var i = 0 ; i < parts.length ; i ++) {
+							parts[i].visible = false;
+						} 
+						if (interestDates[attr].blocksToAdd != null) {
+							//On parcours le tableau et on affiche tout les blocks correspondant à cette date
+							for (var i = 0 ; i < interestDates[attr].blocksToAdd.length ; i ++){
+								parts[interestDates[attr].blocksToAdd[i]].visible = true;
+								console.log(i);
+							}
 						}
 					}
 				}
 			}
 		}
 	}
+	
+	/********************************************************************************/
+	/*		Utils			*/
+	/********************************************************************************/
 	
 	function loadJSON(file, callback) {   
 
