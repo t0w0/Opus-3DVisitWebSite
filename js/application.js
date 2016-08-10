@@ -144,10 +144,13 @@ window.onload = function() {
 			var dt = clock.getDelta();
 			control.update(dt);
 		}
+		/*camera.position.x = 0;
+		camera.position.y = 0;
+		camera.position.z = 0;*/
 		
 		if (stats != null )
 			stats.update();
-		//TWEEN.update();
+		TWEEN.update();
 		
 		requestAnimationFrame(Update);
 		renderer.render(scene,camera);
@@ -692,8 +695,8 @@ window.onload = function() {
 			targetInterestPoint = targetPoint;
 			switchControlsTo(controlModes.trackball);
 			
-			control.target = targetPoint.position;
-			//camera.lookAt(targetPoint);
+			//control.target = targetPoint.position;
+			camera.lookAt(targetPoint);
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
 			targetInterestPoint.material = interestPointMat;
@@ -820,27 +823,27 @@ window.onload = function() {
 
 			case controlModes.trackball :
 				control = new THREE.TrackballControls(camera, renderer.domElement);
+				
+				control.rotateSpeed = 1.0;
+				control.zoomSpeed = 1.2;
+				control.panSpeed = 0.3;
 
-				//control.rotateSpeed = 1.0;
-				//control.zoomSpeed = 1.2;
-				//control.panSpeed = 0.3;
+				control.noRotate = false;
+				control.noZoom = false;
+				control.noPan = true;
 
-				//control.noRotate = false;
-				//control.noZoom = false;
-				//control.noPan = true;
+				control.staticMoving = true;
+				control.dynamicDampingFactor = 0.2;
 
-				//control.staticMoving = true;
-				//control.dynamicDampingFactor = 0.2;
-
-				//control.minDistance = 10;
-				//control.maxDistance = 50;
-				/*if (targetInterestPoint) {
+				control.minDistance = 10;
+				control.maxDistance = 50;
+				if (targetInterestPoint != null) {
 					control.target = targetInterestPoint.position;
 				}
 				else {
 					console.warn(targetInterestPoint);
 					console.warn("trackballControl need a target to be use");
-				}*/
+				}
 				controlMode = controlModes.trackball;
 				//console.log(camera.position);
 				break;

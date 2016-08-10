@@ -420,8 +420,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
-		document.addEventListener( 'mousemove', mousemove, false );
-		document.addEventListener( 'mouseup', mouseup, false );
+		_this.domElement.addEventListener( 'mousemove', mousemove, false );
+		_this.domElement.addEventListener( 'mouseup', mouseup, false );
 
 		_this.dispatchEvent( startEvent );
 
@@ -460,8 +460,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		_state = STATE.NONE;
 
-		document.removeEventListener( 'mousemove', mousemove );
-		document.removeEventListener( 'mouseup', mouseup );
+		_this.domElement.removeEventListener( 'mousemove', mousemove );
+		_this.domElement.removeEventListener( 'mouseup', mouseup );
 		_this.dispatchEvent( endEvent );
 
 	}
@@ -592,8 +592,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		this.domElement.removeEventListener( 'touchend', touchend, false );
 		this.domElement.removeEventListener( 'touchmove', touchmove, false );
 
-		document.removeEventListener( 'mousemove', mousemove, false );
-		document.removeEventListener( 'mouseup', mouseup, false );
+		this.domElement.removeEventListener( 'mousemove', mousemove, false );
+		this.domElement.removeEventListener( 'mouseup', mouseup, false );
 
 		window.removeEventListener( 'keydown', keydown, false );
 		window.removeEventListener( 'keyup', keyup, false );
