@@ -39,11 +39,12 @@ window.onload = function() {
 	var visitModeIndicator = document.getElementById('visitModeIndicator');
 	var wheelButton = document.getElementById('wheelControl');
 	var wheel = document.getElementById('radialSliderContainer');
+	var wheelMode = false;
 	var leftPanel = document.getElementById('leftPanel');
 	
 	var background = document.getElementById('background');
 	
-	var stats;
+	var stats = null;
 	
 	//THREEJS
 	var container = document.getElementById("webGL-container");
@@ -59,21 +60,10 @@ window.onload = function() {
 	//What we're gonna use in Three scene
 	var cathModel;
 	var cathModelStep;
-	var	spotLight;
 	//Table that store the THREE.JS object interestpoints after instantiation.
 	var interestPoints3D = [];
 	//Variable that store the actual targetPoint - Should be a static variable
 	var targetInterestPoint = null;
-	
-	//var that we need to create the interest points.
-	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
-		interestPointMat.transparent = true;
-		interestPointMat.opacity = 0.3;
-		interestPointMat.blending = THREE.AdditiveBlending;
-	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
-		interestPointMatHover.transparent = true;
-		interestPointMatHover.opacity = 0.7;
-		interestPointMatHover.blending = THREE.AdditiveBlending;
 
 	//3D Controls
 	var controlModes = {"trackball": 0, "fly": 1};
@@ -84,48 +74,37 @@ window.onload = function() {
 	var interestPoints;
 	var interestPointsJSON = loadJSON("./data/interestPoints.json", function (response) {interestPoints = JSON.parse(response);});
 	
+	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+		interestPointMat.transparent = true;
+		interestPointMat.opacity = 0.3;
+		interestPointMat.blending = THREE.AdditiveBlending;
+	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
+		interestPointMatHover.transparent = true;
+		interestPointMatHover.opacity = 0.7;
+		interestPointMatHover.blending = THREE.AdditiveBlending;
+	
 	//Visits
 	var visitModes = {"guide": 0, "free": 1};
 	var visitMode = visitModes.guide;
+	var visitSpeed = .01;
 
 	var visits = [
 			[0, 1, 2, 0, 3, 4, 5, 7, 0, 5, 4, 6, 7, 2, 0, 1, 3],
 			[1, 3, 5, 7, 0, 2, 4, 6],
 	];
-	var visitSpeed = .01;
-	var currentVisit;
-
-	var visitStatePos;
+	
+	var currentVisit = visits[0];;
+	var visitState = 0;
+	var visitStatePos =  new THREE.Vector3(45, 0, 0);
 
 	var visitTween = new TWEEN.Tween(0,0,0);
 	
 	var interestDates;
 	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
 	
-	var cathMat = new THREE.MeshLambertMaterial({
-		ambient		: 0x444444,
-		color		: 0xFFFFFF,
-		shininess	: 0.1, 
-		specular	: 0x888888,
-		shading		: THREE.SmoothShading});
-		cathMat.transparent = true;
-		cathMat.blending = THREE.AdditiveBlending;
-	var partsMat = new THREE.MeshLambertMaterial({
-		ambient		: 0x444444,
-		color		: 0xFFFFFF,
-		shininess	: 0.1, 
-		specular	: 0x888888,
-		shading		: THREE.SmoothShading});
-		partsMat.opacity = 0.3;
-	var partsMatHover = new THREE.MeshBasicMaterial({color: 0x89A64B});
-		partsMatHover.transparent = true;
-		partsMatHover.blending = THREE.AdditiveBlending;
-	
 	var parts = [];
 	
-	var wheelMode = false;
-	
-	//Start by loading the 3D model and launch Init()
+	//Start by loading the two 3D models and launch Init()
 	loader.options.convertUpAxis = true;
 	loader.load ('http://localhost/opus0b/models/cath.dae', function (model) {
 		cathModel = model.scene;
@@ -135,20 +114,48 @@ window.onload = function() {
 		cathModel.castShadow = true;
 		
 		loader.load('http://localhost/opus0b/models/cathStepbyStep.dae', function (model) {
-		cathModelStep = model.scene;
+			cathModelStep = model.scene;
+
+			cathModelStep.updateMatrix();
+			cathModelStep.receiveShadow = true;
+			cathModelStep.castShadow = true;
+			Setup();
+		}); 
+	}); 
+	
+	
+	function Setup() {
+
+		addEventsToHTMLElements();
+		setUpThreeJSBasics();
+		createMyScenes();
 		
-		cathModelStep.updateMatrix();
-		cathModelStep.receiveShadow = true;
-		cathModelStep.castShadow = true;
-		init();
-	}); 
-	}); 
+		switchControlsTo(controlModes.fly);
+		
+		//stats();
+		Update();
+		
+	}
 	
+	function Update () {
+		if (mode = controlModes.fly) {
+			var dt = clock.getDelta();
+			control.update(dt);
+		}
+		
+		if (stats != null )
+			stats.update();
+		TWEEN.update();
+		
+		requestAnimationFrame(Update);
+		renderer.render(scene,camera);
+	}
 	
-	function init() {
-		/********************************************************************************/
-		/*		Adding Events to the HTML elements				*/
-		/********************************************************************************/
+	/********************************************************************************/
+	/*		HTML Display Function				*/
+	/********************************************************************************/
+	
+	function addEventsToHTMLElements() {
 		
 		infosDeployButton.addEventListener( 'click', function ( event ) {
 			navigateBetweenPage(0);
@@ -198,15 +205,11 @@ window.onload = function() {
 		wheelButton.addEventListener("click", function(event) {
 			manageWheel();
 		});
-		
-		/********************************************************************************/
-		/*		Building the THREE.js Scene				*/
-		/********************************************************************************/
-		
-		/*creates empty scene object and renderer*/
+	}
+	
+	function setUpThreeJSBasics () {
 		scene = new THREE.Scene();
-		sceneVisit = new THREE.Group();
-		sceneSteps = new THREE.Group();
+		
 		camera =  new THREE.PerspectiveCamera(45, 	window.innerWidth/window.innerHeight, .1, 500);
 			camera.position.x = 45;
 			camera.position.y = 0;
@@ -224,22 +227,68 @@ window.onload = function() {
 			renderer.shadowMapSoft = true;
 		
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
+		
 		window.addEventListener( 'resize', onWindowResize, false );
 		window.scene = scene;
 		
+		var ambientLight = new THREE.AmbientLight(0x1E1E28);
+		ambientLight.castShadow = false;
+		ambientLight.intensity = 0.5;
+		scene.add(ambientLight);
+		
+		container.appendChild( renderer.domElement );
+	}
+	
+	function createMyScenes () {
+		
+		sceneVisit = new THREE.Group();
+		sceneSteps = new THREE.Group();
+		
+		/********************************************************************************/
+		/*		SCENE VISIT				*/
+		/********************************************************************************/
+		
+		var planeGeometry = new THREE.PlaneGeometry( 1000, 1000 );
+		planeGeometry.receiveShadow = true;
+		planeGeometry.castShadow = false;
+		
+		var planeMaterial	= new THREE.MeshPhongMaterial({
+		ambient		: 0x444444,
+		color		: 0xFFFFFF,
+		shading		: THREE.SmoothShading
+		});
+		
+		var floor1 = new THREE.Mesh( planeGeometry, planeMaterial );
+		floor1.name = "Floor1";
+		floor1.receiveShadow = true;
+		floor1.castShadow = false;
+		floor1.rotation.x = 3 * Math.PI/2;
+		floor1.position.y = -15;
+		//scene.add(floor);
+		sceneVisit.add(floor1);
+		
+		var cathMat = new THREE.MeshLambertMaterial({
+		ambient		: 0x444444,
+		color		: 0xFFFFFF,
+		shininess	: 0.1, 
+		specular	: 0x888888,
+		shading		: THREE.SmoothShading});
+		cathMat.transparent = true;
+		cathMat.blending = THREE.AdditiveBlending;
+		
 		/*adds the cathModel model*/
-			cathModel.traverse( function(node) {
-				if (node instanceof THREE.Mesh) {
-					node.material = cathMat;
-				}
-			});
-			cathModel.position.y = 30;
-			cathModel.scale.x = cathModel.scale.y = cathModel.scale.z = 3;
-			cathModel.name = "cathedrale";
+		cathModel.traverse( function(node) {
+			if (node instanceof THREE.Mesh) {
+				node.material = cathMat;
+			}
+		});
+		cathModel.position.y = 30;
+		cathModel.scale.x = cathModel.scale.y = cathModel.scale.z = 3;
+		cathModel.name = "Cathedrale";
 		//scene.add(cathModel);
 		sceneVisit.add(cathModel);
 
-		/*adds spot light with starting parameters*/
+		/*adds spotlight with starting parameters*/
 		spotLight1 = new THREE.SpotLight(0x1E1E28);
 			spotLight1.name = "Spot1";
 			spotLight1.castShadow = true;
@@ -252,14 +301,55 @@ window.onload = function() {
 			spotLight1.shadow.camera.far = 2635;
 			spotLight1.shadow.camera.fov = 68;
 			spotLight1.shadow.bias = 0;
-		//scene.add(spotLight);
 		sceneVisit.add(spotLight1);
 		
+		/********************************************************************************/
+		/*		SCENE STEPS			*/
+		/********************************************************************************/
 		
-		var ambientLight = new THREE.AmbientLight(0x1E1E28);
-		ambientLight.castShadow = false;
-		ambientLight.intensity = 0.5;
-		scene.add(ambientLight);
+		var floor2 = new THREE.Mesh (planeGeometry, planeMaterial);
+		floor2.receiveShadow = true;
+		floor2.castShadow = false;
+		floor2.rotation.x = 3 * Math.PI/2;
+		floor2.position.y = -4;
+		sceneSteps.add(floor2);
+		
+		var partsMat = new THREE.MeshLambertMaterial({
+			ambient		: 0x444444,
+			color		: 0xFFFFFF,
+			shininess	: 0.1, 
+			specular	: 0x888888,
+			shading		: THREE.SmoothShading});
+			partsMat.opacity = 0.3;
+		var partsMatHover = new THREE.MeshBasicMaterial({color: 0x89A64B});
+			partsMatHover.transparent = true;
+			partsMatHover.blending = THREE.AdditiveBlending;
+		
+		cathModelStep.traverse( function(part) {
+			if (part instanceof THREE.Mesh) {
+				part.material = partsMat;
+				part.castShadow = true;
+				part.receiveShadow = true;
+				domEvents.addEventListener(part, 'mouseover', function(event) {
+					event.target.material = partsMatHover;
+				});
+				part.visible = false;
+
+				//Event when mouseOut an interestPoint
+				domEvents.addEventListener(part, 'mouseout', function(event) {
+					event.target.material = partsMat;
+				});
+				parts.push(part);
+			}
+			//console.log(parts);
+		});
+		
+		cathModelStep.position.y = -4;
+		cathModelStep.position.z = 2;
+		cathModelStep.rotation.y = -1;
+		cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1/16;
+		cathModelStep.name = "cathedraleStep";
+		sceneSteps.add(cathModelStep);
 		
 		var spotLight2 = new THREE.SpotLight(0x1E1E28);
 			spotLight2.name = "Spot2";
@@ -294,48 +384,18 @@ window.onload = function() {
 			pointLight1.angle = 2.6;
 		sceneSteps.add(pointLight1);
 		
-		var planeGeometry = new THREE.PlaneGeometry( 1000, 1000 );
-		planeGeometry.receiveShadow = true;
-		planeGeometry.castShadow = false;
-		
-		var material	= new THREE.MeshPhongMaterial({
-		ambient		: 0x444444,
-		color		: 0xFFFFFF,
-		shading		: THREE.SmoothShading
-	});
-		
-		var planeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFFFF } );
-		var floor1 = new THREE.Mesh( planeGeometry, material );
-		floor1.receiveShadow = true;
-		floor1.castShadow = false;
-		floor1.rotation.x = 3 * Math.PI/2;
-		floor1.position.y = -15;
-		//scene.add(floor);
-		sceneVisit.add(floor1);
-		
-		var floor2 = new THREE.Mesh (planeGeometry, material);
-		floor2.receiveShadow = true;
-		floor2.castShadow = false;
-		floor2.rotation.x = 3 * Math.PI/2;
-		floor2.position.y = -4;
-		sceneSteps.add(floor2);
-		
 		setUpInterestPoints();
+		setUpVisit();
+		addEventsToMesh ();
 		
-		container.appendChild( renderer.domElement );
+		scene.add(sceneSteps);
+		scene.add(sceneVisit);
 		
-		/********************************************************************************/
-		/*		Building paths for visits			*/
-		/********************************************************************************/
-		
-		switchControlsTo(controlModes.fly);
-		
-		//Initialize visit value
-		
-		currentVisit = visits[0];
-		visitState = 0;
-		visitStatePos = new THREE.Vector3(45, 0, 0);
-		
+		sceneVisit.visible = true;
+		sceneSteps.visible = false;
+	}
+	
+	function addEventsToMesh () {
 		domEvents.addEventListener(cathModel, 'mousedown', function(event) {
 			switch (visitMode) {	
 				case visitModes.free:
@@ -386,54 +446,11 @@ window.onload = function() {
 			visitTween.stop();
 			visiting = false;
 		});
-		
-		cathModelStep.traverse( function(part) {
-			if (part instanceof THREE.Mesh) {
-				part.material = partsMat;
-				part.castShadow = true;
-				part.receiveShadow = true;
-				domEvents.addEventListener(part, 'mouseover', function(event) {
-					event.target.material = partsMatHover;
-				});
-				part.visible = false;
-
-				//Event when mouseOut an interestPoint
-				domEvents.addEventListener(part, 'mouseout', function(event) {
-					event.target.material = partsMat;
-				});
-				parts.push(part);
-			}
-			//console.log(parts);
-		});
-		
-		/*stats*/
-		/*stats = new Stats();        
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.left = '0px';
-		stats.domElement.style.top = '0px';     
-		container.appendChild( stats.domElement ); */
-		
-		cathModelStep.position.y = -4;
-		cathModelStep.position.z = 2;
-		cathModelStep.rotation.y = -1;
-		cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1/16;
-		cathModelStep.name = "cathedraleStep";
-		sceneSteps.add(cathModelStep);
-		
-		scene.add(sceneSteps);
-		scene.add(sceneVisit);
-		
-		sceneVisit.visible = true;
-		sceneSteps.visible = false;
-		
-		animate();
-		
 	}
 	
-	/********************************************************************************/
-	/*		HTML Display Function				*/
-	/********************************************************************************/
-	
+	function setUpVisit () {
+		
+	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		switch (pageToMoveTo) {
@@ -493,7 +510,7 @@ window.onload = function() {
 		interestPointDescription = document.createElement( 'p' );
 			interestPointDescription.className = 'interestPointDescription';
 			leftPanel.appendChild( interestPointDescription );
-
+		
 		//creating a 3D object for each parameter and override metaData to add title & description to the THREE.Mesh object.
 		for (var attr in interestPoints) {
 			if (interestPoints[attr].hasOwnProperty) {
@@ -676,7 +693,7 @@ window.onload = function() {
 		switch (m) {
 			case controlModes.fly :
 				control = new THREE.FlyControls( camera, renderer.domElement);
-				control.handleEvent( 'change', animate );
+				control.handleEvent( 'change', Update );
 				
 				
 				control.movementSpeed = (visitMode == visitModes.free) ? 10 : 0;
@@ -693,7 +710,7 @@ window.onload = function() {
 
 			case controlModes.trackball :
 				control = new THREE.TrackballControls(camera, renderer.domElement);
-				control.handleEvent( 'change', animate );
+				control.handleEvent( 'change', Update );
 
 				control.rotateSpeed = 1.0;
 				control.zoomSpeed = 1.2;
@@ -721,19 +738,6 @@ window.onload = function() {
 			default :
 				console.info ("This control mode doesn't exist");
 		}
-	}
-	
-	function animate () {
-		if (mode = controlModes.fly) {
-			var dt = clock.getDelta();
-			control.update(dt);
-		}
-		
-		//stats.update();
-		TWEEN.update();
-		
-		requestAnimationFrame(animate);
-		renderer.render(scene,camera);
 	}
 	
 	/********************************************************************************/
@@ -1005,5 +1009,13 @@ window.onload = function() {
 		};
 		xobj.send(null);  
  	}
+	
+	function stats() {
+		stats = new Stats();        
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.left = '0px';
+		stats.domElement.style.top = '0px';     
+		container.appendChild( stats.domElement );
+	}
 	
 }
