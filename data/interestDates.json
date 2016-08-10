@@ -1,4 +1,4 @@
-[{
+[/*{
 	"startDate": 334, 	"endDate": 346,	"blocksToAdd": null,
 	"title": "334", 				
 	"description": "Baptême de saint Martin vers 334 ; existence d’un évêque, Eulogius, attestée en 346."},
@@ -33,7 +33,7 @@
  {
 	"startDate": 1218, 	"endDate": "null",	"blocksToAdd": [0],
 	"title": "1218", 				
-	"description": "Terrasement et mises en place des fondations. Incendie de la cathédrale romane (tradition douteuse) ; projet sans doute longuement mûri.  un contexte favorable. émulation/Reims. Négociations pour acquisition de terrain pour bâtir le plus grand édifice de son temps (8000m²). NB remodelage de la topographie du quartier ; la cathédrale recouvre tous les édifices antérieurs  l’église Saint-Firmin, à l’emplacement de l’actuel bras nord, est déplacée ; nouveaux bâtiments annexes (Palais épiscopal, cloître, salle capitulaire). Un chantier relativement rapide (cf. Phasage dans Murray 1996), env. 50 ans pour le gros oeuvre ; innovations techniques par rapport à Chartres et à Reims : standardisation de la taille des piliers ; allègement des maçonneries. Une perfection rarement dépassée. Mais un chantier qui reste couteux ; évêques soutenus par le chapitre ; rôle des rois de France plus énigmatique"},
+	"description": "Terrasement et mises en place des fondations. Incendie de la cathédrale romane (tradition douteuse) ; projet sans doute longuement mûri.  un contexte favorable. émulation/Reims. Négociations pour acquisition de terrain pour bâtir le plus grand édifice de son temps (8000m²). NB remodelage de la topographie du quartier ; la cathédrale recouvre tous les édifices antérieurs  l’église Saint-Firmin, à l’emplacement de l’actuel bras nord, est déplacée ; nouveaux bâtiments annexes (Palais épiscopal, cloître, salle capitulaire). Un chantier relativement rapide (cf. Phasage dans Murray 1996), env. 50 ans pour le gros oeuvre ; innovations techniques par rapport à Chartres et à Reims : standardisation de la taille des piliers ; allègement des maçonneries. Une perfection rarement dépassée. Mais un chantier qui reste couteux ; évêques soutenus par le chapitre ; rôle des rois de France plus énigmatique"},*/
  {
 	"startDate": 1220, 	"endDate": "null",	"blocksToAdd": [0],
 	"title": "1220", 				
@@ -125,5 +125,5 @@
  {
 	"startDate": 1528, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
 	"title": "1528", 				
-	"description": "Incendie de la flèche en charpente de la croisée du transept ; elle est refaite en 1528-1533"} 
+	"description": "Incendie de la flèche en charpente de la croisée du transept ; elle est refaite en 1528-1533"}
 ]

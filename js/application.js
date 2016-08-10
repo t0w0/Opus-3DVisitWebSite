@@ -53,6 +53,9 @@ window.onload = function() {
 	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
 
+	var sceneVisit;
+	var sceneSteps;
+	
 	//What we're gonna use in Three scene
 	var cathModel;
 	var cathModelStep;
@@ -99,11 +102,20 @@ window.onload = function() {
 	var interestDates;
 	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
 	
-	var cathMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
+	var cathMat = new THREE.MeshLambertMaterial({
+		ambient		: 0x444444,
+		color		: 0xFFFFFF,
+		shininess	: 0.1, 
+		specular	: 0x888888,
+		shading		: THREE.SmoothShading});
 		cathMat.transparent = true;
 		cathMat.blending = THREE.AdditiveBlending;
-	var partsMat = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
-		partsMat.transparent = true;
+	var partsMat = new THREE.MeshLambertMaterial({
+		ambient		: 0x444444,
+		color		: 0xFFFFFF,
+		shininess	: 0.1, 
+		specular	: 0x888888,
+		shading		: THREE.SmoothShading});
 		partsMat.opacity = 0.3;
 	var partsMatHover = new THREE.MeshBasicMaterial({color: 0x0DAAFF});
 		partsMatHover.transparent = true;
@@ -193,6 +205,8 @@ window.onload = function() {
 		
 		/*creates empty scene object and renderer*/
 		scene = new THREE.Scene();
+		sceneVisit = new THREE.Group();
+		sceneSteps = new THREE.Group();
 		camera =  new THREE.PerspectiveCamera(45, 	window.innerWidth/window.innerHeight, .1, 500);
 			camera.position.x = 45;
 			camera.position.y = 0;
@@ -205,6 +219,8 @@ window.onload = function() {
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.domElement.style.position = 'absolute';
 			renderer.shadowMap.enabled = true;
+			// to antialias the shadow
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 			renderer.shadowMapSoft = true;
 		
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
@@ -212,36 +228,97 @@ window.onload = function() {
 		window.scene = scene;
 		
 		/*adds the cathModel model*/
-			//cathModelMat = new THREE.MeshPhongMaterial ({transparent:true, blending:'alpha'});
-			//cathModel.material = cathModelMat;
+			cathModel.traverse( function(node) {
+				if (node instanceof THREE.Mesh) {
+					node.material = cathMat;
+				}
+			});
 			cathModel.position.y = 30;
 			cathModel.scale.x = cathModel.scale.y = cathModel.scale.z = 3;
 			cathModel.name = "cathedrale";
-		scene.add(cathModel);
+		//scene.add(cathModel);
+		sceneVisit.add(cathModel);
 
 		/*adds spot light with starting parameters*/
-		spotLight = new THREE.SpotLight(0x1E1E28);
-			spotLight.name = "Spot1";
-			spotLight.castShadow = true;
-			spotLight.position.x = -100; 
-			spotLight.intensity = 10;        
-			spotLight.distance = 373;
-			spotLight.angle = 1.6;
-			spotLight.exponent = 38;
-			spotLight.shadow.camera.near = 0;
-			spotLight.shadow.camera.far = 2635;
-			spotLight.shadow.camera.fov = 68;
-			spotLight.shadow.bias = 0;
-		scene.add(spotLight);
+		spotLight1 = new THREE.SpotLight(0x1E1E28);
+			spotLight1.name = "Spot1";
+			spotLight1.castShadow = true;
+			spotLight1.position.x = -100; 
+			spotLight1.intensity = 10;        
+			spotLight1.distance = 373;
+			spotLight1.angle = 1.6;
+			spotLight1.exponent = 38;
+			spotLight1.shadow.camera.near = 0;
+			spotLight1.shadow.camera.far = 2635;
+			spotLight1.shadow.camera.fov = 68;
+			spotLight1.shadow.bias = 0;
+		//scene.add(spotLight);
+		sceneVisit.add(spotLight1);
+		
+		
+		var ambientLight = new THREE.AmbientLight(0x1E1E28);
+		ambientLight.castShadow = false;
+		ambientLight.intensity = 0.5;
+		scene.add(ambientLight);
+		
+		var spotLight2 = new THREE.SpotLight(0x1E1E28);
+			spotLight2.name = "Spot2";
+			spotLight2.castShadow = true;
+			spotLight2.position.x = -10; 
+			spotLight2.position.y = 10; 
+			spotLight2.position.z = -5; 
+			spotLight2.intensity = 1;        
+			spotLight2.distance = 40;
+			spotLight2.angle = 2.6;
+		sceneSteps.add(spotLight2);
+		
+		var spotLight3 = new THREE.SpotLight(0x1E1E28);
+			spotLight3.name = "Spot3";
+			spotLight3.castShadow = false;
+			spotLight3.position.x = 0; 
+			spotLight3.position.y = 10; 
+			spotLight3.position.z = 10; 
+			spotLight3.intensity = 1;        
+			spotLight3.distance = 40;
+			spotLight3.angle = 2.6;
+		sceneSteps.add(spotLight3);
+		
+		var pointLight1 = new THREE.PointLight(0x1E1E28);
+			pointLight1.name = "Point1";
+			pointLight1.decay = 2;
+			pointLight1.position.x = 10; 
+			pointLight1.position.y = 5; 
+			pointLight1.position.z = -10; 
+			pointLight1.intensity = 1;        
+			pointLight1.distance = 100;
+			pointLight1.angle = 2.6;
+		sceneSteps.add(pointLight1);
 		
 		var planeGeometry = new THREE.PlaneGeometry( 1000, 1000 );
 		planeGeometry.receiveShadow = true;
-		planeGeometry.castShadow = true;
-		var planeMaterial = new THREE.MeshLambertMaterial( { color: 0x1E1E28 } );
-		var floor = new THREE.Mesh( planeGeometry, planeMaterial );
-		floor.rotation.x = 3 * Math.PI/2;
-		floor.position.y = -15;
-		scene.add(floor);
+		planeGeometry.castShadow = false;
+		
+		var material	= new THREE.MeshPhongMaterial({
+		ambient		: 0x444444,
+		color		: 0xFFFFFF,
+		shading		: THREE.SmoothShading
+	});
+		
+		var planeMaterial = new THREE.MeshLambertMaterial( { color: 0xFFFFFF } );
+		var floor1 = new THREE.Mesh( planeGeometry, material );
+		floor1.receiveShadow = true;
+		floor1.castShadow = false;
+		floor1.rotation.x = 3 * Math.PI/2;
+		floor1.position.y = -15;
+		//scene.add(floor);
+		sceneVisit.add(floor1);
+		
+		var floor2 = new THREE.Mesh (planeGeometry, material);
+		floor2.receiveShadow = true;
+		floor2.castShadow = false;
+		floor2.rotation.x = 3 * Math.PI/2;
+		floor2.position.y = -4;
+		sceneSteps.add(floor2);
 		
 		setUpInterestPoints();
 		
@@ -258,19 +335,14 @@ window.onload = function() {
 		currentVisit = visits[0];
 		visitState = 0;
 		visitStatePos = new THREE.Vector3(45, 0, 0);
-		pathTweensForward = [];
-		pathTweensBackward = [];
 		
 		domEvents.addEventListener(cathModel, 'mousedown', function(event) {
-			
-			switch (visitMode) {
-					
+			switch (visitMode) {	
 				case visitModes.free:
 					break;
 					
 				case visitModes.guide:
-					switch (event.origDomEvent.button) {
-							
+					switch (event.origDomEvent.button) {		
 						case 0:
 							//console.log('left button start');
 							visitTween.stop();
@@ -285,7 +357,6 @@ window.onload = function() {
 							manageVisitProgress(-1);
 							break;
 					break;
-				
 				}
 			}
 		});
@@ -316,27 +387,21 @@ window.onload = function() {
 			visiting = false;
 		});
 		
-		cathModel.traverse( function(node) {
-			if (node instanceof THREE.Mesh) {
-				node.material = cathMat;
-			}
-		});
-		
-		cathModelStep.traverse( function(node) {
-			if (node instanceof THREE.Mesh) {
-				node.material = partsMat;
-				node.castShadow = true;
-				node.receiveShadow = true;
-				domEvents.addEventListener(node, 'mouseover', function(event) {
+		cathModelStep.traverse( function(part) {
+			if (part instanceof THREE.Mesh) {
+				part.material = partsMat;
+				part.castShadow = true;
+				part.receiveShadow = true;
+				domEvents.addEventListener(part, 'mouseover', function(event) {
 					event.target.material = partsMatHover;
 				});
-				node.visible = false;
+				part.visible = false;
 
 				//Event when mouseOut an interestPoint
-				domEvents.addEventListener(node, 'mouseout', function(event) {
+				domEvents.addEventListener(part, 'mouseout', function(event) {
 					event.target.material = partsMat;
 				});
-				parts.push(node);
+				parts.push(part);
 			}
 			//console.log(parts);
 		});
@@ -347,7 +412,20 @@ window.onload = function() {
 		stats.domElement.style.left = '0px';
 		stats.domElement.style.top = '0px';     
 		container.appendChild( stats.domElement ); */
-
+		
+		cathModelStep.position.y = -4;
+		cathModelStep.position.z = 2;
+		cathModelStep.rotation.y = -1;
+		cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1/16;
+		cathModelStep.name = "cathedraleStep";
+		sceneSteps.add(cathModelStep);
+		
+		scene.add(sceneSteps);
+		scene.add(sceneVisit);
+		
+		sceneVisit.visible = true;
+		sceneSteps.visible = false;
+		
 		animate();
 		
 	}
@@ -430,7 +508,8 @@ window.onload = function() {
 						"title": interestPoints[attr].title,
 						"description": interestPoints[attr].description
 					}
-				scene.add(mesh);
+				//scene.add(mesh);
+				sceneVisit.add(mesh);
 				interestPoints3D.push(mesh);
 				//console.log(interestPoints3D);
 
@@ -571,19 +650,23 @@ window.onload = function() {
 			case true: 
 				wheelMode = false;
 				wheel.style.display = "none";
+				sceneVisit.visible = true;
+				sceneSteps.visible = false;
+				targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
+				switchControlsTo(controlModes.fly);
+				visitMode = visitModes.guide;
+				
 				break;
 			case false:
 				wheelMode = true;
 				wheel.style.display = "inline";
-				for( var i = scene.children.length - 1; i >= 0; i--) { scene.children[i].visible = false}
-				cathModelStep.position.y = -4;
-				cathModelStep.position.z = 2;
-				cathModelStep.rotation.y = -1;
-				cathModelStep.scale.x = cathModelStep.scale.y = cathModelStep.scale.z = 1/16;
-				cathModelStep.name = "cathedraleStep";
-				targetPoint = scene;
+				sceneVisit.visible = false;
+				sceneSteps.visible = true;
+				
+				control.target = scene.position;
+				camera.lookAt(scene.position);
 				switchControlsTo(controlModes.trackball);
-				scene.add(cathModelStep);
+				visitMode = visitModes.free;
 				break;
 		}
 	}
