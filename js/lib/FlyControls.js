@@ -2,9 +2,10 @@
  * @author James Baicoianu / http://www.baicoianu.com/
  */
 
-THREE.FlyControls = function ( object, domElement ) {
+THREE.FlyControls = function ( object, buddy, domElement ) {
 
 	this.object = object;
+	this.buddy = buddy;
 
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 	if ( domElement ) this.domElement.setAttribute( 'tabindex', - 1 );
@@ -17,12 +18,15 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.dragToLook = false;
 	this.autoForward = false;
-
+	
+	this.cameraLookVector = new THREE.Vector3(0,0, -1);
+	
 	// disable default target object behavior
 
 	// internals
 
 	this.tmpQuaternion = new THREE.Quaternion();
+	this.buddyTmpQuaternion = new THREE.Quaternion();
 
 	this.mouseStatus = 0;
 
@@ -189,15 +193,26 @@ THREE.FlyControls = function ( object, domElement ) {
 
 		var moveMult = delta * this.movementSpeed;
 		var rotMult = delta * this.rollSpeed;
-	
-		this.object.translateX( this.moveVector.x * moveMult );
-		this.object.translateY( this.moveVector.y * moveMult );
-		this.object.translateZ( this.moveVector.z * moveMult );
+		
+		this.buddy.translateX( this.moveVector.x * moveMult );
+		this.buddy.translateY( this.moveVector.y * moveMult );
+		this.buddy.translateZ( this.moveVector.z * moveMult );
 
-		this.tmpQuaternion.set( this.rotationVector.x * rotMult, this.rotationVector.y * rotMult, this.rotationVector.z * rotMult, 1 ).normalize();
+		this.tmpQuaternion.set( this.rotationVector.x * rotMult, this.rotationVector.y * 0, 0, 1 ).normalize();
+		this.buddyTmpQuaternion.set( this.rotationVector.x * 0, this.rotationVector.y * rotMult, 0, 1 ).normalize();
 		//this.rotation = new THREE.Euler().setFromQuaternion(this.object.quaternion);
 		//console.log(this.object.rotation.x*180/Math.PI);
-		this.object.quaternion.multiply( this.tmpQuaternion );
+		if (this.tmpQuaternion.x > 0 ) {
+			if (this.object.quaternion.x < 0.5) {
+				this.object.quaternion.multiply( this.tmpQuaternion );
+			}
+		}
+		else if (this.tmpQuaternion.x < 0) {
+			if (this.object.quaternion.x > -0.5) {
+				this.object.quaternion.multiply( this.tmpQuaternion );
+			}
+		}
+		this.buddy.quaternion.multiply( this.buddyTmpQuaternion );
 
 		// expose the rotation vector for convenience
 		this.object.rotation.setFromQuaternion( this.object.quaternion, this.object.rotation.order );
@@ -206,10 +221,18 @@ THREE.FlyControls = function ( object, domElement ) {
 
 	this.updateMovementVector = function() {
 
+		//this.cameraLookVector = this.object.getWorldDirection( new THREE.Vector3(0,0, -1) );
+		var vector = new THREE.Vector3( 0, 0, - 1 );
+		this.cameraLookVector = vector.applyQuaternion( this.object.quaternion );
+		this.cameraLookVector = this.cameraLookVector.applyQuaternion( this.buddy.quaternion );
+		
 		var forward = ( this.moveState.forward || ( this.autoForward && ! this.moveState.back ) ) ? 1 : 0;
-		this.moveVector.x = ( - this.moveState.left    + this.moveState.right );
-		this.moveVector.y = ( - this.moveState.down    + this.moveState.up );
-		this.moveVector.z = ( - forward + this.moveState.back );
+		//this.moveVector.x = ( - this.moveState.left    + this.moveState.right );
+		//this.moveVector.y = ( - this.moveState.down    + this.moveState.up );
+		//this.moveVector.z = ( - forward + this.moveState.back );
+		this.moveVector.x = this.cameraLookVector.x;
+		this.moveVector.y = this.cameraLookVector.y;
+		this.moveVector.z = - forward + this.cameraLookVector.z;
 
 		//console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
 

@@ -147,7 +147,7 @@ window.onload = function() {
 		/*camera.position.x = 0;
 		camera.position.y = 0;
 		camera.position.z = 0;*/
-		
+		console.log(control.cameraLookVector);
 		if (stats != null )
 			stats.update();
 		TWEEN.update();
@@ -373,11 +373,20 @@ window.onload = function() {
 	function setUpThreeJSBasics () {
 		scene = new THREE.Scene();
 		
+		buddy = new THREE.Group();
+			buddy.position.x = 45;
+			buddy.position.y = 0;
+			buddy.position.z = 0;
+			buddy.name = "buddy";
+		
 		camera =  new THREE.PerspectiveCamera(45, 	window.innerWidth/window.innerHeight, .1, 500);
-			camera.position.x = 45;
+			camera.position.x = 0;
 			camera.position.y = 0;
 			camera.position.z = 0;
 			camera.lookAt(scene.position);
+		
+		buddy.add(camera);
+		scene.add(buddy);
 
 		renderer = new THREE.WebGLRenderer({antialias:true});
 			renderer.setClearColor(0x1E1E28);
@@ -810,7 +819,7 @@ window.onload = function() {
 	function switchControlsTo (m) {
 		switch (m) {
 			case controlModes.fly :
-				control = new THREE.FlyControls( camera, renderer.domElement);
+				control = new THREE.FlyControls( camera, buddy, renderer.domElement);
 				
 				control.movementSpeed = (visitMode == visitModes.free) ? 10 : 0;
 				control.rollSpeed = .5;
