@@ -609,10 +609,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.domElement.addEventListener( 'touchend', touchend, false );
 	this.domElement.addEventListener( 'touchmove', touchmove, false );
 
-	document.getElementById("webGL-container").addEventListener( 'keydown', keydown, false );
-	document.getElementById("webGL-container").addEventListener( 'mouseup', keyup, false );
-	document.getElementById("webGL-container").addEventListener( 'mouseout', keyup, false );
-	
+	window.addEventListener( 'keydown', keydown, false );
+	window.addEventListener( 'keyup', keyup, false );
+
 	this.handleResize();
 
 	// force an update at start
