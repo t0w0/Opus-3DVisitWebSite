@@ -1,0 +1,33 @@
+[{
+	"startDate": 334, 	"endDate": 346,	"blocksToAdd": null,
+	"title": "334", 				
+	"description": "Baptême de saint Martin vers 334 ; existence d’un évêque, Eulogius, attestée en 346."},
+ {
+	"startDate": 511, 	"endDate": "null",	"blocksToAdd": null,
+	"title": "511", 				
+	"description": "Nouvel évêque attesté : Eudibius"},
+ {
+	"startDate": 600, 	"endDate": 700,	"blocksToAdd": null,
+	"title": "VIIIe siècle", 				
+	"description": "Depuis l’époque carolingienne au moins, il y a 2 églises à l’emplacement actuel, contre le mur de la cité qui passait au niveau du chœur actuel : Saint-Firmin & Notre-Dame. L’une d’elle ou les deux conservent le corps de Saint-Firmin le Martyr, associé depuis le VIIIe siècle à l’église locale"},
+ {
+	"startDate": 1019, 	"endDate": "null",	"blocksToAdd": null,
+	"title": "1019", 				
+	"description": "Incendie"},
+ {
+	"startDate": 1137, 	"endDate": "null",	"blocksToAdd": null,
+	"title": "1137", 				
+	"description": "Second incendie"},
+ {
+	"startDate": 1137, 	"endDate": 1152,	"blocksToAdd": null,
+	"title": "1137 - 1152", 				
+	"description": "Construction d'une cathédrale romane"},
+ {
+	"startDate": 1193, 	"endDate": null,	"blocksToAdd": null,
+	"title": "1193", 				
+	"description": "Noces de Philippe Auguste et d'Ingeburge"},
+ {
+	"startDate": 1206, 	"endDate": "null",	"blocksToAdd": null,
+	"title": "1206", 				
+	"description": "Arrivée du chef de Saint-Jean-Baptiste prise à Constantinople ; pèlerinage. Pierre à laver les morts"}
+]

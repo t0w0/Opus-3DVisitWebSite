@@ -117,7 +117,7 @@ window.onload = function() {
 		specular	: 0x888888,
 		shading		: THREE.SmoothShading});
 		partsMat.opacity = 0.3;
-	var partsMatHover = new THREE.MeshBasicMaterial({color: 0x0DAAFF});
+	var partsMatHover = new THREE.MeshBasicMaterial({color: 0x89A64B});
 		partsMatHover.transparent = true;
 		partsMatHover.blending = THREE.AdditiveBlending;
 	
@@ -662,6 +662,7 @@ window.onload = function() {
 				wheel.style.display = "inline";
 				sceneVisit.visible = false;
 				sceneSteps.visible = true;
+				actualizeDate(0);
 				
 				control.target = scene.position;
 				camera.lookAt(scene.position);
@@ -863,7 +864,7 @@ window.onload = function() {
 	var sliderWidth = radialSliderSlider.offsetWidth;
 	var sliderHeight = radialSliderSlider.offsetHeight;
 	var radius = 320/2;
-	var deg = 0;
+	var deg = 270;
 
 	var X = Math.round(radius * Math.sin(deg*Math.PI/180));
 	var Y = Math.round(radius *  - Math.cos(deg*Math.PI/180));
@@ -961,10 +962,10 @@ window.onload = function() {
 	
 	function actualizeDate (deg) {
 		//Mappig degrees to extremes dates.
-		var minDate = 334;
-		var maxDates = 1528;
+		var minDate = interestDates[0].startDate;
+		var maxDate = interestDates[interestDates.length-1].startDate;
 		
-		var date = (deg * ((1528 - 334)/180)) + 334;
+		var date = (deg * ((maxDate - minDate)/180)) + minDate;
 		
 		for (var attr in interestDates) {
 			if (interestDates[attr].hasOwnProperty) {

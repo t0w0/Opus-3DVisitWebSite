@@ -1,101 +1,69 @@
-[/*{
-	"startDate": 334, 	"endDate": 346,	"blocksToAdd": null,
-	"title": "334", 				
-	"description": "Baptême de saint Martin vers 334 ; existence d’un évêque, Eulogius, attestée en 346."},
- {
-	"startDate": 511, 	"endDate": "null",	"blocksToAdd": null,
-	"title": "511", 				
-	"description": "Nouvel évêque attesté : Eudibius"},
- {
-	"startDate": 600, 	"endDate": 700,	"blocksToAdd": null,
-	"title": "VIIIe siècle", 				
-	"description": "Depuis l’époque carolingienne au moins, il y a 2 églises à l’emplacement actuel, contre le mur de la cité qui passait au niveau du chœur actuel : Saint-Firmin & Notre-Dame. L’une d’elle ou les deux conservent le corps de Saint-Firmin le Martyr, associé depuis le VIIIe siècle à l’église locale"},
- {
-	"startDate": 1019, 	"endDate": "null",	"blocksToAdd": null,
-	"title": "1019", 				
-	"description": "Incendie"},
- {
-	"startDate": 1137, 	"endDate": "null",	"blocksToAdd": null,
-	"title": "1137", 				
-	"description": "Second incendie"},
- {
-	"startDate": 1137, 	"endDate": 1152,	"blocksToAdd": null,
-	"title": "1137 - 1152", 				
-	"description": "Construction d'une cathédrale romane"},
- {
-	"startDate": 1193, 	"endDate": null,	"blocksToAdd": null,
-	"title": "1193", 				
-	"description": "Noces de Philippe Auguste et d'Ingeburge"},
- {
-	"startDate": 1206, 	"endDate": "null",	"blocksToAdd": null,
-	"title": "1206", 				
-	"description": "Arrivée du chef de Saint-Jean-Baptiste prise à Constantinople ; pèlerinage. Pierre à laver les morts"},
- {
+[ {
 	"startDate": 1218, 	"endDate": "null",	"blocksToAdd": [0],
 	"title": "1218", 				
-	"description": "Terrasement et mises en place des fondations. Incendie de la cathédrale romane (tradition douteuse) ; projet sans doute longuement mûri.  un contexte favorable. émulation/Reims. Négociations pour acquisition de terrain pour bâtir le plus grand édifice de son temps (8000m²). NB remodelage de la topographie du quartier ; la cathédrale recouvre tous les édifices antérieurs  l’église Saint-Firmin, à l’emplacement de l’actuel bras nord, est déplacée ; nouveaux bâtiments annexes (Palais épiscopal, cloître, salle capitulaire). Un chantier relativement rapide (cf. Phasage dans Murray 1996), env. 50 ans pour le gros oeuvre ; innovations techniques par rapport à Chartres et à Reims : standardisation de la taille des piliers ; allègement des maçonneries. Une perfection rarement dépassée. Mais un chantier qui reste couteux ; évêques soutenus par le chapitre ; rôle des rois de France plus énigmatique"},*/
+	"description": "Terrasement et mises en place des fondations. Incendie de la cathédrale romane (tradition douteuse) ; projet sans doute longuement mûri.  un contexte favorable. émulation/Reims. Négociations pour acquisition de terrain pour bâtir le plus grand édifice de son temps (8000m²). NB remodelage de la topographie du quartier ; la cathédrale recouvre tous les édifices antérieurs  l’église Saint-Firmin, à l’emplacement de l’actuel bras nord, est déplacée ; nouveaux bâtiments annexes (Palais épiscopal, cloître, salle capitulaire). Un chantier relativement rapide (cf. Phasage dans Murray 1996), env. 50 ans pour le gros oeuvre ; innovations techniques par rapport à Chartres et à Reims : standardisation de la taille des piliers ; allègement des maçonneries. Une perfection rarement dépassée. Mais un chantier qui reste couteux ; évêques soutenus par le chapitre ; rôle des rois de France plus énigmatique"},
  {
 	"startDate": 1220, 	"endDate": "null",	"blocksToAdd": [0],
 	"title": "1220", 				
 	"description": "Pose de la première pierre (de l’élévation) par l’évêque Evrard de Fouilloy. destruction de la vieille église Saint-Firmin avant 1241 (emplacement du bras nord, ; elle est rapidement reconstruite au nord de la nef actuelle à l’emplacement de l’hôtel-Dieu). La construction commence par l’enveloppe extérieure au sud de l’actuelle nef et du transept"},
  {
-	"startDate": 1225, 	"endDate": 1240,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+	"startDate": 1225, 	"endDate": 1240,	"blocksToAdd": [0, 1],
 	"title": "1225 - 1240", 				
 	"description": "Nef construite rapidement, en même temps que la façade occidentale, jusqu’au niveau de la rose compris. Mais probable modification en cours de travaux du projet, avec ajout de la galerie des rois non prévue à l’origine. Les portails sculptés de la façade sud du transept et de la façade occidentale sont mis en place simultanément ; cette partie de la cathédrale doit servir de chœur liturgique."},
  {
-	"startDate": 1243, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+	"startDate": 1243, 	"endDate": "null",	"blocksToAdd": [0, 1, 2],
 	"title": "1243", 				
 	"description": "Pose de cloches dans la tou sud."},
  {
-	"startDate": 1233, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+	"startDate": 1233, 	"endDate": "null",	"blocksToAdd": [0, 1, 2],
 	"title": "1233", 				
 	"description": "Début de la construction du chevet"},
  {
-	"startDate": 1241, 	"endDate": 1254,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+	"startDate": 1241, 	"endDate": 1254,	"blocksToAdd": [0, 1, 2, 3],
 	"title": "1241 - 1254", 				
 	"description": "Bois des tirants des parties basses abattus"},
  {
-	"startDate": 1252, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1252, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4],
 	"title": "1252", 				
 	"description": "Chapelle d’axe terminée (fondation de la fête de la Conception de la Vierge)"},
  {
-	"startDate": 1240, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1240, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5],
 	"title": "1240", 				
 	"description": "Ralentissement du chantier à partir des années 1240 (frais de contribution à la croisade ; incendie sur le chantier en 1258 ; hétérogénéité des parties hautes du transept et du chœur"},
 {
-	"startDate": 1269, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1269, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6],
 	"title": "1269", 				
 	"description": "Fenêtres hautes du chœur vitrées"}, 
  {
-	"startDate": 1284, 	"endDate": 1285,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1284, 	"endDate": 1285,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7],
 	"title": "1284 - 1285", 				
 	"description": "Pose de la charpente définitive du chœur"}, 
  {
-	"startDate": 1290, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1290, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8],
 	"title": "1290", 				
 	"description": "Réalisation du jubé (disparu en 1755)"}, 
  {
-	"startDate": 1293, 	"endDate": 1298,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+	"startDate": 1293, 	"endDate": 1298,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 	"title": "1293 - 1298", 				
 	"description": "Pose de la charpente des bras du transept"},
  {
-	"startDate": 1300, 	"endDate": 1305,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"startDate": 1300, 	"endDate": 1305,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 	"title": "1300 - 1305", 				
 	"description": "Pose de la charpente de la nef "}, 
  {
-	"startDate": 1304, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"startDate": 1304, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
 	"title": "1304", 				
 	"description": "Aménagement du parvis"}, 
  {
-	"startDate": 1300, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"startDate": 1300, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 	"title": "1300", 				
 	"description": "Pose de la rose du bras nord du transept"}, 
  {
-	"startDate": 1292, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"startDate": 1292, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
 	"title": "A partir de1292", 				
 	"description": "Construction des chapelles de la nef, d’est en ouest : Au sud : Chapelle Sainte-Marguerite contre le transept (1292) ; puis chapelles Saint-Laurent et Saint-Nicolas des guédiers (vers 1300) ; puis chapelle du jardinet (vers 1330) ; puis chapelle Saint-Christophe ornée d’une statue monumentale (vers 1380), près du portail du même nom qui était l’accès principal des fidèles. Au nord, chapelle Sainte-Agnès contre le transept par Drieu Malherbes, marchand (1296) ; puis chapelle Saint-Louis (1297), Saint-Honoré (vers 1300) ; Saint-Sauve (vers 1320) ; deux chapelles occidentales (dites du « Beau-Pilier ») vers 1373-1375 par le cardinal de La Grange"}, 
  {
-	"startDate": 1350, 	"endDate": 1372,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"startDate": 1350, 	"endDate": 1372,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 	"title": "1350 - 1372", 				
 	"description": "Construction du dernier étage de la tour sud"}, 
  {
