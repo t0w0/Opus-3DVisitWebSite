@@ -598,7 +598,7 @@ window.onload = function() {
 		});
 								   
 		renderer.domElement.addEventListener('mouseup', function(event) {
-			if (!renderdrag && controlMode == controlModes.trackball) {
+			if (!renderdrag && controlMode == controlModes.trackball && !wheelMode) {
 				switchControlsTo(controlModes.fly);
 				targetInterestPointIs(null);
 				console.log("do");
@@ -822,7 +822,9 @@ window.onload = function() {
 				sceneVisit.visible = false;
 				sceneSteps.visible = true;
 				//actualizeDate(0);
+				console.log("lol");
 				switchControlsTo(controlModes.trackball);
+				camera.position.set(50, 0, 0);
 				control.target = scene.position;
 				camera.lookAt(scene.position);
 				visitMode = visitModes.free;
@@ -880,11 +882,13 @@ window.onload = function() {
 					control.target = targetInterestPoint.position;
 				}
 				else {
+					control.target = new THREE.Vector3(0, 0, 0);
 					console.warn(targetInterestPoint);
 					console.warn("trackballControl need a target to be use");
 				}
 				controlMode = controlModes.trackball;
 				//console.log(camera.position);
+				console.log(control);
 				break;
 				
 			default :
