@@ -16,7 +16,7 @@ window.onload = function() {
 	var fullScreenButton = document.getElementById('fullScreen');
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
-	var audio = new Audio('./data/sound/cathSound.mp3');
+	var audio = new Audio('../data/sound/cathSound.mp3');
 	var mute = false;
 	
 	var openningInterface = document.getElementsByClassName("openningInterface");
@@ -147,7 +147,6 @@ window.onload = function() {
 		/*camera.position.x = 0;
 		camera.position.y = 0;
 		camera.position.z = 0;*/
-		console.log(control.cameraLookVector);
 		if (stats != null )
 			stats.update();
 		TWEEN.update();
@@ -372,20 +371,22 @@ window.onload = function() {
 	
 	function setUpThreeJSBasics () {
 		scene = new THREE.Scene();
+		//scene.fog = new THREE.FogExp2( 0x1E1E28, 0.001);
 		
 		buddy = new THREE.Group();
-			buddy.position.x = 45;
+			buddy.position.x = 0;
 			buddy.position.y = 0;
 			buddy.position.z = 0;
+			buddy.rotation.y = Math.PI/2; 
 			buddy.name = "buddy";
 		
 		camera =  new THREE.PerspectiveCamera(45, 	window.innerWidth/window.innerHeight, .1, 500);
-			camera.position.x = 0;
+			camera.position.x = 45;
 			camera.position.y = 0;
 			camera.position.z = 0;
 			camera.lookAt(scene.position);
 		
-		buddy.add(camera);
+		scene.add(camera);
 		scene.add(buddy);
 
 		renderer = new THREE.WebGLRenderer({antialias:true});
@@ -425,7 +426,6 @@ window.onload = function() {
 		planeGeometry.castShadow = false;
 		
 		var planeMaterial	= new THREE.MeshPhongMaterial({
-		ambient		: 0x444444,
 		color		: 0xFFFFFF,
 		shading		: THREE.SmoothShading
 		});
@@ -440,10 +440,7 @@ window.onload = function() {
 		sceneVisit.add(floor1);
 		
 		var cathMat = new THREE.MeshLambertMaterial({
-		ambient		: 0x444444,
 		color		: 0xFFFFFF,
-		shininess	: 0.1, 
-		specular	: 0x888888,
 		shading		: THREE.SmoothShading});
 		cathMat.transparent = true;
 		cathMat.blending = THREE.AdditiveBlending;
@@ -487,10 +484,7 @@ window.onload = function() {
 		sceneSteps.add(floor2);
 		
 		var partsMat = new THREE.MeshLambertMaterial({
-			ambient		: 0x444444,
 			color		: 0xFFFFFF,
-			shininess	: 0.1, 
-			specular	: 0x888888,
 			shading		: THREE.SmoothShading});
 			partsMat.opacity = 0.3;
 		var partsMatHover = new THREE.MeshBasicMaterial({color: 0x89A64B});
@@ -567,7 +561,12 @@ window.onload = function() {
 	}
 	
 	function addEventsToRenderer () {
+		
+		var mdown = false;
+		var drag = true;
+		
 		renderer.domElement.addEventListener('mousedown', function(event) {
+			mdown = true;
 			switch (visitMode) {	
 				case visitModes.free:
 					break;
@@ -591,9 +590,18 @@ window.onload = function() {
 				}
 			}
 		});
+		
+		renderer.domElement.addEventListener('mousemove', function(event){
+			if (mdown) {
+				drag = true;
+			}
+		});
 								   
 		renderer.domElement.addEventListener('mouseup', function(event) {
-			
+			if (!drag && controlMode == controlModes.trackball) {
+				switchControlsTo(controlModes.fly);
+				targetInterestPointIs(null);
+			}
 			switch (event.button) {
 				case 0:
 					//console.log('left button stop');
@@ -610,9 +618,15 @@ window.onload = function() {
 					visiting = false;
 					break;
         	}
+			console.log(mdown);
+			console.log();
+			drag = false;
+			mdown = false;
 		});
 		
 		renderer.domElement.addEventListener('mouseout', function(event) {
+			mdown = false;
+			drag = false;
 			visitTween.stop();
 			visiting = false;
 			if (controlMode = controlModes.fly) {
@@ -704,7 +718,7 @@ window.onload = function() {
 			targetInterestPoint = targetPoint;
 			switchControlsTo(controlModes.trackball);
 			
-			//control.target = targetPoint.position;
+			control.target = targetPoint.position;
 			camera.lookAt(targetPoint);
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
@@ -719,7 +733,7 @@ window.onload = function() {
 		
 		switch (dir) {
 			case 1 : {
-				visitStatePos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+				visitStatePos = new THREE.Vector3(buddy.position.x, buddy.position.y, buddy.position.z);
 		
 				if (visitState != 0) {
 					var goingPoint = interestPoints3D[currentVisit[visitState-1]].position;
@@ -735,18 +749,19 @@ window.onload = function() {
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
 					.onComplete(function() {
+						targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
 						if (visitState != 0) {visitState--;}
 						else {visitState=currentVisit.length-1};
 						//console.log(visitState);
 					})
 					.onUpdate(function() {
-						camera.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
+						buddy.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
 					})
 					.start();
 				break;
 			}
 			case -1 : {
-				visitStatePos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+				visitStatePos = new THREE.Vector3(buddy.position.x, buddy.position.y, buddy.position.z);
 		
 				var goingPoint = interestPoints3D[currentVisit[visitState]].position;
 				var animDist = visitStatePos.distanceTo(interestPoints3D[currentVisit[visitState]].position);
@@ -756,12 +771,13 @@ window.onload = function() {
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
 					.onComplete(function() {
+					targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
 						if (visitState != currentVisit.length-1) {visitState++;}
 						else {visitState=0};
 						//console.log(visitState);
 					})
 					.onUpdate(function() {
-						camera.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
+						buddy.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
 					})
 					.start();
 				break;
@@ -819,6 +835,14 @@ window.onload = function() {
 	function switchControlsTo (m) {
 		switch (m) {
 			case controlModes.fly :
+				
+				//THREE.SceneUtils.attach( camera, scene, buddy );
+				//buddy.position.set (camera.position.x, camera.position.y, camera.position.z);
+				THREE.SceneUtils.attach( camera, scene, buddy );
+				camera.position.set(0,0,0);
+				camera.rotation.set(camera.rotation.x,0,0);
+				buddy.rotation.set(0,camera.rotation.y,0);
+				
 				control = new THREE.FlyControls( camera, buddy, renderer.domElement);
 				
 				control.movementSpeed = (visitMode == visitModes.free) ? 10 : 0;
@@ -831,6 +855,9 @@ window.onload = function() {
 				break;
 
 			case controlModes.trackball :
+				
+				THREE.SceneUtils.detach( camera, buddy, scene);
+				
 				control = new THREE.TrackballControls(camera, renderer.domElement);
 				
 				control.rotateSpeed = 1.0;
