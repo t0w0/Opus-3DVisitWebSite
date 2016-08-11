@@ -245,7 +245,7 @@ THREE.FlyControls = function ( object, buddy, domElement ) {
 		this.moveVector.y = ( this.object.quaternion.x * 2 * forward );
 		this.moveVector.z = ( - forward + this.moveState.back );
 
-		console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
+		//console.log( 'move:', [ this.moveVector.x, this.moveVector.y, this.moveVector.z ] );
 
 	};
 

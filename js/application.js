@@ -67,7 +67,7 @@ window.onload = function() {
 
 	//3D Controls
 	var controlModes = {"trackball": 0, "fly": 1};
-	var controlMode = controlModes.trackball;
+	var controlMode = controlModes.fly;
 	var control;
 	
 	//Here is an object which got JSONObject as parameters that store all the interest points.
@@ -106,14 +106,14 @@ window.onload = function() {
 	
 	//Start by loading the two 3D models and launch Init()
 	loader.options.convertUpAxis = true;
-	loader.load ('http://localhost/opus0b/models/cath.dae', function (model) {
+	loader.load ('./models/cath.dae', function (model) {
 		cathModel = model.scene;
 		
 		cathModel.updateMatrix();
 		cathModel.receiveShadow = true;
 		cathModel.castShadow = true;
 		
-		loader.load('http://localhost/opus0b/models/cathStepbyStep.dae', function (model) {
+		loader.load('./models/cathStepbyStep.dae', function (model) {
 			cathModelStep = model.scene;
 
 			cathModelStep.updateMatrix();
@@ -562,11 +562,11 @@ window.onload = function() {
 	
 	function addEventsToRenderer () {
 		
-		var mdown = false;
-		var drag = true;
+		var rendermdown = false;
+		var renderdrag = true;
 		
 		renderer.domElement.addEventListener('mousedown', function(event) {
-			mdown = true;
+			rendermdown = true;
 			switch (visitMode) {	
 				case visitModes.free:
 					break;
@@ -592,41 +592,31 @@ window.onload = function() {
 		});
 		
 		renderer.domElement.addEventListener('mousemove', function(event){
-			if (mdown) {
-				drag = true;
+			if (rendermdown) {
+				renderdrag = true;
 			}
 		});
 								   
 		renderer.domElement.addEventListener('mouseup', function(event) {
-			if (!drag && controlMode == controlModes.trackball) {
+			if (!renderdrag && controlMode == controlModes.trackball) {
 				switchControlsTo(controlModes.fly);
 				targetInterestPointIs(null);
+				console.log("do");
 			}
-			switch (event.button) {
-				case 0:
-					//console.log('left button stop');
-					visitTween.stop();
-					visiting = false;
-					
-					break;
-				case 1:
-					//console.log('middle button stop');
-					break;
-				case 2:
-					//console.log('right button stop');
-					visitTween.stop();
-					visiting = false;
-					break;
-        	}
-			console.log(mdown);
-			console.log();
-			drag = false;
-			mdown = false;
+			
+			visitTween.stop();
+			visiting = false;
+			
+			console.log(renderdrag);
+			console.log(rendermdown);
+			console.log(controlMode);
+			renderdrag = false;
+			rendermdown = false;
 		});
 		
 		renderer.domElement.addEventListener('mouseout', function(event) {
-			mdown = false;
-			drag = false;
+			rendermdown = false;
+			renderdrag = false;
 			visitTween.stop();
 			visiting = false;
 			if (controlMode = controlModes.fly) {
@@ -635,7 +625,7 @@ window.onload = function() {
 		});
 		
 		renderer.domElement.addEventListener('mouseover', function(event) {
-			if (controlMode = controlModes.fly) {
+			if (controlMode == controlModes.fly) {
 				control.rollSpeed = .5;
 			}
 		});
@@ -696,14 +686,14 @@ window.onload = function() {
 
 				//Event when click on an interestPoint
 				domEvents.addEventListener(mesh, 'click', function(event) {
-					targetInterestPointIs (event.target);
+					targetInterestPointIs (event.target, true);
 					console.log(event.target);
 				});
 			}
 		}
 	}
 
-	function targetInterestPointIs (targetPoint) {
+	function targetInterestPointIs (targetPoint, isClicked) {
 		//If last interestPoint wasn't null so if we weren't in fly control
 		if  (targetInterestPoint != null) {
 			targetInterestPoint.geometry.scale(2/3, 2/3, 2/3);
@@ -711,15 +701,17 @@ window.onload = function() {
 		}
 
 		if (targetPoint != null) {
+			leftPanel.style.opacity = 1;
 			interestPointTitle.textContent = targetPoint.metaData.title;
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
 			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
-			switchControlsTo(controlModes.trackball);
-			
-			control.target = targetPoint.position;
-			camera.lookAt(targetPoint);
+			if (isClicked) {
+				switchControlsTo(controlModes.trackball);
+				control.target = targetPoint.position;
+				camera.lookAt(targetPoint);
+			}
 		}
 		else if (targetPoint == null && targetInterestPoint!= null) {
 			targetInterestPoint.material = interestPointMat;
@@ -749,10 +741,12 @@ window.onload = function() {
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
 					.onComplete(function() {
-						targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
 						if (visitState != 0) {visitState--;}
 						else {visitState=currentVisit.length-1};
 						//console.log(visitState);
+					})
+					.onStart( function () {
+						targetInterestPointIs(interestPoints3D[currentVisit[visitState-1]]);
 					})
 					.onUpdate(function() {
 						buddy.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
@@ -771,10 +765,12 @@ window.onload = function() {
 				visitTween = new TWEEN.Tween(visitStatePos).to(goingPoint, animTime)
 					.easing (TWEEN.Easing.Quadratic.InOut)
 					.onComplete(function() {
-					targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
 						if (visitState != currentVisit.length-1) {visitState++;}
 						else {visitState=0};
 						//console.log(visitState);
+					})
+					.onStart( function () {
+						targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
 					})
 					.onUpdate(function() {
 						buddy.position.set(visitStatePos.x, visitStatePos.y, visitStatePos.z);
@@ -795,6 +791,7 @@ window.onload = function() {
 				visitModeIndicator.textContent = 'Visite libre';
 				visitMode = visitModes.free;
 				switchControlsTo(controlModes.fly);
+				targetInterestPointIs(null);
 				break;
 			case visitModes.free :
 				visitModeIndicator.textContent = 'Visite guidée';
@@ -810,6 +807,7 @@ window.onload = function() {
 			case true: 
 				wheelMode = false;
 				wheel.style.display = "none";
+				visitButton.style.display = "inline";
 				sceneVisit.visible = true;
 				sceneSteps.visible = false;
 				targetInterestPointIs(interestPoints3D[currentVisit[visitState]]);
@@ -819,14 +817,14 @@ window.onload = function() {
 				break;
 			case false:
 				wheelMode = true;
+				visitButton.style.display = "none";
 				wheel.style.display = "inline";
 				sceneVisit.visible = false;
 				sceneSteps.visible = true;
-				actualizeDate(0);
-				
+				//actualizeDate(0);
+				switchControlsTo(controlModes.trackball);
 				control.target = scene.position;
 				camera.lookAt(scene.position);
-				switchControlsTo(controlModes.trackball);
 				visitMode = visitModes.free;
 				break;
 		}
@@ -836,12 +834,17 @@ window.onload = function() {
 		switch (m) {
 			case controlModes.fly :
 				
-				//THREE.SceneUtils.attach( camera, scene, buddy );
-				//buddy.position.set (camera.position.x, camera.position.y, camera.position.z);
+				var camPosWorld = new THREE.Vector3();
+				camPosWorld.setFromMatrixPosition(camera.matrixWorld);
+				buddy.position.set (camPosWorld.x, camPosWorld.y, camPosWorld.z);
+				
+				var camRot = camera.getWorldQuaternion();
+				
 				THREE.SceneUtils.attach( camera, scene, buddy );
 				camera.position.set(0,0,0);
-				camera.rotation.set(camera.rotation.x,0,0);
-				buddy.rotation.set(0,camera.rotation.y,0);
+				camera.rotation.set (0, 0, 0);
+				//buddy.rotation.set (camRot.x, 0, 0);
+				//buddy.rotation.set(0,camera.rotation.y,0);
 				
 				control = new THREE.FlyControls( camera, buddy, renderer.domElement);
 				
