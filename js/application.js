@@ -32,6 +32,11 @@ window.onload = function() {
 	var projetInfos = document.getElementById('projetInfos');
 	var equipeInfos = document.getElementById('equipeInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
+	var hoverScrollZones = document.getElementById('hoverScrollZones');
+	var projetHoverScrollUp = document.getElementById('projetHoverScrollUp');
+	var projetHoverScrollDown = document.getElementById('projetHoverScrollDown');
+	var projetHoverScrollRight = document.getElementById('projetHoverScrollRight');
+	var projetHoverScrollLeft = document.getElementById('projetHoverScrollLeft');
 	
 	var interface3D = document.getElementsByClassName("interface3D");
 	
@@ -209,36 +214,117 @@ window.onload = function() {
 		wheelButton.addEventListener("click", function(event) {
 			manageWheel();
 		});
+		
+		var count;
+		
+		projetHoverScrollUp.addEventListener('mouseover', function() {
+        	var div = document.getElementById("projetToBeScroll");
+
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollTop;
+				div.scrollTop = pos - count;
+			}, 10);
+		});
+		
+		projetHoverScrollUp.addEventListener('mouseout', function() {
+
+				clearInterval(interval);
+		});
+		
+		projetHoverScrollDown.addEventListener('mouseover', function() {
+        	var div = document.getElementById("projetToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollTop;
+				div.scrollTop = pos + count;
+			}, 10);
+		});
+		
+		projetHoverScrollDown.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
+		
+		projetHoverScrollLeft.addEventListener('mouseover', function() {
+        	var div = document.getElementById("partenairesToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollLeft;
+				div.scrollLeft = pos - count;
+			}, 10);
+		});
+		
+		projetHoverScrollLeft.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
+		projetHoverScrollRight.addEventListener('mouseover', function() {
+        	var div = document.getElementById("partenairesToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollLeft;
+				div.scrollLeft = pos + count;
+			}, 10);
+		});
+		
+		projetHoverScrollRight.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		switch (pageToMoveTo) {
 			case 0 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 1;
+				title.style.display = 'inline';
+				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 1 : {
 				projetInfos.style.opacity = 1;
+				projetInfos.style.display = 'inline';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 			case 2 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 1;
+				equipeInfos.style.display = 'inline';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 3 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 1;
+				partenaireInfos.style.display = 'inline';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 		}
@@ -326,9 +412,12 @@ window.onload = function() {
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
+				projetInfos.style.display = "inline";
 				title.opacity=1;
 				break;
 			case 1 :
+				vid.currentTime = 0;
+				vid.play();
 				audio.pause();
 				background.style.opacity = 1;
 				trailer.style.opacity = 1;
@@ -346,6 +435,7 @@ window.onload = function() {
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
 				title.opacity=0;
+				projetInfos.style.display = "none";
 				break;
 			default :
 				console.warn ("The function manageTrailer() takes 1 argument : 0 : stop, 1 : play");

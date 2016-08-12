@@ -52,6 +52,7 @@ body {
     font-style: normal;
     font-size: 12px;
     font-weight: 100;
+	line-height: 1.5em;
     color: white; 
 }
 
@@ -61,6 +62,7 @@ p{
     font-style: normal;
     font-size:  12px;
     font-weight: 100;
+	
     color:white;
 }
 
@@ -70,7 +72,7 @@ a {
     font-style: normal;
     font-size:  1.7em;
     font-weight: 300;
-    color:white;
+    color:aqua;
 }
 
 h1 {
@@ -80,6 +82,7 @@ h1 {
     font-weight: normal;
 	text-align:left;
 	padding-bottom: 10px;
+	line-height: normal;
     color: #B9A64B;
 }
 
@@ -388,6 +391,7 @@ wheelnContros {
 	text-align: center;
 }
 #projetInfos{
+	display : none;
 	position : absolute;
 	margin-left:20vw;
 	margin-right:20vw;
@@ -398,6 +402,17 @@ wheelnContros {
 	-webkit-transition: 0.5s linear 0s;
     -o-transition: 0.5s linear 0s;
     transition: 0.5s linear 0s;
+}
+#projetToBeScroll {
+	width:100%;
+	height:80%;
+	overflow-y: hidden;
+}
+#projetInfos ul {
+	margin-left:2em;
+}
+#projetInfos li {
+	list-style-type: circle;
 }
 #equipeInfos{
 	position : absolute;
@@ -442,21 +457,62 @@ wheelnContros {
     -o-transition: 0.5s linear 0s;
     transition: 0.5s linear 0s;
 }
+#partenairesToBeScroll {
+	width:100%;
+	height:80%;
+	overflow-y: hidden;
+}
 #partenairesInfos #partenairesList {
 	height: 20vh;
-	width:700%;
-	transform:translate(0%,0);
+	width:200%;
 }
 #partenairesInfos #partenairesList .partenairesListElement {
-	width:15vw;
+	width:19.5vw;
 	display:inline-block;
 	text-align: center;
 	overflow: hidden;
 	vertical-align:top;
-	padding: 7px;
+	padding: 0;
 }
 #partenairesInfos #partenairesList .partenairesListElement img {
-	width:10vw;
+	width:15vw;
+}
+#hoverScrollZones {
+	position : absolute;
+	margin-left:20vw;
+    margin-top: 50vh;
+	width: 58vw;
+	height: 60vh;
+    transform: translate(0, -50%);
+	z-index : 4;
+}
+#projetHoverScrollUp {
+	width:100%;
+ 	height:120px;
+ 	position:fixed;
+ 	top:0;
+	z-index:1;
+}
+#projetHoverScrollDown {
+	width:100%;
+ 	height:80px;
+ 	position:fixed;
+ 	bottom: 0;
+	z-index:1;
+}
+#projetHoverScrollRight {
+	height:100%;
+ 	width:80px;
+ 	position:fixed;
+ 	right: 0;
+	z-index:1;
+}
+#projetHoverScrollLeft {
+	height:100%;
+ 	width:80px;
+ 	position:fixed;
+ 	left: 0;
+	z-index:1;
 }
 
 /*****************************   Interface 3D  *********************************/
