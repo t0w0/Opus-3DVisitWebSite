@@ -29,5 +29,29 @@
  {
 	"startDate": 1206, 	"endDate": "null",	"blocksToAdd": null,
 	"title": "1206", 				
-	"description": "Arrivée du chef de Saint-Jean-Baptiste prise à Constantinople ; pèlerinage. Pierre à laver les morts"}
+	"description": "Arrivée du chef de Saint-Jean-Baptiste prise à Constantinople ; pèlerinage. Pierre à laver les morts"},
+ {
+	"startDate": 1400, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "XVe siècle", 				
+	"description": "Un siècle de sommeil : crises"}, 
+ {
+	"startDate": 1497, 	"endDate": 1503,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "1497 - 1503", 				
+	"description": "Consolidation des piliers de la croisée et des 2 premiers piliers au nord du chœur (piles séparant le double collatéral ; localisation précise à vérifier) ; pose d’une chaîne en fer dans le triforium du chœur, de la nef et du transept ; modification du contrebutement du chœur ; chargement des culées de la nef ; contrefort pour raidir la rose du bras nord et certaines baies du bras sud."}, 
+ {
+	"startDate": 1490, 	"endDate": 1531,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "1490", 				
+	"description": "Mise en place des clôtures du chœur et des monuments sculptés dans le transept"}, 
+ {
+	"startDate": 1500, 	"endDate": 1520,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "1500 - 1520", 				
+	"description": "Remplacement des roses du bras sud du transept et de la façade occidentale (tempête en 1519)"},
+ {
+	"startDate": 1508, 	"endDate": 1519,	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "1508 - 1519", 				
+	"description": "Mise en place des stalles dans le chœur"},
+ {
+	"startDate": 1528, 	"endDate": "null",	"blocksToAdd": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+	"title": "1528", 				
+	"description": "Incendie de la flèche en charpente de la croisée du transept ; elle est refaite en 1528-1533"}
 ]

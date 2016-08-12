@@ -32,6 +32,7 @@ window.onload = function() {
 	var projetInfos = document.getElementById('projetInfos');
 	var equipeInfos = document.getElementById('equipeInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
+	var hoverPartNameContainer = document.getElementById('hoverPartNameContainer')
 	var hoverScrollZones = document.getElementById('hoverScrollZones');
 	var projetHoverScrollUp = document.getElementById('projetHoverScrollUp');
 	var projetHoverScrollDown = document.getElementById('projetHoverScrollDown');
@@ -108,6 +109,7 @@ window.onload = function() {
 	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
 	
 	var parts = [];
+	var partsName = ["Fondations", "Transept Sud", "Croisée du transept", "Nef", "Porche", "Tour Nord", "Choeur", "Tour Sud", "Transept Nord", "Collatéral Nord", "Collateral Sud", "Abside", "Déambulatoire", "Absidiole", "Chapelle Absidiale", "Toît", "Flêche"];
 	
 	//Start by loading the two 3D models and launch Init()
 	loader.options.convertUpAxis = true;
@@ -253,7 +255,7 @@ window.onload = function() {
 				count = count || 1;
 				var pos = div.scrollLeft;
 				div.scrollLeft = pos - count;
-			}, 10);
+			}, 5);
 		});
 		
 		projetHoverScrollLeft.addEventListener('mouseout', function() {
@@ -267,7 +269,7 @@ window.onload = function() {
 				count = count || 1;
 				var pos = div.scrollLeft;
 				div.scrollLeft = pos + count;
-			}, 10);
+			}, 5);
 		});
 		
 		projetHoverScrollRight.addEventListener('mouseout', function() {
@@ -334,6 +336,7 @@ window.onload = function() {
 	function startVisit() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
+		hoverScrollZones.style.display = 'none';
 		for (i = 0 ; i < openningInterface.length ; i++) {
 			openningInterface[i].style.display = 'none';
 			openningInterface[i].style.opacity = 0;
@@ -581,19 +584,32 @@ window.onload = function() {
 			partsMatHover.transparent = true;
 			partsMatHover.blending = THREE.AdditiveBlending;
 		
+		var hoverPartName = document.createElement( 'h1' );
+			hoverPartName.className = 'hoverPartName';
+			hoverPartNameContainer.appendChild( hoverPartName );
+		console.log(cathModelStep);
+		for (var i = 0 ; i < cathModelStep.children.length ; i ++) {
+			cathModelStep.children[i].children[0].name = partsName[i];
+			//console.log(cathModelStep);
+		}
 		cathModelStep.traverse( function(part) {
 			if (part instanceof THREE.Mesh) {
+				//console.log(part);
 				part.material = partsMat;
 				part.castShadow = true;
 				part.receiveShadow = true;
 				domEvents.addEventListener(part, 'mouseover', function(event) {
 					event.target.material = partsMatHover;
+					hoverPartName.textContent = event.target.name;
+					hoverPartNameContainer.style.display = 'inline';
+					console.log(event.target);
 				});
 				part.visible = false;
 
 				//Event when mouseOut an interestPoint
 				domEvents.addEventListener(part, 'mouseout', function(event) {
 					event.target.material = partsMat;
+					hoverPartNameContainer.style.display = 'none'; 
 				});
 				parts.push(part);
 			}
@@ -896,6 +912,7 @@ window.onload = function() {
 		switch (wheelMode) {
 			case true: 
 				wheelMode = false;
+				leftPanel.style.opacity = 0;
 				wheel.style.display = "none";
 				visitButton.style.display = "inline";
 				sceneVisit.visible = true;
@@ -907,6 +924,7 @@ window.onload = function() {
 				break;
 			case false:
 				wheelMode = true;
+				leftPanel.style.opacity = 0;
 				visitButton.style.display = "none";
 				wheel.style.display = "inline";
 				sceneVisit.visible = false;

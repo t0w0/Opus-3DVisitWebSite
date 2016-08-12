@@ -536,6 +536,13 @@ wheelnContros {
 	display: inline;
 }
 
+#hoverPartNameContainer {
+	position : absolute;
+	left : 50vw;
+	transform : translateX(-50%);
+	top : 15vh;
+}
+
 #planMini {
 	position:absolute;
 	opacity:0;
