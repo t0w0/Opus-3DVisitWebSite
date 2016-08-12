@@ -138,6 +138,7 @@ window.onload = function() {
 		createMyScenes();
 		setUpRadialSlider();
 		
+		
 		switchControlsTo(controlModes.fly);
 		
 		//stats();
@@ -1154,6 +1155,22 @@ window.onload = function() {
 	/********************************************************************************/
 	/*		Utils			*/
 	/********************************************************************************/
+	
+	function transformText (string) {
+		
+		var transformStringed;
+		var balS = "<mark>";
+		var balE = "</mark>"
+		
+		for (var i = 0 ; i < string.length ; i++) {
+			if (string[i] == string[i].toUpperCase() && string[i] != " ") {
+				string = string.slice(0, i) + balE + string.slice(i + string.length-1);
+				alert(string);
+			}
+		}
+
+		return transformedString;
+	}
 	
 	function loadJSON(file, callback) {   
 
