@@ -1044,6 +1044,7 @@ THREE.ColladaLoader = function () {
 		var skinController;
 		var morphController;
 		var i, j;
+		var index;
 
 		// FIXME: controllers
 

@@ -32,6 +32,12 @@ window.onload = function() {
 	var projetInfos = document.getElementById('projetInfos');
 	var equipeInfos = document.getElementById('equipeInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
+	var hoverPartNameContainer = document.getElementById('hoverPartNameContainer')
+	var hoverScrollZones = document.getElementById('hoverScrollZones');
+	var projetHoverScrollUp = document.getElementById('projetHoverScrollUp');
+	var projetHoverScrollDown = document.getElementById('projetHoverScrollDown');
+	var projetHoverScrollRight = document.getElementById('projetHoverScrollRight');
+	var projetHoverScrollLeft = document.getElementById('projetHoverScrollLeft');
 	
 	var interface3D = document.getElementsByClassName("interface3D");
 	
@@ -103,6 +109,7 @@ window.onload = function() {
 	var interestDatesJSON = loadJSON("./data/interestDates.json", function (response) {interestDates = JSON.parse(response);});
 	
 	var parts = [];
+	var partsName = ["Fondations", "Transept Sud", "Croisée du transept", "Nef", "Porche", "Tour Nord", "Choeur", "Tour Sud", "Transept Nord", "Collatéral Nord", "Collateral Sud", "Abside", "Déambulatoire", "Absidiole", "Chapelle Absidiale", "Toît", "Flêche"];
 	
 	//Start by loading the two 3D models and launch Init()
 	loader.options.convertUpAxis = true;
@@ -209,36 +216,117 @@ window.onload = function() {
 		wheelButton.addEventListener("click", function(event) {
 			manageWheel();
 		});
+		
+		var count;
+		
+		projetHoverScrollUp.addEventListener('mouseover', function() {
+        	var div = document.getElementById("projetToBeScroll");
+
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollTop;
+				div.scrollTop = pos - count;
+			}, 10);
+		});
+		
+		projetHoverScrollUp.addEventListener('mouseout', function() {
+
+				clearInterval(interval);
+		});
+		
+		projetHoverScrollDown.addEventListener('mouseover', function() {
+        	var div = document.getElementById("projetToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollTop;
+				div.scrollTop = pos + count;
+			}, 10);
+		});
+		
+		projetHoverScrollDown.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
+		
+		projetHoverScrollLeft.addEventListener('mouseover', function() {
+        	var div = document.getElementById("partenairesToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollLeft;
+				div.scrollLeft = pos - count;
+			}, 5);
+		});
+		
+		projetHoverScrollLeft.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
+		projetHoverScrollRight.addEventListener('mouseover', function() {
+        	var div = document.getElementById("partenairesToBeScroll");
+			interval = setInterval(function(){
+				count = count || 1;
+				var pos = div.scrollLeft;
+				div.scrollLeft = pos + count;
+			}, 5);
+		});
+		
+		projetHoverScrollRight.addEventListener('mouseout', function() {
+				// Uncomment this line if you want to reset the speed on out
+				// count = 0;
+				clearInterval(interval);
+		});
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
 		switch (pageToMoveTo) {
 			case 0 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 1;
+				title.style.display = 'inline';
+				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 1 : {
 				projetInfos.style.opacity = 1;
+				projetInfos.style.display = 'inline';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 			case 2 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 1;
+				equipeInfos.style.display = 'inline';
 				partenaireInfos.style.opacity = 0;
+				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 3 : {
 				projetInfos.style.opacity = 0;
+				projetInfos.style.display = 'none';
 				equipeInfos.style.opacity = 0;
+				equipeInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 1;
+				partenaireInfos.style.display = 'inline';
 				title.style.opacity = 0;
+				title.style.display = 'none';
+				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 		}
@@ -248,6 +336,7 @@ window.onload = function() {
 	function startVisit() {
 		background.style.display = 'none';
 		trailer.style.display = 'none';
+		hoverScrollZones.style.display = 'none';
 		for (i = 0 ; i < openningInterface.length ; i++) {
 			openningInterface[i].style.display = 'none';
 			openningInterface[i].style.opacity = 0;
@@ -326,9 +415,12 @@ window.onload = function() {
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
+				projetInfos.style.display = "inline";
 				title.opacity=1;
 				break;
 			case 1 :
+				vid.currentTime = 0;
+				vid.play();
 				audio.pause();
 				background.style.opacity = 1;
 				trailer.style.opacity = 1;
@@ -346,6 +438,7 @@ window.onload = function() {
 				partenairesInfos.style.opacity = 0;
 				equipeInfos.style.opacity = 0;
 				title.opacity=0;
+				projetInfos.style.display = "none";
 				break;
 			default :
 				console.warn ("The function manageTrailer() takes 1 argument : 0 : stop, 1 : play");
@@ -491,19 +584,32 @@ window.onload = function() {
 			partsMatHover.transparent = true;
 			partsMatHover.blending = THREE.AdditiveBlending;
 		
+		var hoverPartName = document.createElement( 'h1' );
+			hoverPartName.className = 'hoverPartName';
+			hoverPartNameContainer.appendChild( hoverPartName );
+		console.log(cathModelStep);
+		for (var i = 0 ; i < cathModelStep.children.length ; i ++) {
+			cathModelStep.children[i].children[0].name = partsName[i];
+			//console.log(cathModelStep);
+		}
 		cathModelStep.traverse( function(part) {
 			if (part instanceof THREE.Mesh) {
+				//console.log(part);
 				part.material = partsMat;
 				part.castShadow = true;
 				part.receiveShadow = true;
 				domEvents.addEventListener(part, 'mouseover', function(event) {
 					event.target.material = partsMatHover;
+					hoverPartName.textContent = event.target.name;
+					hoverPartNameContainer.style.display = 'inline';
+					console.log(event.target);
 				});
 				part.visible = false;
 
 				//Event when mouseOut an interestPoint
 				domEvents.addEventListener(part, 'mouseout', function(event) {
 					event.target.material = partsMat;
+					hoverPartNameContainer.style.display = 'none'; 
 				});
 				parts.push(part);
 			}
@@ -806,6 +912,7 @@ window.onload = function() {
 		switch (wheelMode) {
 			case true: 
 				wheelMode = false;
+				leftPanel.style.opacity = 0;
 				wheel.style.display = "none";
 				visitButton.style.display = "inline";
 				sceneVisit.visible = true;
@@ -817,6 +924,7 @@ window.onload = function() {
 				break;
 			case false:
 				wheelMode = true;
+				leftPanel.style.opacity = 0;
 				visitButton.style.display = "none";
 				wheel.style.display = "inline";
 				sceneVisit.visible = false;
