@@ -48,6 +48,7 @@ window.onload = function() {
 	var wheel = document.getElementById('radialSliderContainer');
 	var wheelMode = false;
 	var leftPanel = document.getElementById('leftPanel');
+	var playPauseAudioGuide = document.getElementById('playPauseAudioGuide');
 	
 	var background = document.getElementById('background');
 	
@@ -139,7 +140,7 @@ window.onload = function() {
 		createMyScenes();
 		setUpRadialSlider();
 		
-		//transformText("This Is A Test");
+		//transformText("This Isa Test But There Is A Problem");
 		
 		switchControlsTo(controlModes.fly);
 		
@@ -214,6 +215,15 @@ window.onload = function() {
 		visitModeIndicator.textContent = 'Visite guidée';
 		visitButton.addEventListener("click", function(event) {
 			manageVisitMode ();
+		});
+		
+		playPauseAudioGuide.addEventListener("click", function (event) {
+			if (audioVoice.pause) {
+				audioVoice.play();
+			}
+			else {
+				audioVoice.pause();
+			}
 		});
 		
 		wheelButton.addEventListener("click", function(event) {
@@ -781,6 +791,7 @@ window.onload = function() {
 				//Event when mouseover an interestPoint
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
 					event.target.material = interestPointMatHover;
+					//interestPointTitle.textContent = transformText(event.target.metaData.title);
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
@@ -789,6 +800,7 @@ window.onload = function() {
 				//Event when mouseOut an interestPoint
 				domEvents.addEventListener(mesh, 'mouseout', function(event) {
 					if (targetInterestPoint != null) {
+						//interestPointTitle.textContent = transformText(targetInterestPoint.metaData.title);
 						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (targetInterestPoint.metaData.video != null) {
@@ -836,6 +848,7 @@ window.onload = function() {
 
 		if (targetPoint != null) {
 			leftPanel.style.opacity = 1;
+			//interestPointTitle.textContent = transformText(targetPoint.metaData.title);
 			interestPointTitle.textContent = targetPoint.metaData.title;
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			if (targetPoint.metaData.video != null) {
@@ -1196,42 +1209,12 @@ window.onload = function() {
 		
 		var transformString = "";
 		var balS = "<mark>";
-		var balE = "</mark>";
-		var caps = [];
-		var subCaps =[];
+		var balE = "</mark>"
 		
-		
-		for (var i = 0 ; i < string.length ; i++) {
-			if (string[i] == string[i].toUpperCase() && string[i] != " ") {
-				caps.push(i);
-				var transformSubString = balS + string[i] + balE;
-				subCaps.push(transformSubString);
-			}
-		}
-		console.log(subCaps);
-		console.log(caps);
-		var subWords = [];
-		for (var i = 0 ; i < caps.length ; i ++) {
-			if ( i == caps.length-1 ) {
-				var word = string.substr(caps[i], string.length-1);
-				subWords.push(word);
-			}
-			else {
-				var word = string.substr(caps[i], caps[i+1]-1);
-				subWords.push(word);
-			}
-			console.log(string[caps[i+1]-1]);
-		}
-		
-		console.log(subWords);
-		
-		for (var i = 0 ; i < subWords.length ; i++){
-			transformString =+ subWords[i];
-		}
-		
+		transformString = string.replace(/\b\w/g, l => balS + l + balE);
+		console.log(transformString);
 
-		
-		//return transformedString;
+		return transformString;
 	}
 	
 	function loadJSON(file, callback) {   

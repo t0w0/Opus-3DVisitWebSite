@@ -120,6 +120,29 @@ body {
 	overflow: hidden;
 }
 
+::-webkit-scrollbar {									/* Scrollbars */
+	width: 14px;
+	height: 14px;
+	background-color: transparent;
+}
+::-webkit-scrollbar-track-piece {						/* Fond */
+	background: transparent none;
+	border: solid 4px transparent;
+	border-right-width: 8px;
+	margin: 4px;
+	-webkit-box-shadow: inset 1px 1px 0 0 rgb(255,255,255), inset -1px -1px 0 0 rgb(255,255,255);
+}
+
+::-webkit-scrollbar-thumb {								/* Barre */
+	border: solid 0 transparent;
+	border-right-width: 4px;
+	-webkit-border-radius: 5px;
+	background-color: rgb(30,30,40);
+}
+::-webkit-scrollbar-thumb:hover {	
+	background-color: rgb(40,40,50);
+}	
+
 /**********************************     ***************************************/
 /*****************************   CONTAINERS   *********************************/
 /**********************************     ***************************************/
@@ -393,8 +416,8 @@ wheelnContros {
 #projetInfos{
 	display : none;
 	position : absolute;
-	margin-left:20vw;
-	margin-right:20vw;
+	margin-left:30vw;
+	margin-right:40vw;
     margin-top: 50vh;
 	height:60vh;
     transform: translate(0, -50%);
@@ -406,7 +429,7 @@ wheelnContros {
 #projetToBeScroll {
 	width:100%;
 	height:80%;
-	overflow-y: hidden;
+	overflow-y: scroll;
 }
 #projetInfos ul {
 	margin-left:2em;
@@ -416,9 +439,8 @@ wheelnContros {
 }
 #equipeInfos{
 	position : absolute;
-	overflow: hidden;
-	margin-left:20vw;
-	margin-right:20vw;
+	margin-left:30vw;
+	margin-right:40vw;
     margin-top: 50vh;
 	height: 60vh;
     transform: translate(0, -50%);
@@ -426,6 +448,11 @@ wheelnContros {
 	-webkit-transition: 0.5s linear 0s;
     -o-transition: 0.5s linear 0s;
     transition: 0.5s linear 0s;
+}
+#contactToBeScroll {
+	width:100%;
+	height:80%;
+	overflow-y: scroll;
 }
 #equipeInfos #equipeList{
 	height: 30vh;
@@ -522,7 +549,7 @@ wheelnContros {
 	bottom: 10vh;
 	width:20vw;
 	max-height: 60vh;
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 	float: left;
 	padding: 2vw;
@@ -532,6 +559,12 @@ wheelnContros {
     -o-transition: 0.2s linear 0s;
     transition: 0.2s linear 0s;
 }
+#leftPanel #playPauseAudioGuide {
+	position : absolute;
+	right: 2vw;
+	top: 2vh;
+}
+
 #leftPanel .interestPointDescription {
 	display:none;
 }
@@ -540,6 +573,7 @@ wheelnContros {
 }
 #leftPanel .interestPointVideo {
 	width:auto;
+	margin-top:1.5em;
 	max-width: 18vw;
 	display:none;
 }
