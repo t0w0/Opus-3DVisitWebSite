@@ -523,6 +523,7 @@ wheelnContros {
 	width:20vw;
 	max-height: 60vh;
 	overflow-y: scroll;
+	overflow-x: hidden;
 	float: left;
 	padding: 2vw;
 	opacity:0;
