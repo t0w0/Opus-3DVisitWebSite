@@ -543,7 +543,7 @@ wheelnContros {
 	display:none;
 }
 #leftPanel:hover .interestPointVideo {
-	display:inline !important;
+	display:inline;
 }
 
 #hoverPartNameContainer {

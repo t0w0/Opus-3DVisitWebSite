@@ -781,9 +781,6 @@ window.onload = function() {
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
-					if (targetInterestPoint.metaData.video == null) {
-						interestPointVideo.style.display = 'none';
-					}
 				});
 
 				//Event when mouseOut an interestPoint
@@ -793,10 +790,6 @@ window.onload = function() {
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (targetInterestPoint.metaData.video != null) {
 							interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
-							interestPointVideo.style.display = 'none';
-						}
-						else {
-							interestPointVideo.style.display = 'none';
 						}
 						if (event.target != targetInterestPoint){
 							event.target.material = interestPointMat;
@@ -813,6 +806,18 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'click', function(event) {
 					targetInterestPointIs (event.target, true);
 					console.log(event.target);
+				});
+				leftPanel.addEventListener('mouseover', function (event) {
+					if (targetInterestPoint.metaData.video != null) {
+						interestPointVideo.style.display = 'inline';
+					}
+					else {
+						interestPointVideo.style.display = 'none';
+					}
+				});
+				
+				leftPanel.addEventListener('mouseout', function (event) {
+					interestPointVideo.style.display = 'none';
 				});
 			}
 		}
@@ -831,10 +836,6 @@ window.onload = function() {
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
-				interestPointVideo.style.display = 'none';
-			}
-			else {
-				interestPointVideo.style.display = 'none';
 			}
 			console.log(null);
 			console.log(targetPoint.metaData.video);
