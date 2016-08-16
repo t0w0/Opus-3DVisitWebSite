@@ -16,7 +16,8 @@ window.onload = function() {
 	var fullScreenButton = document.getElementById('fullScreen');
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
-	var audio = new Audio('../data/sound/cathSound.mp3');
+	var audio = new Audio('./data/sound/cathSoundEffect.mp3');
+	var audioVoice;
 	var mute = false;
 	
 	var openningInterface = document.getElementsByClassName("openningInterface");
@@ -357,6 +358,7 @@ window.onload = function() {
 				break;
 			case false :
 				audio.pause();
+				audioVoice.pause();
 				mute = true;
 				break;
 			default :
@@ -770,7 +772,8 @@ window.onload = function() {
 					{
 						"title": interestPoints[attr].title,
 						"description": interestPoints[attr].description,
-						"video": interestPoints[attr].video
+						"video": interestPoints[attr].video,
+						"sound": interestPoints[attr].sound
 					}
 				sceneVisit.add(mesh);
 				interestPoints3D.push(mesh);
@@ -807,20 +810,21 @@ window.onload = function() {
 					targetInterestPointIs (event.target, true);
 					console.log(event.target);
 				});
-				leftPanel.addEventListener('mouseover', function (event) {
-					if (targetInterestPoint.metaData.video != null) {
-						interestPointVideo.style.display = 'inline';
-					}
-					else {
-						interestPointVideo.style.display = 'none';
-					}
-				});
 				
-				leftPanel.addEventListener('mouseout', function (event) {
-					interestPointVideo.style.display = 'none';
-				});
 			}
 		}
+		leftPanel.addEventListener('mouseover', function (event) {
+			if (targetInterestPoint.metaData.video != null) {
+				interestPointVideo.style.display = 'inline';
+			}
+			else {
+				interestPointVideo.style.display = 'none';
+			}
+		});
+
+		leftPanel.addEventListener('mouseout', function (event) {
+			interestPointVideo.style.display = 'none';
+		});
 	}
 
 	function targetInterestPointIs (targetPoint, isClicked) {
@@ -837,8 +841,11 @@ window.onload = function() {
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
 			}
-			console.log(null);
-			console.log(targetPoint.metaData.video);
+			if (targetPoint.metaData.sound != null) {
+				audioVoice.stop();
+				audioVoice = new Audio (targetPoint.metaData.sound);
+				audioVoice.play();
+			}
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
 			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
