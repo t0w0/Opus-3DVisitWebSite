@@ -17,7 +17,7 @@ window.onload = function() {
 	var fullScreen = false;
 	var muteButton = document.getElementById('mute');
 	var audio = new Audio('./data/sound/cathSoundEffect.mp3');
-	var audioVoice;
+	var audioVoice = new Audio('./data/sound/cathSoundEffect.mp3');
 	var mute = false;
 	
 	var openningInterface = document.getElementsByClassName("openningInterface");
@@ -841,8 +841,8 @@ window.onload = function() {
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
 			}
-			if (targetPoint.metaData.sound != null) {
-				audioVoice.stop();
+			if (targetPoint.metaData.sound != null && targetPoint != targetInterestPoint) {
+				audioVoice.pause();
 				audioVoice = new Audio (targetPoint.metaData.sound);
 				audioVoice.play();
 			}
