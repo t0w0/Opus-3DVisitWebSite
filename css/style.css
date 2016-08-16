@@ -521,6 +521,8 @@ wheelnContros {
 	position : absolute;
 	bottom: 10vh;
 	width:20vw;
+	max-height: 60vh;
+	overflow-y: scroll;
 	float: left;
 	padding: 2vw;
 	opacity:0;
@@ -534,6 +536,14 @@ wheelnContros {
 }
 #leftPanel:hover .interestPointDescription {
 	display: inline;
+}
+#leftPanel .interestPointVideo {
+	width:auto;
+	max-width: 18vw;
+	display:none;
+}
+#leftPanel:hover .interestPointVideo {
+	display:inline !important;
 }
 
 #hoverPartNameContainer {

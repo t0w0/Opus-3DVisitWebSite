@@ -138,6 +138,7 @@ window.onload = function() {
 		createMyScenes();
 		setUpRadialSlider();
 		
+		//transformText("This Is A Test");
 		
 		switchControlsTo(controlModes.fly);
 		
@@ -750,6 +751,12 @@ window.onload = function() {
 			interestPointDescription.className = 'interestPointDescription';
 			leftPanel.appendChild( interestPointDescription );
 		
+		interestPointVideo = document.createElement('VIDEO');
+			interestPointVideo.className = 'interestPointVideo';
+			leftPanel.appendChild(interestPointVideo);
+			interestPointVideo.setAttribute("controls", "controls");
+			interestPointVideo.setAttribute("frameBorder","0"); 
+		
 		//creating a 3D object for each parameter and override metaData to add title & description to the THREE.Mesh object.
 		for (var attr in interestPoints) {
 			if (interestPoints[attr].hasOwnProperty) {
@@ -762,7 +769,8 @@ window.onload = function() {
 				mesh.metaData = 
 					{
 						"title": interestPoints[attr].title,
-						"description": interestPoints[attr].description
+						"description": interestPoints[attr].description,
+						"video": interestPoints[attr].video
 					}
 				sceneVisit.add(mesh);
 				interestPoints3D.push(mesh);
@@ -773,6 +781,9 @@ window.onload = function() {
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
+					if (targetInterestPoint.metaData.video == null) {
+						interestPointVideo.style.display = 'none';
+					}
 				});
 
 				//Event when mouseOut an interestPoint
@@ -780,6 +791,13 @@ window.onload = function() {
 					if (targetInterestPoint != null) {
 						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
+						if (targetInterestPoint.metaData.video != null) {
+							interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
+							interestPointVideo.style.display = 'none';
+						}
+						else {
+							interestPointVideo.style.display = 'none';
+						}
 						if (event.target != targetInterestPoint){
 							event.target.material = interestPointMat;
 						}
@@ -811,6 +829,15 @@ window.onload = function() {
 			leftPanel.style.opacity = 1;
 			interestPointTitle.textContent = targetPoint.metaData.title;
 			interestPointDescription.textContent = targetPoint.metaData.description;
+			if (targetPoint.metaData.video != null) {
+				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
+				interestPointVideo.style.display = 'none';
+			}
+			else {
+				interestPointVideo.style.display = 'none';
+			}
+			console.log(null);
+			console.log(targetPoint.metaData.video);
 			targetPoint.geometry.scale(3/2, 3/2, 3/2);
 			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
@@ -1156,20 +1183,47 @@ window.onload = function() {
 	/*		Utils			*/
 	/********************************************************************************/
 	
+	//function that change the each cap letter into a <mark> to go from pefeffer type to steelplate Textur 
 	function transformText (string) {
 		
-		var transformStringed;
+		var transformString = "";
 		var balS = "<mark>";
-		var balE = "</mark>"
+		var balE = "</mark>";
+		var caps = [];
+		var subCaps =[];
+		
 		
 		for (var i = 0 ; i < string.length ; i++) {
 			if (string[i] == string[i].toUpperCase() && string[i] != " ") {
-				string = string.slice(0, i) + balE + string.slice(i + string.length-1);
-				alert(string);
+				caps.push(i);
+				var transformSubString = balS + string[i] + balE;
+				subCaps.push(transformSubString);
 			}
 		}
+		console.log(subCaps);
+		console.log(caps);
+		var subWords = [];
+		for (var i = 0 ; i < caps.length ; i ++) {
+			if ( i == caps.length-1 ) {
+				var word = string.substr(caps[i], string.length-1);
+				subWords.push(word);
+			}
+			else {
+				var word = string.substr(caps[i], caps[i+1]-1);
+				subWords.push(word);
+			}
+			console.log(string[caps[i+1]-1]);
+		}
+		
+		console.log(subWords);
+		
+		for (var i = 0 ; i < subWords.length ; i++){
+			transformString =+ subWords[i];
+		}
+		
 
-		return transformedString;
+		
+		//return transformedString;
 	}
 	
 	function loadJSON(file, callback) {   
