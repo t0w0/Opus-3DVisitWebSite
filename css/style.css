@@ -204,7 +204,7 @@ body {
     transition: 0.2s linear 0.6s;
 }
 
-#infosMenu #infosList #equipe {
+#infosMenu #infosList #contact {
 	opacity: 0;
 	transform: translateY(35px);
     -webkit-transition: 0.2s linear 0.4s;
@@ -227,7 +227,7 @@ body {
     -o-transition: 0.2s linear 0.2s;
     transition: 0.2s linear 0.2s;
 }
-#infosMenu:hover #infosList #equipe {
+#infosMenu:hover #infosList #contact {
 	opacity: 0.7;
     transform: translateY(0px);
 	 -webkit-transition: 0.2s linear 0.3s;
@@ -417,7 +417,7 @@ wheelnContros {
 	display : none;
 	position : absolute;
 	margin-left:30vw;
-	margin-right:40vw;
+	margin-right:20vw;
     margin-top: 50vh;
 	height:60vh;
     transform: translate(0, -50%);
@@ -437,10 +437,10 @@ wheelnContros {
 #projetInfos li {
 	list-style-type: circle;
 }
-#equipeInfos{
+#contactInfos{
 	position : absolute;
 	margin-left:30vw;
-	margin-right:40vw;
+	margin-right:20vw;
     margin-top: 50vh;
 	height: 60vh;
     transform: translate(0, -50%);
@@ -454,12 +454,12 @@ wheelnContros {
 	height:80%;
 	overflow-y: scroll;
 }
-#equipeInfos #equipeList{
+#contactInfos #contactList{
 	height: 30vh;
 	width: 700%;
 	transform:translate(0,0);
 }
-.equipeListElement {
+.contactListElement {
 	width: 15vw;
 	display:inline-block;
 	text-align: center;
@@ -467,7 +467,7 @@ wheelnContros {
 	vertical-align: top;
 	padding: 7px;
 }
-.equipeListElement img {
+.contactListElement img {
 	width: 10vw;
 }
 
@@ -490,11 +490,12 @@ wheelnContros {
 	overflow-y: hidden;
 }
 #partenairesInfos #partenairesList {
-	height: 20vh;
+	height: 100%;
 	width:200%;
 }
 #partenairesInfos #partenairesList .partenairesListElement {
 	width:19.5vw;
+	height:100%;
 	display:inline-block;
 	text-align: center;
 	overflow: hidden;
@@ -502,7 +503,14 @@ wheelnContros {
 	padding: 0;
 }
 #partenairesInfos #partenairesList .partenairesListElement img {
+	margin-top: 5vh;
 	width:15vw;
+}
+#partenairesInfos #partenairesList .partenairesListElement h3 {
+	margin-top: 20%;
+}
+#partenairesInfos #partenairesList .partenairesListElement p {
+	margin-top: 10%;
 }
 #hoverScrollZones {
 	position : absolute;

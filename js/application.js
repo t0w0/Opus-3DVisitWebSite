@@ -25,13 +25,13 @@ window.onload = function() {
 	var infosMenu = document.getElementById('infosMenu');
 	var infosDeployButton = document.getElementById( 'infosDeploy' );
 	var projetButton = document.getElementById( 'projet' );
-	var equipeButton = document.getElementById('equipe');
+	var contactButton = document.getElementById('contact');
 	var partenaireButton = document.getElementById('partenaires');
 	var startButton = document.getElementById('startButton');
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
 	var projetInfos = document.getElementById('projetInfos');
-	var equipeInfos = document.getElementById('equipeInfos');
+	var contactInfos = document.getElementById('contactInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
 	var hoverPartNameContainer = document.getElementById('hoverPartNameContainer')
 	var hoverScrollZones = document.getElementById('hoverScrollZones');
@@ -61,7 +61,11 @@ window.onload = function() {
 	var loader = new  THREE.ColladaLoader();
 	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
-
+	
+	// Create a new Frustum object (for efficiency, do this only once)
+	var frustum = new THREE.Frustum();
+	var cameraViewProjectionMatrix = new THREE.Matrix4();
+	
 	var sceneVisit;
 	var sceneSteps;
 	
@@ -161,6 +165,18 @@ window.onload = function() {
 		if (stats != null )
 			stats.update();
 		TWEEN.update();
+
+		// every time the camera or objects change position (or every frame)
+
+		camera.updateMatrixWorld(); // make sure the camera matrix is updated
+		camera.matrixWorldInverse.getInverse( camera.matrixWorld );
+		cameraViewProjectionMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+		frustum.setFromMatrix( cameraViewProjectionMatrix );
+
+		// frustum is now ready to check all the objects you need
+		//console.log(cathModel);
+		console.log(cathModel.children[0].children[0]);
+		//console.log( frustum.intersectsObject( cathModel.children[0].geometry));
 		
 		requestAnimationFrame(Update);
 		renderer.render(scene,camera);
@@ -180,7 +196,7 @@ window.onload = function() {
 			navigateBetweenPage(1);
 		}, false );
 		
-		equipeButton.addEventListener('click', function(event){
+		contactButton.addEventListener('click', function(event){
 			navigateBetweenPage(2);
 		}, false)
 		
@@ -297,8 +313,8 @@ window.onload = function() {
 			case 0 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 1;
@@ -309,8 +325,8 @@ window.onload = function() {
 			case 1 : {
 				projetInfos.style.opacity = 1;
 				projetInfos.style.display = 'inline';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
@@ -321,8 +337,8 @@ window.onload = function() {
 			case 2 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 1;
-				equipeInfos.style.display = 'inline';
+				contactInfos.style.opacity = 1;
+				contactInfos.style.display = 'inline';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
@@ -333,8 +349,8 @@ window.onload = function() {
 			case 3 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 1;
 				partenaireInfos.style.display = 'inline';
 				title.style.opacity = 0;
@@ -428,7 +444,7 @@ window.onload = function() {
 				watchTheTrailer.style.opacity = 0.3;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
+				contactInfos.style.opacity = 0;
 				projetInfos.style.display = "inline";
 				title.opacity=1;
 				break;
@@ -450,7 +466,7 @@ window.onload = function() {
 				watchTheTrailer.style.opacity = 0;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
+				contactInfos.style.opacity = 0;
 				title.opacity=0;
 				projetInfos.style.display = "none";
 				break;
@@ -678,6 +694,9 @@ window.onload = function() {
 		
 		sceneVisit.visible = true;
 		sceneSteps.visible = false;
+
+		
+		// Test for visibility
 	}
 	
 	function addEventsToRenderer () {
@@ -792,7 +811,8 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
 					event.target.material = interestPointMatHover;
 					//interestPointTitle.textContent = transformText(event.target.metaData.title);
-					interestPointTitle.textContent = event.target.metaData.title;
+					interestPoint.appendChild(transformText(event.target.metaData.title));
+					//interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
 				});
@@ -801,7 +821,8 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseout', function(event) {
 					if (targetInterestPoint != null) {
 						//interestPointTitle.textContent = transformText(targetInterestPoint.metaData.title);
-						interestPointTitle.textContent = targetInterestPoint.metaData.title;
+						interestPoint.appendChild(transformText(targetInterestPoint.metaData.title));
+						//interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (targetInterestPoint.metaData.video != null) {
 							interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
@@ -849,7 +870,8 @@ window.onload = function() {
 		if (targetPoint != null) {
 			leftPanel.style.opacity = 1;
 			//interestPointTitle.textContent = transformText(targetPoint.metaData.title);
-			interestPointTitle.textContent = targetPoint.metaData.title;
+			//interestPointTitle.textContent = targetPoint.metaData.title;
+			interestPoint.appendChild(transformText(targetPoint.metaData.title));
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
@@ -1207,14 +1229,26 @@ window.onload = function() {
 	//function that change the each cap letter into a <mark> to go from pefeffer type to steelplate Textur 
 	function transformText (string) {
 		
-		var transformString = "";
-		var balS = "<mark>";
-		var balE = "</mark>"
+		var elem = document.createElement( 'p' );
+		var caps = [];
 		
-		transformString = string.replace(/\b\w/g, l => balS + l + balE);
-		console.log(transformString);
-
-		return transformString;
+		console.log(string);
+		
+		for (var i = 0 ; i < string.length ; i++) {
+			if (string[i] == string[i].toUpperCase() && string[i] != " ") {
+				caps.push(i);
+			}
+		}
+		
+		console.log(caps);
+		
+		for (var i = 0 ; i < caps.length ; i ++) {
+			var mark = createElement( 'mark' );
+			mark.appendChild(string[caps[i]]);
+			elem.appendChild(mark);
+		}
+		
+		return elem;
 	}
 	
 	function loadJSON(file, callback) {   
