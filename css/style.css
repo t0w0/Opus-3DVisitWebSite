@@ -130,12 +130,11 @@ body {
 	border: solid 4px transparent;
 	border-right-width: 8px;
 	margin: 4px;
-	-webkit-box-shadow: inset 1px 1px 0 0 rgb(255,255,255), inset -1px -1px 0 0 rgb(255,255,255);
+	-webkit-box-shadow: inset 1px 1px 0px 0px rgb(255,255,255), inset 1px 1px 0px 0px rgb(255,255,255);
 }
 
 ::-webkit-scrollbar-thumb {								/* Barre */
 	border: solid 0 transparent;
-	border-right-width: 4px;
 	-webkit-border-radius: 5px;
 	background-color: rgb(30,30,40);
 }
@@ -159,6 +158,10 @@ body {
 	display: none;
 	opacity:0;
 	z-index:4;
+}
+.tutorial {
+    z-index:5;
+    display: none;
 }
 .interface3D {
 	opacity:0;
@@ -204,7 +207,7 @@ body {
     transition: 0.2s linear 0.6s;
 }
 
-#infosMenu #infosList #equipe {
+#infosMenu #infosList #partenaires {
 	opacity: 0;
 	transform: translateY(35px);
     -webkit-transition: 0.2s linear 0.4s;
@@ -212,7 +215,7 @@ body {
     transition: 0.2s linear 0.4s;
 }
 
-#infosMenu #infosList #partenaires {
+#infosMenu #infosList #contact {
 	opacity: 0;
 	transform: translateY(45px);
     -webkit-transition: 0.2s linear 0.2s;
@@ -227,14 +230,14 @@ body {
     -o-transition: 0.2s linear 0.2s;
     transition: 0.2s linear 0.2s;
 }
-#infosMenu:hover #infosList #equipe {
+#infosMenu:hover #infosList #partenaires {
 	opacity: 0.7;
     transform: translateY(0px);
 	 -webkit-transition: 0.2s linear 0.3s;
     -o-transition: 0.2s linear 0.3s;
     transition: 0.2s linear 0.3s;
 }
-#infosMenu:hover #infosList #partenaires {
+#infosMenu:hover #infosList #contact {
 	opacity: 0.7;
     transform:translateY(0px);
 	-webkit-transition: 0.2s linear 0.4s;
@@ -399,6 +402,58 @@ wheelnContros {
 	opacity:.7;
 }
 
+#putYourHeadphones {
+    position: absolute;
+    text-align: center;
+    margin-left: 50vw;
+    margin-top: 50vh;
+	opacity:0;
+    -webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+    transform: translate(-50%, -50%);
+}
+#putYourHeadphones p {
+    text-align: center;
+}
+#tutorial1 {
+    position: absolute;
+    text-align: center;
+    margin-left: 50vw;
+    margin-top: 50vh;
+    width: 60vw;
+	opacity:0;
+    -webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+    transform: translate(-50%, -50%);
+}
+#tutorial1 #mouseRight {
+    float: left;
+    width: 20vw;
+}
+#tutorial1 #mouseLeft {
+    float: right;
+    width: 20vw;
+}
+#tutorial1 p {
+    text-align: center;
+}
+#tutorial2 {
+    position: absolute;
+    text-align: center;
+    margin-left: 50vw;
+    margin-top: 50vh;
+	opacity:0;
+    -webkit-transition: 0.5s linear 0s;
+    -o-transition: 0.5s linear 0s;
+    transition: 0.5s linear 0s;
+    transform: translate(-50%, -50%);
+}
+#tutorial2 p {
+    text-align: center;
+}
+
 #title{
 	position : absolute;
     text-align: center;
@@ -417,7 +472,7 @@ wheelnContros {
 	display : none;
 	position : absolute;
 	margin-left:30vw;
-	margin-right:40vw;
+	margin-right:20vw;
     margin-top: 50vh;
 	height:60vh;
     transform: translate(0, -50%);
@@ -429,7 +484,7 @@ wheelnContros {
 #projetToBeScroll {
 	width:100%;
 	height:80%;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 #projetInfos ul {
 	margin-left:2em;
@@ -437,12 +492,13 @@ wheelnContros {
 #projetInfos li {
 	list-style-type: circle;
 }
-#equipeInfos{
+#contactInfos{
 	position : absolute;
 	margin-left:30vw;
-	margin-right:40vw;
+	margin-right:20vw;
     margin-top: 50vh;
 	height: 60vh;
+    width: 50vw;
     transform: translate(0, -50%);
 	opacity:0;
 	-webkit-transition: 0.5s linear 0s;
@@ -452,23 +508,15 @@ wheelnContros {
 #contactToBeScroll {
 	width:100%;
 	height:80%;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
-#equipeInfos #equipeList{
-	height: 30vh;
-	width: 700%;
-	transform:translate(0,0);
+#contact1 {
+    float: left;
+    width:40%;
 }
-.equipeListElement {
-	width: 15vw;
-	display:inline-block;
-	text-align: center;
-	overflow: hidden;
-	vertical-align: top;
-	padding: 7px;
-}
-.equipeListElement img {
-	width: 10vw;
+#contact2 {
+    float : right;
+    width : 40%;
 }
 
 #partenairesInfos{
@@ -490,11 +538,12 @@ wheelnContros {
 	overflow-y: hidden;
 }
 #partenairesInfos #partenairesList {
-	height: 20vh;
+	height: 100%;
 	width:200%;
 }
 #partenairesInfos #partenairesList .partenairesListElement {
 	width:19.5vw;
+	height:100%;
 	display:inline-block;
 	text-align: center;
 	overflow: hidden;
@@ -502,44 +551,13 @@ wheelnContros {
 	padding: 0;
 }
 #partenairesInfos #partenairesList .partenairesListElement img {
-	width:15vw;
+    margin-top: 10%;
 }
-#hoverScrollZones {
-	position : absolute;
-	margin-left:20vw;
-    margin-top: 50vh;
-	width: 58vw;
-	height: 60vh;
-    transform: translate(0, -50%);
-	z-index : 4;
+#partenairesInfos #partenairesList .partenairesListElement h3 {
+	margin-top: 10%;
 }
-#projetHoverScrollUp {
-	width:100%;
- 	height:120px;
- 	position:fixed;
- 	top:0;
-	z-index:1;
-}
-#projetHoverScrollDown {
-	width:100%;
- 	height:80px;
- 	position:fixed;
- 	bottom: 0;
-	z-index:1;
-}
-#projetHoverScrollRight {
-	height:100%;
- 	width:80px;
- 	position:fixed;
- 	right: 0;
-	z-index:1;
-}
-#projetHoverScrollLeft {
-	height:100%;
- 	width:80px;
- 	position:fixed;
- 	left: 0;
-	z-index:1;
+#partenairesInfos #partenairesList .partenairesListElement p {
+	margin-top: 5%;
 }
 
 /*****************************   Interface 3D  *********************************/

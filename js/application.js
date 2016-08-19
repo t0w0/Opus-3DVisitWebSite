@@ -25,20 +25,22 @@ window.onload = function() {
 	var infosMenu = document.getElementById('infosMenu');
 	var infosDeployButton = document.getElementById( 'infosDeploy' );
 	var projetButton = document.getElementById( 'projet' );
-	var equipeButton = document.getElementById('equipe');
+	var contactButton = document.getElementById('contact');
 	var partenaireButton = document.getElementById('partenaires');
 	var startButton = document.getElementById('startButton');
+    var startButtonPress = false;
 	var watchTheTrailer = document.getElementById('watchTheTrailer');
 	var title = document.getElementById('title');
 	var projetInfos = document.getElementById('projetInfos');
-	var equipeInfos = document.getElementById('equipeInfos');
+	var contactInfos = document.getElementById('contactInfos');
 	var partenaireInfos = document.getElementById('partenairesInfos');
 	var hoverPartNameContainer = document.getElementById('hoverPartNameContainer')
-	var hoverScrollZones = document.getElementById('hoverScrollZones');
-	var projetHoverScrollUp = document.getElementById('projetHoverScrollUp');
-	var projetHoverScrollDown = document.getElementById('projetHoverScrollDown');
-	var projetHoverScrollRight = document.getElementById('projetHoverScrollRight');
-	var projetHoverScrollLeft = document.getElementById('projetHoverScrollLeft');
+    
+    var tutorial = document.getElementsByClassName('tutorial');
+    var putYourHeadphones = document.getElementById('putYourHeadphones');
+    var tutorial1 = document.getElementById('tutorial1');
+    var tutorial2 = document.getElementById('tutorial2');
+    var tutorialState = 0;
 	
 	var interface3D = document.getElementsByClassName("interface3D");
 	
@@ -61,7 +63,11 @@ window.onload = function() {
 	var loader = new  THREE.ColladaLoader();
 	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
-
+	
+	// Create a new Frustum object (for efficiency, do this only once)
+	var frustum = new THREE.Frustum();
+	var cameraViewProjectionMatrix = new THREE.Matrix4();
+	
 	var sceneVisit;
 	var sceneSteps;
 	
@@ -82,14 +88,10 @@ window.onload = function() {
 	var interestPoints;
 	var interestPointsJSON = loadJSON("./data/interestPoints.json", function (response) {interestPoints = JSON.parse(response);});
 	
-	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0x89A64B} );
+	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0xB9A64B} );
 		interestPointMat.transparent = true;
-		interestPointMat.opacity = 0.3;
-		interestPointMat.blending = THREE.AdditiveBlending;
 	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
 		interestPointMatHover.transparent = true;
-		interestPointMatHover.opacity = 0.7;
-		interestPointMatHover.blending = THREE.AdditiveBlending;
 	
 	//Visits
 	var visitModes = {"guide": 0, "free": 1};
@@ -180,25 +182,33 @@ window.onload = function() {
 			navigateBetweenPage(1);
 		}, false );
 		
-		equipeButton.addEventListener('click', function(event){
+		contactButton.addEventListener('click', function(event){
 			navigateBetweenPage(2);
-		}, false)
+		}, false);
 		
 		partenaireButton.addEventListener('click', function(event){
 			navigateBetweenPage(3);
-		}, false)
+		}, false);
 		
 		fullScreenButton.addEventListener('click', function(event){
 			manageFullScreen(body);
-		}, false)
+		}, false);
 			
 		muteButton.addEventListener('click', function(event){
 			manageSound();
-		}, false)
+		}, false);
 		
 		startButton.addEventListener('click', function(event){
-			startVisit();
-		}, false)
+			manageTutorial(tutorialState);
+            startButtonPress = true;
+		}, false);
+        
+        document.addEventListener('mousedown', function(event){
+            if (startButtonPress && tutorialState <= 3) {
+                manageTutorial(tutorialState);
+                console.log(tutorialState)
+            } 
+		}, false);
 		
 		vid.addEventListener("ended", function(event) {
 			manageTrailer(0);
@@ -229,67 +239,6 @@ window.onload = function() {
 		wheelButton.addEventListener("click", function(event) {
 			manageWheel();
 		});
-		
-		var count;
-		
-		projetHoverScrollUp.addEventListener('mouseover', function() {
-        	var div = document.getElementById("projetToBeScroll");
-
-			interval = setInterval(function(){
-				count = count || 1;
-				var pos = div.scrollTop;
-				div.scrollTop = pos - count;
-			}, 10);
-		});
-		
-		projetHoverScrollUp.addEventListener('mouseout', function() {
-
-				clearInterval(interval);
-		});
-		
-		projetHoverScrollDown.addEventListener('mouseover', function() {
-        	var div = document.getElementById("projetToBeScroll");
-			interval = setInterval(function(){
-				count = count || 1;
-				var pos = div.scrollTop;
-				div.scrollTop = pos + count;
-			}, 10);
-		});
-		
-		projetHoverScrollDown.addEventListener('mouseout', function() {
-				// Uncomment this line if you want to reset the speed on out
-				// count = 0;
-				clearInterval(interval);
-		});
-		
-		projetHoverScrollLeft.addEventListener('mouseover', function() {
-        	var div = document.getElementById("partenairesToBeScroll");
-			interval = setInterval(function(){
-				count = count || 1;
-				var pos = div.scrollLeft;
-				div.scrollLeft = pos - count;
-			}, 5);
-		});
-		
-		projetHoverScrollLeft.addEventListener('mouseout', function() {
-				// Uncomment this line if you want to reset the speed on out
-				// count = 0;
-				clearInterval(interval);
-		});
-		projetHoverScrollRight.addEventListener('mouseover', function() {
-        	var div = document.getElementById("partenairesToBeScroll");
-			interval = setInterval(function(){
-				count = count || 1;
-				var pos = div.scrollLeft;
-				div.scrollLeft = pos + count;
-			}, 5);
-		});
-		
-		projetHoverScrollRight.addEventListener('mouseout', function() {
-				// Uncomment this line if you want to reset the speed on out
-				// count = 0;
-				clearInterval(interval);
-		});
 	}
 	
 	function navigateBetweenPage (pageToMoveTo) {
@@ -297,67 +246,49 @@ window.onload = function() {
 			case 0 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 1;
 				title.style.display = 'inline';
-				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 1 : {
 				projetInfos.style.opacity = 1;
 				projetInfos.style.display = 'inline';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
 				title.style.display = 'none';
-				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 			case 2 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 1;
-				equipeInfos.style.display = 'inline';
+				contactInfos.style.opacity = 1;
+				contactInfos.style.display = 'inline';
 				partenaireInfos.style.opacity = 0;
 				partenaireInfos.style.display = 'none';
 				title.style.opacity = 0;
 				title.style.display = 'none';
-				hoverScrollZones.style.display = 'none';
 				break;
 			}
 			case 3 : {
 				projetInfos.style.opacity = 0;
 				projetInfos.style.display = 'none';
-				equipeInfos.style.opacity = 0;
-				equipeInfos.style.display = 'none';
+				contactInfos.style.opacity = 0;
+				contactInfos.style.display = 'none';
 				partenaireInfos.style.opacity = 1;
 				partenaireInfos.style.display = 'inline';
 				title.style.opacity = 0;
 				title.style.display = 'none';
-				hoverScrollZones.style.display = 'inline';
 				break;
 			}
 		}
 		
-	}
-	
-	function startVisit() {
-		background.style.display = 'none';
-		trailer.style.display = 'none';
-		hoverScrollZones.style.display = 'none';
-		for (i = 0 ; i < openningInterface.length ; i++) {
-			openningInterface[i].style.display = 'none';
-			openningInterface[i].style.opacity = 0;
-		}
-		for (i=0 ; i < interface3D.length ; i ++) {
-			interface3D[i].style.display = 'inline';
-			interface3D[i].style.opacity = 1;
-		}
 	}
 	
 	function manageSound() {
@@ -428,7 +359,7 @@ window.onload = function() {
 				watchTheTrailer.style.opacity = 0.3;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
+				contactInfos.style.opacity = 0;
 				projetInfos.style.display = "inline";
 				title.opacity=1;
 				break;
@@ -450,16 +381,60 @@ window.onload = function() {
 				watchTheTrailer.style.opacity = 0;
 				projetInfos.style.opacity = 0;
 				partenairesInfos.style.opacity = 0;
-				equipeInfos.style.opacity = 0;
+				contactInfos.style.opacity = 0;
 				title.opacity=0;
 				projetInfos.style.display = "none";
 				break;
 			default :
 				console.warn ("The function manageTrailer() takes 1 argument : 0 : stop, 1 : play");
+                return;
 		}
 		
 	}
 	
+    function manageTutorial(s) {
+        switch (s) {
+            case 0 :
+                trailer.style.display = 'none';
+                for (i = 0 ; i < openningInterface.length ; i++) {
+                    openningInterface[i].style.opacity = 0;
+                }
+                for (i = 0 ; i < tutorial.length ; i++) {
+                    tutorial[i].style.display = 'inline';
+                }
+                putYourHeadphones.style.opacity = 1;
+                startButtonPress = true;
+                tutorialState++;
+                break;
+            case 1 :
+                putYourHeadphones.style.opacity = 0;
+                tutorial1.style.opacity = 1;
+                tutorialState++;
+                break;
+            case 2 : 
+                tutorial1.style.opacity = 0;
+                tutorial2.style.opacity = 1;
+                tutorialState++;
+                break;
+            case 3 :
+                for (i=0 ; i < tutorial.length ; i++) {
+                    tutorial[i].style.display = 'none';
+                }
+                for (i = 0 ; i < openningInterface.length ; i++) {
+                    openningInterface[i].style.display = 'none';
+                }
+                for (i=0 ; i < interface3D.length ; i ++) {
+                    interface3D[i].style.display = 'inline';
+                    interface3D[i].style.opacity = 1;
+                }
+                background.style.display = 'none';
+                tutorialState++;
+                break;
+            default :
+                return;
+        }
+    }
+    
 	function onWindowResize( event ) {
 
 		SCREEN_HEIGHT = window.innerHeight;
@@ -678,6 +653,9 @@ window.onload = function() {
 		
 		sceneVisit.visible = true;
 		sceneSteps.visible = false;
+
+		
+		// Test for visibility
 	}
 	
 	function addEventsToRenderer () {
@@ -792,6 +770,7 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
 					event.target.material = interestPointMatHover;
 					//interestPointTitle.textContent = transformText(event.target.metaData.title);
+					//interestPoint.appendChild(transformText(event.target.metaData.title));
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
@@ -801,6 +780,7 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseout', function(event) {
 					if (targetInterestPoint != null) {
 						//interestPointTitle.textContent = transformText(targetInterestPoint.metaData.title);
+						//interestPoint.appendChild(transformText(targetInterestPoint.metaData.title));
 						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (targetInterestPoint.metaData.video != null) {
@@ -850,6 +830,7 @@ window.onload = function() {
 			leftPanel.style.opacity = 1;
 			//interestPointTitle.textContent = transformText(targetPoint.metaData.title);
 			interestPointTitle.textContent = targetPoint.metaData.title;
+			//interestPoint.appendChild(transformText(targetPoint.metaData.title));
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
@@ -1207,14 +1188,26 @@ window.onload = function() {
 	//function that change the each cap letter into a <mark> to go from pefeffer type to steelplate Textur 
 	function transformText (string) {
 		
-		var transformString = "";
-		var balS = "<mark>";
-		var balE = "</mark>"
+		var elem = document.createElement( 'p' );
+		var caps = [];
 		
-		transformString = string.replace(/\b\w/g, l => balS + l + balE);
-		console.log(transformString);
-
-		return transformString;
+		console.log(string);
+		
+		for (var i = 0 ; i < string.length ; i++) {
+			if (string[i] == string[i].toUpperCase() && string[i] != " ") {
+				caps.push(i);
+			}
+		}
+		
+		console.log(caps);
+		
+		for (var i = 0 ; i < caps.length ; i ++) {
+			var mark = createElement( 'mark' );
+			mark.appendChild(string[caps[i]]);
+			elem.appendChild(mark);
+		}
+		
+		return elem;
 	}
 	
 	function loadJSON(file, callback) {   

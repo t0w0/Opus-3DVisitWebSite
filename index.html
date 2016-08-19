@@ -35,18 +35,18 @@
 		
 		<div id="infosMenu" class='openningInterface'>
 			<ul id = "infosList">
+                <li id="contact">
+					<button>
+						<img src="data/img/picto/contact.png">
+					</button>
+					<hr width="10px">
+				</li>
 				<li id="partenaires">
 					<button>
 						<img src="data/img/picto/partenaires.png">
 					</button>
 					<hr width="10px">
-				</li>
-				<li id="equipe">
-					<button>
-						<img src="data/img/picto/equipe.png">
-					</button>
-					<hr width="10px">
-				</li>
+                </li>
 				<li id='projet'>
 					<button>
 						<img src="data/img/picto/projet.png">
@@ -117,6 +117,36 @@
 				Pénétrez avec nous dans ce monument gothique <br/>
 				et découvrez les secrets de son élévation.</h4>
 		</div>
+        <div id="tutorialContainer" class='tutorial'>
+            <div id='putYourHeadphones' class='tutorial'>
+                <img src="data/img/picto/headphonesBig.png">
+                <p>Pour profitez pleinement de l'expérience,</br>
+                veuillez montez le son ou brancher un casque.</br>
+                Cliquez pour continuer.
+                </p>
+            </div>
+            <div id='tutorial1' class='tutorial'>
+                <p>Bienvenue dans cette visite guidée de la Cathédrale Notre Dame d'Amiens.</br>
+                vous suivez actuellement notre guide virtuel.</br>
+                </p>
+                <div id='mouseRight'> 
+                    <img src="data/img/picto/mouseR.png"/>
+                    <p>Maintenez pour avancer dans la visite.</p>
+                </div>
+                <div id='mouseLeft'>
+                    <img src="data/img/picto/mouseL.png"/>
+                    <p>Maintenez pour revenir en arrière.</p>
+                </div>
+            </div>
+            <div id='tutorial2' class='tutorial'>
+                <p>Vous pouvez à tout moment quittez la visite guidée</br>
+                    et vous déplacer librement en cliquant sur ce bouton.
+                </p>
+                <div id='freeVisit'> 
+                    <img src="data/img/picto/freeVisit.png"/>
+                </div>
+            </div>
+        </div>
 		<div id="projetInfos" class='openningInterface'>
 			<h1><mark>L</mark>e <mark>P</mark>rojet </h1>
 			<div id="projetToBeScroll">
@@ -159,38 +189,35 @@
 				</p>
 			</div>
 		</div>
-		<div id="equipeInfos" class='openningInterface'>
+		<div id="contactInfos" class='openningInterface'>
 			<h1><mark>N</mark>ous <mark>C</mark>ontacter </h1>
 			<div id="contactToBeScroll">
-				<p>
-					Site web dédié à la cathédrale d'Amiens développé par l'UPJV : <br/>
-					<a href="http://www.u-picardie.fr/Cathedrale/visite.html">http://www.u-picardie.fr/Cathedrale/visite.html</a><br/><br/>
-
-					Amiens Métropole :<br/>
-					<a href="http://www.amiens-cathedrale.fr/home.html">http://www.amiens-cathedrale.fr/home.html</a><br/><br/>
-
-					Site Centre des Monuments Nationaux :<br/>
-					<a href="http://cathedrale-amiens.monuments-nationaux.fr/">http://cathedrale-amiens.monuments-nationaux.fr/</a><br/><br/>
-
-					Site Pascal Lando :<br/>
-					<a href="http://www.cathedrale-amiens.images-en-somme.fr/">http://www.cathedrale-amiens.images-en-somme.fr/</a><br/><br/>
-
-					Site UNESCO :<br/>
-					<a href="http://whc.unesco.org/fr/list/162/">http://whc.unesco.org/fr/list/162/</a><br/><br/>
-
-					Site Wikipedia :<br/>
-					<a href="http://fr.wikipedia.org/wiki/Cathédrale_Notre-Dame_d'Amiens">http://fr.wikipedia.org/wiki/Cathédrale_Notre-Dame_d'Amiens</a><br/><br/>
-
-					Site Mapping gothic France :<br/>
-					<a href="http://mappinggothic.org/building/1063">http://mappinggothic.org/building/1063/<a><br/><br/>
-
-					Site Amiens Cathedral Project : <br/>
-					<a href="http://www.learn.columbia.edu/Mcahweb/index-frame.html">http://www.learn.columbia.edu/Mcahweb/index-frame.html</a><br/><br/>
-
-					Site sur la cathédrale d'Amiens et en particulier sur sa flèche :<br/>
-					<a href="http://cathedrale.gothique.free.fr/Cathedrale_Amiens_3.htm">http://cathedrale.gothique.free.fr/Cathedrale_Amiens_3.htm</a><br/><br/>
-
-				</p>
+                <div id = 'contact1'>
+                    <p>
+                        <h3>Laboratoire MIS</h3></br>
+                        33 rue Saint Leu</br>
+                        80039 Amiens Cedex 1</br>
+                        France</br>
+                        </br>
+                        <h3>Secrétariat</h3></br>
+                        Valérie Faqui</br>
+                        +33 3 22 82 59 05</br>
+                        Juliette Dubois</br>
+                        +33 3 22 82 59 05</br>  
+                    </p>
+                </div>
+                <div id = 'contact2'>
+                    <p>
+                        <h3>Directeur</h3></br>
+                        El Mustapha Mouaddib</br>
+                        +33 3 22 82 59 06</br>
+                        </br>
+                        <h3>Directeur adjoint</h3></br>
+                        Vincent Villain</br>
+                        +33 3 22 82 59 04</br>
+                        </br>
+                    </p>
+                </div>
 			</div>
 		</div>
 		<div id="partenairesInfos" class='openningInterface'>
@@ -198,48 +225,42 @@
 			<div id = "partenairesToBeScroll">
 				<ul id='partenairesList'>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/mis.png">
-						<h3><a href="https://www.mis.u-picardie.fr">MIS</a></h3>
-						<p><a href="https://www.mis.u-picardie.fr">Modélisation, Information et Systèmes</a></p>
+							<img src="data/img/logo/mis.png">
+						<h3>MIS</h3>
+						<p>Modélisation, Information et Systèmes</p>
 
 					</li>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/amiensMetropole.png">
+							<img src="data/img/logo/amiensMetropole.png">
 						<h3>Amiens Métropole</h3>
 						<p></p>
 					</li>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/dracPicardie.jpg">
+							<img src="data/img/logo/dracPicardie.jpg">
 						<h3>DRAC Picardie</h3>
 						<p>Direction régionale des Affaires Culturelles de Picardie</p>
 					</li>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/esad.png">
+							<img src="data/img/logo/esad.png">
 						<h3>ESAD Amiens</h3>
 						<p>Ecole Supérieure d'Art et de Design d'Amiens</p>
 					</li>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/ensg.png">
+							<img src="data/img/logo/ensg.png">
 						<h3>ENSG</h3>
 						<p>Ecole Nationale des Sciences Géographique</p>
 					</li>
 					<li class="partenairesListElement">
-						<img src="data/img/logo/ign.jpg">
+							<img src="data/img/logo/ign.jpg">
 						<h3>IGN</h3>
 						<p>Institut National de l'Information Géographique et Forestière</p>
 					</li>
 				</ul>
 			</div>
-		</div>
-		<div id="hoverScrollZones">
-			<div id="projetHoverScrollUp"></div>
-			<div id="projetHoverScrollDown"></div>
-			<div id="projetHoverScrollLeft"></div>
-			<div id="projetHoverScrollRight"></div>
-		</div>
+        </div>
 		<div id="hoverPartNameContainer"></div>
 		<div id ="leftPanel">
-			<img id="playPauseAudioGuide" src="data/img/picto/close.png"></img>
+			<img id="playPauseAudioGuide" src="data/img/picto/play.png"></img>
 			<!-- Javascript is creating title and description of the hover interest point here -->
 		</div>
        	<script type="text/javascript" src="js/application.js"></script>
