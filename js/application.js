@@ -62,10 +62,6 @@ window.onload = function() {
 	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
 	
-	// Create a new Frustum object (for efficiency, do this only once)
-	var frustum = new THREE.Frustum();
-	var cameraViewProjectionMatrix = new THREE.Matrix4();
-	
 	var sceneVisit;
 	var sceneSteps;
 	
@@ -165,18 +161,6 @@ window.onload = function() {
 		if (stats != null )
 			stats.update();
 		TWEEN.update();
-
-		// every time the camera or objects change position (or every frame)
-
-		camera.updateMatrixWorld(); // make sure the camera matrix is updated
-		camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-		cameraViewProjectionMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
-		frustum.setFromMatrix( cameraViewProjectionMatrix );
-
-		// frustum is now ready to check all the objects you need
-		//console.log(cathModel);
-		console.log(cathModel.children[0].children[0]);
-		//console.log( frustum.intersectsObject( cathModel.children[0].geometry));
 		
 		requestAnimationFrame(Update);
 		renderer.render(scene,camera);
