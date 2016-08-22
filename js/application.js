@@ -811,8 +811,8 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseover', function(event) {
 					event.target.material = interestPointMatHover;
 					//interestPointTitle.textContent = transformText(event.target.metaData.title);
-					interestPoint.appendChild(transformText(event.target.metaData.title));
-					//interestPointTitle.textContent = event.target.metaData.title;
+					//interestPoint.appendChild(transformText(event.target.metaData.title));
+					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
 				});
@@ -821,8 +821,8 @@ window.onload = function() {
 				domEvents.addEventListener(mesh, 'mouseout', function(event) {
 					if (targetInterestPoint != null) {
 						//interestPointTitle.textContent = transformText(targetInterestPoint.metaData.title);
-						interestPoint.appendChild(transformText(targetInterestPoint.metaData.title));
-						//interestPointTitle.textContent = targetInterestPoint.metaData.title;
+						//interestPoint.appendChild(transformText(targetInterestPoint.metaData.title));
+						interestPointTitle.textContent = targetInterestPoint.metaData.title;
 						interestPointDescription.textContent = targetInterestPoint.metaData.description;
 						if (targetInterestPoint.metaData.video != null) {
 							interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
@@ -870,8 +870,8 @@ window.onload = function() {
 		if (targetPoint != null) {
 			leftPanel.style.opacity = 1;
 			//interestPointTitle.textContent = transformText(targetPoint.metaData.title);
-			//interestPointTitle.textContent = targetPoint.metaData.title;
-			interestPoint.appendChild(transformText(targetPoint.metaData.title));
+			interestPointTitle.textContent = targetPoint.metaData.title;
+			//interestPoint.appendChild(transformText(targetPoint.metaData.title));
 			interestPointDescription.textContent = targetPoint.metaData.description;
 			if (targetPoint.metaData.video != null) {
 				interestPointVideo.setAttribute('src', targetPoint.metaData.video);
