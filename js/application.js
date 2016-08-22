@@ -88,9 +88,17 @@ window.onload = function() {
 	var interestPoints;
 	var interestPointsJSON = loadJSON("./data/interestPoints.json", function (response) {interestPoints = JSON.parse(response);});
 	
+	var textureLoader = new THREE.TextureLoader();
+	
 	var interestPointMat = new THREE.MeshBasicMaterial( {color: 0xB9A64B} );
 		interestPointMat.transparent = true;
+		interestPointMat.opacity = 0;
+	var interestPointSprite = textureLoader.load( "./data/img/picto/spriteInterestPoints.png" );
+	var spriteMaterial = new THREE.PointsMaterial( { size: 5, map: interestPointSprite, depthTest: false, transparent : true } );
+	var interestPointSpriteHover = textureLoader.load("./data/img/picto/spriteInterestPoints.png");
+	var spriteMaterialHover = new THREE.PointsMaterial( { size: 10, map: interestPointSpriteHover, depthTest: false, transparent : true } );
 	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
+		interestPointMatHover.opacity = 0;
 		interestPointMatHover.transparent = true;
 	
 	//Visits
@@ -115,7 +123,7 @@ window.onload = function() {
 	var parts = [];
 	var partsName = ["Fondations", "Transept Sud", "Croisée du transept", "Nef", "Porche", "Tour Nord", "Choeur", "Tour Sud", "Transept Nord", "Collatéral Nord", "Collateral Sud", "Abside", "Déambulatoire", "Absidiole", "Chapelle Absidiale", "Toît", "Flêche"];
 	
-	//Start by loading the two 3D models and launch Init()
+	//Start by loading the two 3D models, init their shadows properties and launch Setup()
 	loader.options.convertUpAxis = true;
 	loader.load ('./models/cath.dae', function (model) {
 		cathModel = model.scene;
@@ -174,6 +182,9 @@ window.onload = function() {
 	
 	function addEventsToHTMLElements() {
 		
+		
+		/************Landing Page******************/
+		
 		infosDeployButton.addEventListener( 'click', function ( event ) {
 			navigateBetweenPage(0);
 		}, false );
@@ -190,20 +201,12 @@ window.onload = function() {
 			navigateBetweenPage(3);
 		}, false);
 		
-		fullScreenButton.addEventListener('click', function(event){
-			manageFullScreen(body);
-		}, false);
-			
-		muteButton.addEventListener('click', function(event){
-			manageSound();
-		}, false);
-		
 		startButton.addEventListener('click', function(event){
 			manageTutorial(tutorialState);
             startButtonPress = true;
 		}, false);
-        
-        document.addEventListener('mousedown', function(event){
+		
+		document.addEventListener('mousedown', function(event){
             if (startButtonPress && tutorialState <= 3) {
                 manageTutorial(tutorialState);
                 console.log(tutorialState)
@@ -221,6 +224,18 @@ window.onload = function() {
 		watchTheTrailer.addEventListener("click", function(event) {
 			manageTrailer(1);
 		});
+		
+		/*************Basic Interface********************/
+		
+		fullScreenButton.addEventListener('click', function(event){
+			manageFullScreen(body);
+		}, false);
+			
+		muteButton.addEventListener('click', function(event){
+			manageSound();
+		}, false);
+		
+		/*************3D Visit*************************/
 		
 		visitModeIndicator.textContent = 'Visite guidée';
 		visitButton.addEventListener("click", function(event) {
@@ -342,6 +357,7 @@ window.onload = function() {
 	
 	function manageTrailer(toDo) {
 		switch (toDo) {
+			//Stop Trailer
 			case 0 :
 				vid.pause();
 				audio.play();
@@ -363,6 +379,7 @@ window.onload = function() {
 				projetInfos.style.display = "inline";
 				title.opacity=1;
 				break;
+			//Start Trailer
 			case 1 :
 				vid.currentTime = 0;
 				vid.play();
@@ -434,18 +451,6 @@ window.onload = function() {
                 return;
         }
     }
-    
-	function onWindowResize( event ) {
-
-		SCREEN_HEIGHT = window.innerHeight;
-		SCREEN_WIDTH  = window.innerWidth;
-
-		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-
-		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-		camera.updateProjectionMatrix();
-
-	}
 	
 	/********************************************************************************/
 	/*		3D Stuff				*/
@@ -455,6 +460,9 @@ window.onload = function() {
 		scene = new THREE.Scene();
 		//scene.fog = new THREE.FogExp2( 0x1E1E28, 0.001);
 		
+		//creating a container for the camera needed to fix the fly control (flyControls.js has been modified)
+		//This is needed to clamp y rotation between an angle to avoid being upside down in the model.
+		//Same princioe than in a FPS Player Controller.
 		buddy = new THREE.Group();
 			buddy.position.x = 0;
 			buddy.position.y = 0;
@@ -481,9 +489,11 @@ window.onload = function() {
 			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 			renderer.shadowMapSoft = true;
 		
+		//This initialize the THREEx library that allow to make hoverable mesh.
 		domEvents = new THREEx.DomEvents(camera, renderer.domElement);
 		
 		window.addEventListener( 'resize', onWindowResize, false );
+		//Just here for the chromeDev plugin - Three.js Inspetor
 		window.scene = scene;
 		
 		var ambientLight = new THREE.AmbientLight(0x1E1E28);
@@ -496,6 +506,7 @@ window.onload = function() {
 	
 	function createMyScenes () {
 		
+		//Creating two scenes one for the visit and one for the timeline (steps)
 		sceneVisit = new THREE.Group();
 		sceneSteps = new THREE.Group();
 		
@@ -518,7 +529,6 @@ window.onload = function() {
 		floor1.castShadow = false;
 		floor1.rotation.x = 3 * Math.PI/2;
 		floor1.position.y = -15;
-		//scene.add(floor);
 		sceneVisit.add(floor1);
 		
 		var cathMat = new THREE.MeshLambertMaterial({
@@ -536,7 +546,6 @@ window.onload = function() {
 		cathModel.position.y = 30;
 		cathModel.scale.x = cathModel.scale.y = cathModel.scale.z = 3;
 		cathModel.name = "Cathedrale";
-		//scene.add(cathModel);
 		sceneVisit.add(cathModel);
 
 		/*adds spotlight with starting parameters*/
@@ -547,11 +556,6 @@ window.onload = function() {
 			spotLight1.intensity = 10;        
 			spotLight1.distance = 373;
 			spotLight1.angle = 1.6;
-			spotLight1.exponent = 38;
-			spotLight1.shadow.camera.near = 0;
-			spotLight1.shadow.camera.far = 2635;
-			spotLight1.shadow.camera.fov = 68;
-			spotLight1.shadow.bias = 0;
 		sceneVisit.add(spotLight1);
 		
 		/********************************************************************************/
@@ -653,16 +657,17 @@ window.onload = function() {
 		
 		sceneVisit.visible = true;
 		sceneSteps.visible = false;
-
-		
-		// Test for visibility
 	}
 	
 	function addEventsToRenderer () {
 		
+		//var needed to distinguish drag from click when controll trackball enabled
+		//a drag allow to move around the target point
+		//a simple exit the trackball mode and goback to flyMode (visit or free)
 		var rendermdown = false;
 		var renderdrag = true;
 		
+		//When clicking and guide mode progress in the Visit
 		renderer.domElement.addEventListener('mousedown', function(event) {
 			rendermdown = true;
 			switch (visitMode) {	
@@ -689,39 +694,39 @@ window.onload = function() {
 			}
 		});
 		
+		//Needed for simple click check
 		renderer.domElement.addEventListener('mousemove', function(event){
 			if (rendermdown) {
 				renderdrag = true;
 			}
 		});
-								   
+		
+		//when mouse Up stop visit and reinit simple click check
 		renderer.domElement.addEventListener('mouseup', function(event) {
+			//go back to flyMode and reset targetPoint if necessary.
+			//So if we're in trackball, if it's a simple click and if we're not on the other scene.
 			if (!renderdrag && controlMode == controlModes.trackball && !wheelMode) {
 				switchControlsTo(controlModes.fly);
 				targetInterestPointIs(null);
-				console.log("do");
 			}
 			
 			visitTween.stop();
-			visiting = false;
-			
-			console.log(renderdrag);
-			console.log(rendermdown);
-			console.log(controlMode);
 			renderdrag = false;
 			rendermdown = false;
 		});
 		
+		
+		//when mouseOut reInit(simple click check),  and stop rotation.
 		renderer.domElement.addEventListener('mouseout', function(event) {
 			rendermdown = false;
 			renderdrag = false;
 			visitTween.stop();
-			visiting = false;
 			if (controlMode = controlModes.fly) {
 				control.rollSpeed = 0;
 			}
 		});
 		
+		//when mouse in screen rotation spedd back to normal
 		renderer.domElement.addEventListener('mouseover', function(event) {
 			if (controlMode == controlModes.fly) {
 				control.rollSpeed = .5;
@@ -747,14 +752,19 @@ window.onload = function() {
 			interestPointVideo.setAttribute("controls", "controls");
 			interestPointVideo.setAttribute("frameBorder","0"); 
 		
+		var particlesGeo = new THREE.Geometry();
+		
 		//creating a 3D object for each parameter and override metaData to add title & description to the THREE.Mesh object.
 		for (var attr in interestPoints) {
+			
 			if (interestPoints[attr].hasOwnProperty) {
-				var geometry = new THREE.BoxGeometry( .5, .5, .5 );
+				var geometry = new THREE.BoxGeometry( 2, 2, 2 );
 				var mesh = new THREE.Mesh( geometry, interestPointMat );
-				mesh.position.x = interestPoints[attr].x;
-				mesh.position.y = interestPoints[attr].y;
-				mesh.position.z = interestPoints[attr].z;
+			
+				var vertex = new THREE.Vector3 (interestPoints[attr].x, interestPoints[attr].y, interestPoints[attr].z);
+				particlesGeo.vertices.push(vertex);
+				
+				mesh.position.set(interestPoints[attr].x, interestPoints[attr].y, interestPoints[attr].z);
 				mesh.name = "interestPoint"+attr;
 				mesh.metaData = 
 					{
@@ -771,6 +781,8 @@ window.onload = function() {
 					event.target.material = interestPointMatHover;
 					//interestPointTitle.textContent = transformText(event.target.metaData.title);
 					//interestPoint.appendChild(transformText(event.target.metaData.title));
+					particles.materials = spriteMaterialHover;
+					console.log("pass");
 					interestPointTitle.textContent = event.target.metaData.title;
 					leftPanel.style.display = 'inline';
 					leftPanel.style.opacity = 1;
@@ -805,6 +817,11 @@ window.onload = function() {
 				
 			}
 		}
+		
+		var spriteMaterial = new THREE.PointsMaterial( { size: 5, map: interestPointSprite, depthTest: false, transparent : true } );
+		var particles = new THREE.Points( particlesGeo, spriteMaterial );
+		sceneVisit.add(particles);
+		
 		leftPanel.addEventListener('mouseover', function (event) {
 			if (targetInterestPoint.metaData.video != null) {
 				interestPointVideo.style.display = 'inline';
@@ -1185,7 +1202,19 @@ window.onload = function() {
 	/*		Utils			*/
 	/********************************************************************************/
 	
-	//function that change the each cap letter into a <mark> to go from pefeffer type to steelplate Textur 
+	function onWindowResize( event ) {
+
+		SCREEN_HEIGHT = window.innerHeight;
+		SCREEN_WIDTH  = window.innerWidth;
+
+		renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+
+		camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+		camera.updateProjectionMatrix();
+
+	}
+	
+	//function that change each cap letter into a <mark> to change pfeffer type to steelplate Textur cf css mark{}
 	function transformText (string) {
 		
 		var elem = document.createElement( 'p' );
