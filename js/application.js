@@ -701,8 +701,10 @@ window.onload = function() {
 				}
 			}
 			//if the click is done on an interest point
-			if (INTERSECTED) {
+			if (INTERSECTED && visitMode != visitModes.guide) {
 				targetInterestPointIs (INTERSECTED, true);
+				console.log("pass1");
+				console.log(controlMode);
 			}
 		});
 		
@@ -717,7 +719,7 @@ window.onload = function() {
 		renderer.domElement.addEventListener('mouseup', function(event) {
 			//go back to flyMode and reset targetPoint if necessary.
 			//So if we're in trackball, if it's a simple click and if we're not on the other scene.
-			if (!renderdrag && controlMode == controlModes.trackball && !wheelMode) {
+			if (!renderdrag && controlMode == controlModes.trackball && !wheelMode && !INTERSECTED) {
 				switchControlsTo(controlModes.fly);
 				targetInterestPointIs(null);
 			}
@@ -844,6 +846,7 @@ window.onload = function() {
 				else {
 					INTERSECTED.material = spriteMaterial;
 					leftPanel.style.opacity = 0;
+					leftPanel.style.display = 'none';
 				}
 			}
 
@@ -852,6 +855,9 @@ window.onload = function() {
 	}
 
 	function targetInterestPointIs (targetPoint, isClicked) {
+		console.log("pass");
+		console.log(targetPoint);
+		console.log(controlMode);
 		//If last interestPoint wasn't null so if we weren't in fly control
 		if  (targetInterestPoint != null) {
 			targetInterestPoint.scale.x = targetInterestPoint.scale.y = 3;
@@ -884,6 +890,7 @@ window.onload = function() {
 		else if (targetPoint == null && targetInterestPoint!= null) {
 			targetInterestPoint.material = interestPointMat;
 			leftPanel.style.opacity = 0;
+			leftPanel.style.display = 'none';
 			switchControlsTo(controlModes.fly);
 		}
 		targetInterestPoint = targetPoint;
@@ -1015,6 +1022,7 @@ window.onload = function() {
 				THREE.SceneUtils.attach( camera, scene, buddy );
 				camera.position.set(0,0,0);
 				camera.rotation.set (0, 0, 0);
+				
 				//buddy.rotation.set (camRot.x, 0, 0);
 				//buddy.rotation.set(0,camera.rotation.y,0);
 				
