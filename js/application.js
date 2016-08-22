@@ -64,9 +64,10 @@ window.onload = function() {
 	var domEvents;
 	var SCREEN_WIDTH, SCREEN_HEIGHT;
 	
-	// Create a new Frustum object (for efficiency, do this only once)
-	var frustum = new THREE.Frustum();
-	var cameraViewProjectionMatrix = new THREE.Matrix4();
+	//var for handMade Hover Particle.
+	var raycaster;
+	var mouse;
+	var INTERSECTED;
 	
 	var sceneVisit;
 	var sceneSteps;
@@ -94,9 +95,9 @@ window.onload = function() {
 		interestPointMat.transparent = true;
 		interestPointMat.opacity = 0;
 	var interestPointSprite = textureLoader.load( "./data/img/picto/spriteInterestPoints.png" );
-	var spriteMaterial = new THREE.PointsMaterial( { size: 5, map: interestPointSprite, depthTest: false, transparent : true } );
+	var spriteMaterial = new THREE.SpriteMaterial( { map: interestPointSprite, depthTest: false, transparent : true } );
 	var interestPointSpriteHover = textureLoader.load("./data/img/picto/spriteInterestPoints.png");
-	var spriteMaterialHover = new THREE.PointsMaterial( { size: 10, map: interestPointSpriteHover, depthTest: false, transparent : true } );
+	var spriteMaterialHover = new THREE.SpriteMaterial( { map: interestPointSpriteHover, depthTest: false, transparent : true, color:0x317DF } );
 	var interestPointMatHover = new THREE.MeshBasicMaterial({color:0x317DFA});
 		interestPointMatHover.opacity = 0;
 		interestPointMatHover.transparent = true;
@@ -171,7 +172,9 @@ window.onload = function() {
 		if (stats != null )
 			stats.update();
 		TWEEN.update();
-		
+
+		checkIfAnInterestPointIsHovered();
+
 		requestAnimationFrame(Update);
 		renderer.render(scene,camera);
 	}
@@ -212,6 +215,11 @@ window.onload = function() {
                 console.log(tutorialState)
             } 
 		}, false);
+		
+		raycaster = new THREE.Raycaster();
+		mouse = new THREE.Vector2();
+		
+		document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 		
 		vid.addEventListener("ended", function(event) {
 			manageTrailer(0);
@@ -692,6 +700,10 @@ window.onload = function() {
 					break;
 				}
 			}
+			//if the click is done on an interest point
+			if (INTERSECTED) {
+				targetInterestPointIs (INTERSECTED, true);
+			}
 		});
 		
 		//Needed for simple click check
@@ -752,82 +764,36 @@ window.onload = function() {
 			interestPointVideo.setAttribute("controls", "controls");
 			interestPointVideo.setAttribute("frameBorder","0"); 
 		
-		var particlesGeo = new THREE.Geometry();
-		
 		//creating a 3D object for each parameter and override metaData to add title & description to the THREE.Mesh object.
 		for (var attr in interestPoints) {
 			
 			if (interestPoints[attr].hasOwnProperty) {
-				var geometry = new THREE.BoxGeometry( 2, 2, 2 );
-				var mesh = new THREE.Mesh( geometry, interestPointMat );
-			
-				var vertex = new THREE.Vector3 (interestPoints[attr].x, interestPoints[attr].y, interestPoints[attr].z);
-				particlesGeo.vertices.push(vertex);
-				
-				mesh.position.set(interestPoints[attr].x, interestPoints[attr].y, interestPoints[attr].z);
-				mesh.name = "interestPoint"+attr;
-				mesh.metaData = 
+				var point = new THREE.Sprite (spriteMaterial);
+				point.position.x = interestPoints[attr].x;
+				point.position.y = interestPoints[attr].y;
+				point.position.z = interestPoints[attr].z;
+				point.scale.x = point.scale.y =  3;
+				point.name = "interestPoint"+attr;
+				point.metaData = 
 					{
 						"title": interestPoints[attr].title,
 						"description": interestPoints[attr].description,
 						"video": interestPoints[attr].video,
 						"sound": interestPoints[attr].sound
 					}
-				sceneVisit.add(mesh);
-				interestPoints3D.push(mesh);
-
-				//Event when mouseover an interestPoint
-				domEvents.addEventListener(mesh, 'mouseover', function(event) {
-					event.target.material = interestPointMatHover;
-					//interestPointTitle.textContent = transformText(event.target.metaData.title);
-					//interestPoint.appendChild(transformText(event.target.metaData.title));
-					particles.materials = spriteMaterialHover;
-					console.log("pass");
-					interestPointTitle.textContent = event.target.metaData.title;
-					leftPanel.style.display = 'inline';
-					leftPanel.style.opacity = 1;
-				});
-
-				//Event when mouseOut an interestPoint
-				domEvents.addEventListener(mesh, 'mouseout', function(event) {
-					if (targetInterestPoint != null) {
-						//interestPointTitle.textContent = transformText(targetInterestPoint.metaData.title);
-						//interestPoint.appendChild(transformText(targetInterestPoint.metaData.title));
-						interestPointTitle.textContent = targetInterestPoint.metaData.title;
-						interestPointDescription.textContent = targetInterestPoint.metaData.description;
-						if (targetInterestPoint.metaData.video != null) {
-							interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
-						}
-						if (event.target != targetInterestPoint){
-							event.target.material = interestPointMat;
-						}
-					}
-					else {
-						event.target.material = interestPointMat;
-						leftPanel.style.opacity = 0;
-					}
-
-				});
-
-				//Event when click on an interestPoint
-				domEvents.addEventListener(mesh, 'click', function(event) {
-					targetInterestPointIs (event.target, true);
-					console.log(event.target);
-				});
-				
+				interestPoints3D.push(point);
+				sceneVisit.add(point);
 			}
 		}
 		
-		var spriteMaterial = new THREE.PointsMaterial( { size: 5, map: interestPointSprite, depthTest: false, transparent : true } );
-		var particles = new THREE.Points( particlesGeo, spriteMaterial );
-		sceneVisit.add(particles);
-		
 		leftPanel.addEventListener('mouseover', function (event) {
-			if (targetInterestPoint.metaData.video != null) {
-				interestPointVideo.style.display = 'inline';
-			}
-			else {
-				interestPointVideo.style.display = 'none';
+			if (targetInterestPoint) {
+				if (targetInterestPoint.metaData.video != null) {
+					interestPointVideo.style.display = 'inline';
+				}
+				else {
+					interestPointVideo.style.display = 'none';
+				}
 			}
 		});
 
@@ -835,12 +801,61 @@ window.onload = function() {
 			interestPointVideo.style.display = 'none';
 		});
 	}
+	
+	function checkIfAnInterestPointIsHovered () {
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObjects( interestPoints3D);
+
+		if ( intersects.length > 0 ) {
+
+			if ( INTERSECTED != intersects[ 0 ].object ) {
+
+				if ( INTERSECTED ) {
+					INTERSECTED.material = spriteMaterialHover;
+				}
+
+				INTERSECTED = intersects[ 0 ].object;
+				INTERSECTED.material = spriteMaterialHover;
+				INTERSECTED.scale.x = INTERSECTED.scale.y = 5;
+				interestPointTitle.textContent = INTERSECTED.metaData.title;
+				leftPanel.style.display = 'inline';
+				leftPanel.style.opacity = 1;
+
+			}
+
+		}
+		else {
+
+			if ( INTERSECTED ) {
+				console.log(INTERSECTED);
+				INTERSECTED.material = spriteMaterial;
+				INTERSECTED.scale.x = INTERSECTED.scale.y = 3;
+				if (targetInterestPoint != null) {
+					interestPointTitle.textContent = targetInterestPoint.metaData.title;
+					interestPointDescription.textContent = targetInterestPoint.metaData.description;
+					if (targetInterestPoint.metaData.video != null) {
+						interestPointVideo.setAttribute('src', targetInterestPoint.metaData.video);
+					}
+					if (INTERSECTED != targetInterestPoint){
+						INTERSECTED.material = spriteMaterial;
+					}
+				}
+				else {
+					INTERSECTED.material = spriteMaterial;
+					leftPanel.style.opacity = 0;
+				}
+			}
+
+			INTERSECTED = null;
+		}
+	}
 
 	function targetInterestPointIs (targetPoint, isClicked) {
 		//If last interestPoint wasn't null so if we weren't in fly control
 		if  (targetInterestPoint != null) {
-			targetInterestPoint.geometry.scale(2/3, 2/3, 2/3);
-			targetInterestPoint.material = interestPointMat;
+			targetInterestPoint.scale.x = targetInterestPoint.scale.y = 3;
+			targetInterestPoint.material = spriteMaterial;
 		}
 
 		if (targetPoint != null) {
@@ -857,7 +872,7 @@ window.onload = function() {
 				audioVoice = new Audio (targetPoint.metaData.sound);
 				audioVoice.play();
 			}
-			targetPoint.geometry.scale(3/2, 3/2, 3/2);
+			targetPoint.scale.x = targetPoint.scale.y = 5;
 			targetPoint.material = interestPointMatHover;
 			targetInterestPoint = targetPoint;
 			if (isClicked) {
@@ -1043,7 +1058,7 @@ window.onload = function() {
 				}
 				controlMode = controlModes.trackball;
 				//console.log(camera.position);
-				console.log(control);
+				//console.log(control);
 				break;
 				
 			default :
@@ -1201,6 +1216,15 @@ window.onload = function() {
 	/********************************************************************************/
 	/*		Utils			*/
 	/********************************************************************************/
+	
+	function onDocumentMouseMove( event ) {
+
+		event.preventDefault();
+
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+	}
 	
 	function onWindowResize( event ) {
 
